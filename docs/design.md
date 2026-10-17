@@ -60,7 +60,7 @@ A foundation's spec covers three things: the document a later agent will read (t
 - **The plan is the contract.** A "Feature plan" comment lists the steps, the worker per step (model and effort from the sub-issue's complexity), the base branch per step, the checks, the stops, and numbered decisions. Nothing starts before "go".
 - **One worker per step, fresh context.** The worker is a child: a subagent or a background `claude -p "code ABC-48"` run. Its return is the signal that it finished. The orchestrator reads its report on the issue, never its transcript, so its own context stays small. No event bus, no polling.
 - **Verify before moving on.** A smaller model checks the worker's report against the spec: evidence per check, owner checks match, diff in scope, nothing that changes a later step.
-- **Chained branches.** Each step builds on the previous step's branch, so no step waits for a merge. The chain is shipped in order at the end.
+- **Chained branches.** Each step builds on the previous step's branch, so no step waits for a merge. The chain is shipped in order at the end, with the retarget caveat under Known gaps.
 - **Stops are explicit.** The approved stop line, holds on owner checks, two failed verification rounds, a worker Handoff, a report that changes a later step. For anything else it decides and records.
 - **Never merges.** Shipping stays one approval per pull request.
 
@@ -184,3 +184,13 @@ Considered and declined: mandatory visual proof in `build`; scoring each run; be
 Tested on real tickets: `ideate`, `spec` and `build` end to end on a native desktop app and on a multiplatform app, including a run on the person's machine with a tool install and an owner-only permission check; `feature` on a multi-issue feature. Tested in dry runs with fresh agents: the three lanes, the Foundation card, the feature plan against a fixture of four sub-issues, `build` with and without the execution skills.
 
 Not tested yet: `ship` against hosting that deploys on merge; a fast-lane spec going through `build`; the Codex manifest; `feature` continuing from a "Feature run" comment in a later session.
+
+## Known gaps
+
+Found on real runs and not fixed yet. Each has a workaround.
+
+- **Stacked pull requests do not merge themselves.** `feature` opens each step's pull request against the previous step's branch, and `ship` merges a pull request into whatever base it has; neither retargets the next one. Merging the chain through `ship` as it stands lands step 2 in step 1's branch, not in the integration branch, and Linear marks the issue Done anyway, since its GitHub sync counts a merge into any branch. Until a skill owns the retarget: after each merge, retarget the next pull request at the integration branch before shipping it, or turn on "Automatically delete head branches" in the repository so GitHub retargets dependent pull requests on its own. A merged pull request is not proof that a step reached the integration branch; `git merge-base --is-ancestor <commit> <branch>` is.
+- **Workers without a subagent tool self-review.** When a worker runs somewhere it cannot start a fresh reviewer, `build`'s whole-branch review is a self-review and its report says so. `feature`'s own reviewer covers the gap; a single `build` run does not have that cover, so read the report harder.
+- **The later-step-impact rule can stop on a name.** A field called one thing in a spec and another in the code is a clarification the next worker resolves by reading the code, not a change to the plan. The orchestrator should record it as a decision and continue; v0.1 may stop instead.
+
+Open: whether an orchestrator may run an owner's production step when asked (a migration, a deploy), and under what conditions. The rule today is that agents never touch production data, and it stays absolute until decided otherwise.

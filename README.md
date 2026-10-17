@@ -114,7 +114,7 @@ Agents stop on their own for an irreversible operation, anything touching secret
 
 ## Status
 
-v0.1. The loop has run on real tickets: `ideate`, `spec` and `build` on a native macOS app and a multiplatform app, `feature` on a multi-issue feature. `ship` has run against a repository without automatic deploys. Dry runs with fresh agents are how each skill was tested before that; [docs/design.md](docs/design.md) says what is still untested. Expect the skills to change as more tickets go through.
+v0.1. The loop has run on real tickets: `ideate`, `spec` and `build` on a native macOS app and a multiplatform app, `feature` on a four-issue feature across two repositories. `ship` has not yet run against hosting that deploys on merge. Dry runs with fresh agents are how each skill was tested before that. [docs/design.md](docs/design.md) says what is still untested and lists the known gaps, each with a workaround; the first `feature` run found one around stacked pull requests that you should read before shipping a chain. Expect the skills to change as more tickets go through.
 
 ## Validate a checkout
 
