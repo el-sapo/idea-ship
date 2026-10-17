@@ -1,0 +1,133 @@
+# sdlc-fede
+
+A lean software factory for solo builders and small teams. Five agent skills carry a ticket from a spoken idea to a merged pull request. The Linear issue is the thread, sessions are disposable, and you step in at most four times per ticket.
+
+Built for people who do not want enterprise process but do want a process: no story points, no test-case tables, no retros. A loop, evidence for every claim, and agents that speak up about what needs your attention.
+
+## The loop
+
+```mermaid
+flowchart LR
+  I([You: an idea]) --> ideate
+  ideate -->|Backlog: options| P([You: pick, "spec it"])
+  P --> spec
+  spec -->|Todo: spec| C([You: "code ABC-12"])
+  C --> build
+  build -->|In Review: PR + report| S([You: "ship ABC-12"])
+  S --> ship
+  ship -->|Done: merged, checked live| E([Live])
+  ideate -. fast lane: small and clear .-> C
+```
+
+You speak four times. Everything in between is an agent working alone, in the cloud or on your machine. Every status where the issue rests is your turn.
+
+| You say | Skill | The agent does alone | On the issue | Status after |
+|---|---|---|---|---|
+| An idea, by voice is fine | `ideate` | Visual read-back at once, then explores and prepares options | Idea, flow, attention items, options, numbered decisions | Backlog |
+| "1 B, 2 ok, option A. Spec it" | `spec` | Grounds the pick in the code, flags risks, sizes it, writes checks an agent can verify | The spec replaces the description; the options move to a comment | Todo |
+| "Code ABC-12" | `build` | Branch, tests first, code, review, evidence for every check, pull request | A report with evidence, attention items and decisions | In Review |
+| "Ship ABC-12" | `ship` | Checks it is ready, merges, watches the deploy, looks at the live result | A close-out with what is next and factory notes | Done |
+
+When a ticket is small and clear, `ideate` takes the **fast lane** and files a ready-to-build spec, so you speak three times instead of four. When a feature is several tickets, `feature` runs them for you: it posts a plan, waits for your "go", then drives one build per sub-issue, verifies each, and reports on the parent.
+
+## Install
+
+With Claude Code 2.1.275 or later, one step:
+
+```sh
+claude plugin install factory --marketplace el-sapo/sdlc-fede --scope user
+```
+
+Or in two, which works on older versions too:
+
+```sh
+claude plugin marketplace add el-sapo/sdlc-fede --scope user
+claude plugin install factory@sdlc-fede --scope user
+```
+
+Restart the session afterwards; skills are discovered at session start. The skills then answer to `/factory:ideate`, `/factory:spec`, `/factory:build`, `/factory:ship` and `/factory:feature`, and to plain words such as "spec it", "code ABC-12", "ship ABC-12" and "build the feature ABC-47".
+
+With Codex:
+
+```sh
+codex plugin marketplace add el-sapo/sdlc-fede
+codex plugin add factory@sdlc-fede
+```
+
+Start a new Codex task afterwards so it discovers the skills. The Codex manifest ships; the skills have been exercised with Claude Code.
+
+### Where the skills load
+
+A plugin installed on your machine loads in local sessions, including the ones you steer from your phone through Remote Control. Claude Code cloud sessions do not install plugins. Two ways to have the skills there:
+
+- Save the five skills on your claude.ai account (open each `SKILL.md` under `plugins/factory/skills/` and add it as a skill). Account skills load in cloud, app and terminal sessions alike.
+- Commit them into a repository's `.claude/skills/`, which loads in every session that opens that repository.
+
+The plugin is for sharing the process with a team or a friend; your account or the repository is how the skills reach cloud sessions.
+
+## What you need
+
+- **Linear** with the default statuses (Backlog, Todo, In Progress, In Review, Done) and the GitHub integration on, so branches link to issues. Nothing custom.
+- **GitHub** and a Linear connector in the sessions that run the skills.
+- **Hosting that deploys on merge** and builds a preview per pull request, for `ship` to watch. Without it, `ship` says "merged, not deployed" and stops there.
+- **A session that can run the project.** A cloud session cannot build native apps or grant device permissions; for those, run the session on your machine. The skills say what each situation leaves to you.
+
+## The five skills
+
+| Skill | Trigger | Job |
+|---|---|---|
+| [`ideate`](plugins/factory/skills/ideate/SKILL.md) | an idea | A visual brief you can steer from a phone, then two or three options on a Linear issue, or a ready spec on the fast lane |
+| [`spec`](plugins/factory/skills/spec/SKILL.md) | "spec it" | A lean, buildable spec in the same issue: binary checks with how to verify them, real file names, a default for every open decision, sub-issues when it is more than one pull request |
+| [`build`](plugins/factory/skills/build/SKILL.md) | "code ABC-12" | A pull request built carefully and unattended: tests first, a fresh reviewer, evidence per check, a report on the issue. Never merges |
+| [`ship`](plugins/factory/skills/ship/SKILL.md) | "ship ABC-12" | Readiness checks, merge, watch the deploy, check it live, close out. One approval covers one pull request |
+| [`feature`](plugins/factory/skills/feature/SKILL.md) | "build the feature ABC-47" | The orchestrator: a plan you approve, then one fresh worker per sub-issue, verified before the next, with the state on the parent so any session can continue |
+
+### What agents are loud about
+
+Every skill flags the same things, each as its own card with tags for complexity and risk of breaking: a behaviour change, a risk of breaking existing features or data, security and privacy, data that cannot be undone, a design problem, a new cost or dependency, a scope surprise, a shaky assumption. The test is whether you would be annoyed to learn it only after the build. Routine work gets no card.
+
+### Where you are in the loop
+
+| Issue rests in | You look at | Your word approves |
+|---|---|---|
+| Backlog | The options page: options, attention cards, numbered decisions | The direction |
+| Todo | The spec in Linear, which you can edit | What gets built. This is where your time pays off most |
+| In Review | The pull request, the preview, the report with evidence per check | The merge, which is also the deploy |
+| Feature plan | Steps, worker per step, where the run stops | How far the orchestrator goes |
+
+Agents stop on their own for an irreversible operation, anything touching secrets or permissions beyond the spec, a discovery that changes what you approved, or a plan too broken to follow. They never merge during `build`, weaken a test to get to green, force a merge, deploy by hand, edit a repository's instructions file, or commit specs and plans.
+
+## Principles
+
+- **The Linear issue is the thread.** Every run starts by reading the issue and ends by writing to it. Nobody has to find a chat again.
+- **Pictures steer faster than paragraphs.** The first answer to an idea is a visual brief, laid out for a phone.
+- **Depth follows the idea.** The agent decides how much to show and how to size the work.
+- **Evidence, not claims.** A check has passed only when something was run and seen to pass. Checks only you can run are counted apart.
+- **Only code is committed.** Specs stay in Linear, plans stay in ignored scratch folders.
+- **Decide what you can, stop for what you must.** A question with a recorded default never blocks a build.
+
+[docs/design.md](docs/design.md) has the full design: lanes, templates, what each step generates, and the decisions with what was rejected. [docs/setup.md](docs/setup.md) walks through Linear, GitHub, hosting and a new repository.
+
+## Optional: Superpowers execution skills
+
+`build` keeps its own discipline (tests first, a fresh reviewer, evidence) and works on its own. When a repository carries eight execution skills from [Superpowers](https://github.com/obra/superpowers) (MIT) in `.claude/skills/`, `build` uses them for planning, test-driven work, debugging and reviews. `tools/superpowers-skills.py` copies those eight at a pinned release, records a hash per skill, and tells you when upstream has a newer release to review. See [tools/README.md](tools/README.md).
+
+## Status
+
+v0.1. The loop has run on real tickets: `ideate`, `spec` and `build` on a native macOS app and a multiplatform app, `feature` on a multi-issue feature. `ship` has run against a repository without automatic deploys. Dry runs with fresh agents are how each skill was tested before that; [docs/design.md](docs/design.md) says what is still untested. Expect the skills to change as more tickets go through.
+
+## Validate a checkout
+
+```sh
+python3 scripts/validate.py
+claude plugin validate .claude-plugin/marketplace.json --strict
+claude plugin validate plugins/factory --strict
+```
+
+## Credits
+
+The triage idea behind the fast lane and the orchestrator comes from [Warp Factories](https://www.warp.dev/blog/open-infrastructure-for-building-a-software-factory) and Zach Lloyd's talk on software factories. The optional execution skills are [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent.
+
+## License
+
+[MIT](LICENSE)
