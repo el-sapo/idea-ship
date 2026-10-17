@@ -130,7 +130,7 @@ A finding goes under Needs attention and a choice you made goes under Decisions.
 
 **Show it before the ping.** Build one HTML page, phone first: what was built, with a screenshot or diagram when there is an interface; the checks with green or red tags and their evidence; a card per attention item with its tags (`Complexity` and `Risk of breaking`, each low, medium or high, coloured green, amber or red with the word printed) and a before-and-after diagram or table; and the decisions numbered so the user can answer by number. Publish it and link it from the comment, or use the session's inline visual tool. Without either, the comment is the presentation.
 
-**Ping.** End with a message short enough for a phone notification: the pull request link, the preview link, how many checks passed out of how many and how many wait for them, how many attention items and decisions are waiting, and the next step, which is to review and then say "ship" with the identifier or ask for changes.
+**Ping.** End with a message short enough for a phone notification: the pull request link, the preview link, how many checks passed out of how many and how many wait for them, how many attention items and decisions are waiting, and the next step, which is to review and then say "ship" with the identifier or ask for changes. When an orchestrator started this run, the next step is that the feature run continues, and the report says so instead.
 
 ## When to stop
 

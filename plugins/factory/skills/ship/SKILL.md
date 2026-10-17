@@ -34,7 +34,7 @@ Merge only when all of these hold:
 - Every required check is green.
 - If the hosting built a preview for the pull request, that build succeeded.
 - No change request or review thread from a person is unresolved.
-- Every check in the build report passed, or the user's message accepts the ones that did not ("ship it anyway").
+- Every check in the build report passed, or a later comment on the issue records the owner's result ("Owner checks 1 and 2 passed"), or the user's message accepts the ones that did not ("ship it anyway").
 - Every decision the build report left as a question has an answer. Decisions where the build took a default need none.
 
 If one does not hold, do not merge. Say which one and what would fix it. Two cases you can handle yourself: when the branch is only behind its base, update it by merging the base in, never by rebasing, and wait for the checks; when a check is still running, wait for it.

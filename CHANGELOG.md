@@ -6,7 +6,8 @@ The plugin version lives in `plugins/factory/.claude-plugin/plugin.json` and `pl
 
 From the first real `feature` run.
 
-- `feature`: a feature branch per feature, created at "go" from the integration branch. Every step's pull request targets it, verified steps merge into it as the run goes (or on the owner's word with "steps on my word"), and the run ends with one final pull request into the integration branch for the owner to ship. Replaces stacked pull requests, which did not retarget themselves.
+- `feature`: a feature branch per feature, created at "go" from the integration branch. Every step builds on it and targets its pull request at it, verified steps merge into it with merge commits as the run goes (or on the owner's word with "steps on my word"), and the run ends with one final pull request into the integration branch for the owner to ship. Replaces stacked pull requests, which did not retarget themselves.
+- `feature`: a taken step is "in the integration branch" only when `git merge-base --is-ancestor` says so; Linear's Done proves nothing. Owner results are recorded on the sub-issue so `ship` can read them. Holds can be added mid-run from a step's report. Secrets, keychain profiles and preconditions outside the repository are numbered plan decisions. Without Linear the run stops at preflight.
 - `feature`: one reviewer by default, two (evidence re-run, and scope plus later-step impact) on high-complexity, integration-heavy or many-touch-point steps.
 - `feature`: a renamed field between a spec and the code is a recorded decision, not a stop; only a changed shape a later step builds on stops the run.
 - `feature`: on the owner's machine, a checkout in use gets a worktree for the run; workers are handed its path and never create one.
