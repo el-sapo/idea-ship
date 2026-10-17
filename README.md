@@ -28,7 +28,7 @@ You speak four times. Everything in between is an agent working alone, in the cl
 | "Code ABC-12" | `build` | Branch, tests first, code, review, evidence for every check, pull request | A report with evidence, attention items and decisions | In Review |
 | "Ship ABC-12" | `ship` | Checks it is ready, merges, watches the deploy, looks at the live result | A close-out with what is next and factory notes | Done |
 
-When a ticket is small and clear, `ideate` takes the **fast lane** and files a ready-to-build spec, so you speak three times instead of four. When a feature is several tickets, `feature` runs them for you: it posts a plan, waits for your "go", then drives one build per sub-issue, verifies each, and reports on the parent.
+When a ticket is small and clear, `ideate` takes the **fast lane** and files a ready-to-build spec, so you speak three times instead of four. When a feature is several tickets, `feature` runs them for you: it posts a plan, waits for your "go", then drives one build per sub-issue on a feature branch, verifies and integrates each, and hands you one pull request to ship.
 
 ## Install
 
@@ -80,7 +80,7 @@ The plugin is for sharing the process with a team or a friend; your account or t
 | [`spec`](plugins/factory/skills/spec/SKILL.md) | "spec it" | A lean, buildable spec in the same issue: binary checks with how to verify them, real file names, a default for every open decision, sub-issues when it is more than one pull request |
 | [`build`](plugins/factory/skills/build/SKILL.md) | "code ABC-12" | A pull request built carefully and unattended: tests first, a fresh reviewer, evidence per check, a report on the issue. Never merges |
 | [`ship`](plugins/factory/skills/ship/SKILL.md) | "ship ABC-12" | Readiness checks, merge, watch the deploy, check it live, close out. One approval covers one pull request |
-| [`feature`](plugins/factory/skills/feature/SKILL.md) | "build the feature ABC-47" | The orchestrator: a plan you approve, then one fresh worker per sub-issue, verified before the next, with the state on the parent so any session can continue |
+| [`feature`](plugins/factory/skills/feature/SKILL.md) | "build the feature ABC-47" | The orchestrator: a plan you approve, then one fresh worker per sub-issue on a feature branch, each verified and merged into it before the next, one final pull request, and the state on the parent so any session can continue |
 
 ### What agents are loud about
 
@@ -93,7 +93,8 @@ Every skill flags the same things, each as its own card with tags for complexity
 | Backlog | The options page: options, attention cards, numbered decisions | The direction |
 | Todo | The spec in Linear, which you can edit | What gets built. This is where your time pays off most |
 | In Review | The pull request, the preview, the report with evidence per check | The merge, which is also the deploy |
-| Feature plan | Steps, worker per step, where the run stops | How far the orchestrator goes |
+| Feature plan | Steps, worker and reviewers per step, where the run stops | How far the orchestrator goes |
+| In Review, a feature | The final pull request and the "Feature built" report | The merge of the whole feature, which is the deploy |
 
 Agents stop on their own for an irreversible operation, anything touching secrets or permissions beyond the spec, a discovery that changes what you approved, or a plan too broken to follow. They never merge during `build`, weaken a test to get to green, force a merge, deploy by hand, edit a repository's instructions file, or commit specs and plans.
 
@@ -114,7 +115,7 @@ Agents stop on their own for an irreversible operation, anything touching secret
 
 ## Status
 
-v0.1. The loop has run on real tickets: `ideate`, `spec` and `build` on a native macOS app and a multiplatform app, `feature` on a four-issue feature across two repositories. `ship` has not yet run against hosting that deploys on merge. Dry runs with fresh agents are how each skill was tested before that. [docs/design.md](docs/design.md) says what is still untested and lists the known gaps, each with a workaround; the first `feature` run found one around stacked pull requests that you should read before shipping a chain. Expect the skills to change as more tickets go through.
+v0.2. The loop has run on real tickets: `ideate`, `spec` and `build` on a native macOS app and a multiplatform app, `feature` on a four-issue feature across two repositories. That first `feature` run is what moved it from stacked pull requests to a feature branch with one final pull request; the new shape has not run on a real feature yet. `ship` has not yet run against hosting that deploys on merge. Dry runs with fresh agents are how each skill was tested before that. [docs/design.md](docs/design.md) says what is still untested and lists the known gaps, each with a workaround. Expect the skills to change as more tickets go through.
 
 ## Validate a checkout
 

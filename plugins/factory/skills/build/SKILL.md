@@ -44,7 +44,7 @@ The execution skills were written for a person at the keyboard, and they stop to
 - The design is approved on the Linear issue. Do not brainstorm or write design documents.
 - The plan goes in `.superpowers/plans/`, which git ignores. Do not wait for a plan review.
 - Execute subagent-driven. If there is no subagent tool, execute inline.
-- Work in place on the feature branch. Do not create a worktree.
+- Work in place on the branch, in the worktree the prompt names if it names one. Do not create a worktree.
 - When finished, push the branch and open a pull request. Never merge.
 - Commit only code, tests and the docs the spec asks for. Never commit specs, plans or ledgers.
 
@@ -52,7 +52,7 @@ If the repo's agent instructions file (CLAUDE.md or AGENTS.md) says otherwise on
 
 ## 4. Branch and plan
 
-Create the branch with the name Linear suggests for the issue, so the pull request links itself to the issue. Otherwise use the identifier and a short slug, for example `abc-12-venue-sign-in`.
+Create the branch with the name Linear suggests for the issue, so the pull request links itself to the issue. Otherwise use the identifier and a short slug, for example `abc-12-venue-sign-in`. Start it from the branch the prompt names, when an orchestrator names one (a feature branch, or the previous step's branch), otherwise from the default branch.
 
 Make `.superpowers/plans/` ignore itself by putting a `.gitignore` containing `*` inside it. The execution skills do the same for their own scratch folder, `.superpowers/sdd/`.
 
@@ -92,7 +92,7 @@ A check without evidence is "not verified". It is never "passed". A check the sp
 
 ## 7. Pull request
 
-Push the branch and open a pull request. The title is the identifier and the outcome. Keep the body short, because the full report lives on the issue: link the issue, then say what changed, how to verify it, and each attention item in one line.
+Push the branch and open a pull request against the base the prompt names, otherwise the default branch. The title is the identifier and the outcome. Keep the body short, because the full report lives on the issue: link the issue, then say what changed, how to verify it, and each attention item in one line.
 
 If the repo has CI, wait for it and fix failures this change caused. If the session can watch the pull request, keep watching until it is green. If the hosting builds a preview for the pull request, wait for that build too, treat a failed preview build like a failed check, and record the preview link.
 
@@ -138,6 +138,8 @@ Stop, post a Handoff comment and ping, for these only:
 
 - An irreversible or destructive operation: deleting data, running a migration against real data, rewriting shared history.
 - Anything touching secrets, credentials, payments or permissions beyond what the spec describes, and on the user's own machine anything that would put a system permission prompt on their screen.
+
+A secret the spec does need is never asked for in chat. Ask the user to put it in a file outside the repository or in an environment variable, say where you will read it, and never echo it. If one is pasted in chat anyway, use it from a file and say in the report that it is in the transcript and should be rotated.
 - A discovery that changes what the user approved: the scope is far larger, or the chosen approach cannot work.
 - A plan so broken that every path forward is a guess.
 

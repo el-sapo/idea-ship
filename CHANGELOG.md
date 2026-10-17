@@ -2,6 +2,19 @@
 
 The plugin version lives in `plugins/factory/.claude-plugin/plugin.json` and `plugins/factory/.codex-plugin/plugin.json`; both move together.
 
+## 0.2.0 (2026-10-17)
+
+From the first real `feature` run.
+
+- `feature`: a feature branch per feature, created at "go" from the integration branch. Every step's pull request targets it, verified steps merge into it as the run goes (or on the owner's word with "steps on my word"), and the run ends with one final pull request into the integration branch for the owner to ship. Replaces stacked pull requests, which did not retarget themselves.
+- `feature`: one reviewer by default, two (evidence re-run, and scope plus later-step impact) on high-complexity, integration-heavy or many-touch-point steps.
+- `feature`: a renamed field between a spec and the code is a recorded decision, not a stop; only a changed shape a later step builds on stops the run.
+- `feature`: on the owner's machine, a checkout in use gets a worktree for the run; workers are handed its path and never create one.
+- `feature`, `build`: secrets are never asked for in chat; a file or an environment variable, and a pasted secret is reported as needing rotation.
+- `ship`: refuses a pull request whose base is an unmerged step branch, treats a merge into a feature branch as "merged, not deployed", ships a parent's final pull request like any other, and proves every merge with `git merge-base --is-ancestor`.
+- `build`: branch base and pull request target come from the prompt when an orchestrator sets them; works in a named worktree, never creates one.
+- Docs: the production rule's one exception (a stop, the stated risk, and the owner's in-session word) recorded as such.
+
 ## 0.1.0 (2026-10-17)
 
 First public version.

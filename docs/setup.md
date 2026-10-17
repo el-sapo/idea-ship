@@ -12,7 +12,8 @@ What a repository and its surroundings need before the first ticket goes through
 
 - The repository attached to the session, with push access, so `build` can open a pull request and `ship` can merge.
 - CI is optional. When it exists, `build` waits for it and fixes failures its change caused, and `ship` treats a red check as not ready.
-- Branch protection is your choice. The skills never push to the default branch or force a merge, so protection costs nothing.
+- Branch protection is your choice. The skills never push to the integration branch or force a merge, so protection costs nothing.
+- The integration branch is the default branch unless you name another when you approve a feature plan, so a long-lived branch a team integrates on works. `feature` creates one branch per feature off it and ships back into it with one pull request; "Automatically delete head branches" is your choice and nothing depends on it.
 
 ## 3. Hosting
 

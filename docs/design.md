@@ -55,16 +55,19 @@ A foundation's spec covers three things: the document a later agent will read (t
 
 ## Features
 
-`feature` is the orchestrator for a parent issue whose sub-issues are specced and ordered. It plans the run, waits for approval on how far it goes, and then runs one fresh `build` worker per sub-issue, verifies each with a fresh reviewer, and keeps the state on the parent.
+`feature` is the orchestrator for a parent issue whose sub-issues are specced and ordered. It plans the run, waits for approval on how far it goes, and then runs one fresh `build` worker per sub-issue on a feature branch, verifies each with a fresh reviewer, folds it into the feature branch, and hands back one pull request.
 
-- **The plan is the contract.** A "Feature plan" comment lists the steps, the worker per step (model and effort from the sub-issue's complexity), the base branch per step, the checks, the stops, and numbered decisions. Nothing starts before "go".
+- **The plan is the contract.** A "Feature plan" comment lists the steps, the worker per step (model and effort from the sub-issue's complexity), what each step builds on, the reviewers per step, the checks, the stops, and numbered decisions. Nothing starts before "go". A default that changes how the result reaches the integration branch is never silent.
 - **One worker per step, fresh context.** The worker is a child: a subagent or a background `claude -p "code ABC-48"` run. Its return is the signal that it finished. The orchestrator reads its report on the issue, never its transcript, so its own context stays small. No event bus, no polling.
-- **Verify before moving on.** A smaller model checks the worker's report against the spec: evidence per check, owner checks match, diff in scope, nothing that changes a later step.
-- **Chained branches.** Each step builds on the previous step's branch, so no step waits for a merge. The chain is shipped in order at the end, with the retarget caveat under Known gaps.
-- **Stops are explicit.** The approved stop line, holds on owner checks, two failed verification rounds, a worker Handoff, a report that changes a later step. For anything else it decides and records.
-- **Never merges.** Shipping stays one approval per pull request.
+- **Verify before integrating.** A smaller model checks the worker's report against the spec: evidence re-run, owner checks match, diff in scope and matching the report, nothing that changes a shape a later step builds on. One reviewer by default; two (one re-runs evidence, one takes the rest) when the step is high complexity, depends on an integration, or touches many areas.
+- **The feature branch is the sandbox.** Created at "go" from the integration branch (`main`, or a long-lived branch the person names). Step 1 builds on it, each later step builds on the previous step's branch, and every step's pull request targets the feature branch, so there is one stable base and no retargeting: once a step merges, the next pull request shrinks to its own diff. Verified steps merge into the feature branch as the run goes, unless the person says "steps on my word". Nothing deploys from it.
+- **One final pull request.** At the stop line the orchestrator merges the integration branch into the feature branch, runs the full suite, opens the feature branch's pull request into the integration branch, and moves the parent to In Review. "Ship" on the parent is the one approval that deploys.
+- **Stops are explicit.** The approved stop line, holds on owner checks, two failed verification rounds, a worker Handoff, a report that changes a shape a later step builds on. A name that differs between a spec and the code is a recorded decision, not a stop. For anything else it decides and records.
+- **Never merges into the integration branch.** That is `ship`'s and the person's.
 
-The worker mapping in v0.1: low complexity runs Opus at medium effort, medium at high, high at xhigh with ultracode when the session can start a worker that way. The person can state different mappings and the plan uses theirs.
+On the person's machine, when the checkout is in use, the orchestrator makes a worktree for the run and hands workers its path; `build` itself never creates one. Secrets a spec needs go in a file or an environment variable the worker reads; no skill asks for one in chat, and one pasted anyway is reported as needing rotation.
+
+The worker mapping: low complexity runs Opus at medium effort, medium at high, high at xhigh with ultracode when the session can start a worker that way. The person can state different mappings and the plan uses theirs.
 
 ## When a ticket leaves the straight path
 
@@ -72,6 +75,7 @@ The worker mapping in v0.1: low complexity runs Opus at medium effort, medium at
 - **The spec is larger than one pull request.** `spec` splits it into sub-issues in build order. Each `build` run does one, or `feature` runs them all. `ship` names the next unblocked one and closes the parent when all are Done.
 - **Build has to stop.** It pushes the branch as it is and posts a Handoff comment (Done, Open, Check, Next). The issue stays In Progress, and the next session continues from the issue and the branch.
 - **The deploy fails.** `ship` finds out what users see, opens a revert pull request without merging it, posts "Not live" and pings at once. The issue stays In Review. Reverting is the person's call.
+- **A merge has to be proven.** After any merge, `ship` and `feature` check `git merge-base --is-ancestor`. A pull request's merged state is not proof that the commits reached the branch the person expects, and Linear moves an issue to Done on a merge into any branch.
 - **The session is on the person's machine.** Installing a tool the build needs is a decision to record. Anything that would put a system permission prompt on their screen is a stop. The report says where the session ran.
 
 ## How agents present things
@@ -101,13 +105,16 @@ The test for whether something earns a card: would the person be surprised or an
 | Not filed yet | The read-back, if they are still there | The idea | Starting the work |
 | Backlog | The options page | "1 B, 2 ok, A. Spec it" | The direction. Skipped on the fast lane |
 | Todo | The spec in Linear, which they can edit | "Code ABC-12" | What gets built. This is where their time pays off most |
-| Feature plan | Steps, workers, stop line, holds | "go", or "3: after step 2, go" | How far the orchestrator goes |
+| Feature plan | Steps, workers, reviewers, stop line, holds | "go", or "3: after step 2, go" | How far the orchestrator goes |
 | In Review | The pull request, the preview and the report | "Ship ABC-12", or the changes they want | The merge, which is also the deploy |
+| In Review, a feature's parent | The final pull request, the preview and the "Feature built" report | "Ship ABC-47", or changes on a step | The merge of the whole feature, which is the deploy |
 | In Review, after a failed deploy | The "Not live" comment and the revert pull request | Merge the revert, or not | Rolling back |
 
 **Agents stop and ping** when an operation cannot be undone; when the work touches secrets, credentials, payments or permissions beyond the spec; when a discovery changes what was approved; when the plan is so broken that every path is a guess; when the issue has no spec; when a readiness check fails before a merge; and on the person's own machine, when a system permission prompt would appear. For anything else the agent decides, records the call under Decisions, and keeps going. A question with a recorded default never blocks a build.
 
-**Agents never** merge during `build` or push to the default branch; weaken a test to get to green; force a merge or use admin rights; deploy by hand or touch production data; merge a revert; edit a repository's instructions file or copy third-party skills into a repository; commit specs, plans or ledgers; or start two workers on the same files at once.
+**Agents never** merge during `build` or push to the integration branch outside `ship`; weaken a test to get to green; force a merge or use admin rights; deploy by hand or touch production data; merge a revert; edit a repository's instructions file or copy third-party skills into a repository; commit specs, plans or ledgers; ask for a secret in chat; or start two workers on the same files at once.
+
+The production rule has one shape of exception, and it is not a rule change: when a run stops on it and the person, in the session, reads the stated risk and says to continue, the agent continues. It never happens unattended, and the stop and the risk come first.
 
 ## What each step generates
 
@@ -129,7 +136,9 @@ Decisions and reports live on the Linear issue. Only code is committed.
 | `build` | Follow-up issues for problems outside the scope | Linear, Backlog |
 | `build` | Handoff comment, only if it has to stop | Linear |
 | `feature` | "Feature plan" comment and a visual plan | Linear, on the parent |
+| `feature` | Feature branch, with the verified steps merged into it | GitHub |
 | `feature` | "Feature run" comment, updated per step | Linear, on the parent |
+| `feature` | The final pull request, feature branch into integration branch | GitHub |
 | `feature` | "Feature built" report | Linear, on the parent |
 | `ship` | Merge | GitHub |
 | `ship` | Close-out: Shipped, Checked live, Answers, Next, Factory notes | A Linear comment |
@@ -166,6 +175,9 @@ Factory notes are one line for anything that made a ticket harder than it should
 | No scoring of runs | Two facts recorded on each close-out | It would make the flow more complex |
 | An orchestrator that is itself a skill | A platform orchestrator (Warp, Projects, agent teams) | The issue already carries everything, so a skill with a worker per step is enough, and it runs wherever the skills run |
 | A plan approved before any worker starts | Running to the end by default | How far an unattended run goes is the person's call |
+| A feature branch per feature, one final pull request | Step pull requests stacked on each other and shipped one by one into the integration branch | The first real run showed that stacked pull requests do not retarget themselves; a feature branch gives every step one stable base, keeps half a feature off the integration branch, and makes the deploy one approval |
+| The orchestrator merges verified steps into the feature branch | Approving each step's merge | Nothing deploys from the feature branch, so the merge is integration, not release; "steps on my word" keeps the other option |
+| One reviewer by default, two on complex or integration-heavy steps | Two reviewers on every step | Two found real things on the first run, but at a token cost that only pays on the risky steps |
 | Owner checks counted apart | Reporting them as not passing | "3 of 6 passed, 3 owner" says what it means; "3 of 6" does not |
 
 ## Parked
@@ -189,8 +201,5 @@ Not tested yet: `ship` against hosting that deploys on merge; a fast-lane spec g
 
 Found on real runs and not fixed yet. Each has a workaround.
 
-- **Stacked pull requests do not merge themselves.** `feature` opens each step's pull request against the previous step's branch, and `ship` merges a pull request into whatever base it has; neither retargets the next one. Merging the chain through `ship` as it stands lands step 2 in step 1's branch, not in the integration branch, and Linear marks the issue Done anyway, since its GitHub sync counts a merge into any branch. Until a skill owns the retarget: after each merge, retarget the next pull request at the integration branch before shipping it, or turn on "Automatically delete head branches" in the repository so GitHub retargets dependent pull requests on its own. A merged pull request is not proof that a step reached the integration branch; `git merge-base --is-ancestor <commit> <branch>` is.
 - **Workers without a subagent tool self-review.** When a worker runs somewhere it cannot start a fresh reviewer, `build`'s whole-branch review is a self-review and its report says so. `feature`'s own reviewer covers the gap; a single `build` run does not have that cover, so read the report harder.
-- **The later-step-impact rule can stop on a name.** A field called one thing in a spec and another in the code is a clarification the next worker resolves by reading the code, not a change to the plan. The orchestrator should record it as a decision and continue; v0.1 may stop instead.
-
-Open: whether an orchestrator may run an owner's production step when asked (a migration, a deploy), and under what conditions. The rule today is that agents never touch production data, and it stays absolute until decided otherwise.
+- **The feature branch flow has not run on a real feature yet.** 0.2.0 replaced stacked pull requests with a feature branch after the first real run exposed the retarget problem. Until a feature has gone through it, check the final pull request's diff against the steps before shipping it.

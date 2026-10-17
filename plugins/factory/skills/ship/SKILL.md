@@ -18,6 +18,8 @@ Four principles explain the rules below:
 
 Open the issue, its build report and its pull request. If the issue has more than one open pull request and the user did not say which, ask.
 
+The identifier may be a parent issue whose feature was built by `feature`. Then the pull request is the final one, from the feature branch into the integration branch, its report is the "Feature built" comment, and the sub-issues' pull requests are already merged into the feature branch. Ship it like any other: one approval, one pull request.
+
 The user's message may also answer numbered decisions from the build report. Sort each answer:
 
 - An answer that matches what was built is just an answer. Record it in the close-out comment.
@@ -28,6 +30,7 @@ The user's message may also answer numbered decisions from the build report. Sor
 Merge only when all of these hold:
 
 - The pull request is open, not a draft, and has no conflicts.
+- Its base is the branch the user expects: the integration branch, or a feature branch when the user ships a step of a feature under "steps on my word". A pull request whose base is another step's branch that has not merged is not ready: name the step to ship first.
 - Every required check is green.
 - If the hosting built a preview for the pull request, that build succeeded.
 - No change request or review thread from a person is unresolved.
@@ -40,11 +43,15 @@ If one does not hold, do not merge. Say which one and what would fix it. Two cas
 
 Merge with the method the repo uses, and squash when the repo allows it and has no convention. Never force a merge, never use admin rights to skip a protection, and never merge into anything but the pull request's base branch. Delete the branch if that is the repo's habit.
 
+Then confirm the commits reached the base: `git merge-base --is-ancestor <head> <base>`. The pull request's merged state is not proof, and neither is Linear moving the issue to Done, since its GitHub sync counts a merge into any branch.
+
 ## 4. Watch it go live
 
 If the repo deploys on merge, through a workflow on the default branch or a hosting integration, watch the deploy until it finishes. When it succeeds, check the result without changing anything: load the live URL or health endpoint, and repeat any Done when check that can be observed on the live site.
 
 If the repo has no automatic deploy, say so plainly: merged, not deployed, and what a release would take.
+
+If the base is a feature branch, this merge is integration, not a release. Say "merged into <feature branch>, not deployed", skip the deploy watch and the live check, and name what still waits: the feature's final pull request.
 
 ## 5. If it goes wrong
 
@@ -85,7 +92,7 @@ Merged: <link> · Deploy: failed · Users see: <the previous version, or what is
 What failed: the error, in a line. Revert ready: <pull request link>
 ````
 
-For a sub-issue, name the next one that is now unblocked, and close the parent only when every sub-issue is Done.
+For a sub-issue, name the next one that is now unblocked, and close the parent only when every sub-issue is Done. For a parent whose feature branch just merged, set it and any sub-issue still open to Done together. For a step merged into a feature branch, the first line reads "Merged into <feature branch> · Live: not yet", and Next names the final pull request.
 
 Factory notes are how the process improves. Write them whenever something cost time, even if the ticket went fine, and leave the section out when there is nothing to say.
 
