@@ -138,12 +138,12 @@ Stop, post a Handoff comment and ping, for these only:
 
 - An irreversible or destructive operation: deleting data, running a migration against real data, rewriting shared history.
 - Anything touching secrets, credentials, payments or permissions beyond what the spec describes, and on the user's own machine anything that would put a system permission prompt on their screen.
-
-A secret the spec does need is never asked for in chat. Ask the user to put it in a file outside the repository or in an environment variable, say where you will read it, and never echo it. If one is pasted in chat anyway, use it from a file and say in the report that it is in the transcript and should be rotated.
 - A discovery that changes what the user approved: the scope is far larger, or the chosen approach cannot work.
 - A plan so broken that every path forward is a guess.
 
 For everything else, decide, record the decision under Decisions, and keep going. A wrong call costs rework the user can see and undo. A session parked on a question costs them the whole wait.
+
+A secret the spec does need is never asked for in chat. Ask the user to put it in a file outside the repository, in an environment variable or in the place the platform keeps it (a keychain profile), say where you will read it, and never echo it. If one is pasted in chat anyway, use it from a file and say in the report that it is in the transcript and should be rotated.
 
 ## Handoff
 
