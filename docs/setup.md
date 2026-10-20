@@ -21,10 +21,9 @@ What a repository and its surroundings need before the first ticket goes through
 
 ## 4. The repository
 
-- **An instructions file** (`CLAUDE.md` or `AGENTS.md`) that says how to install, run, test and lint. `build` reads it in preflight and stops when it cannot find out how to run the tests. Agents never edit this file; keeping it right is your job.
+- **An instructions file** (`AGENTS.md`, or `CLAUDE.md` if that is what you use) that says how to install, run, test and lint, and how the app deploys and where to check it live: a hosting integration that builds a preview per pull request and deploys on merge, a workflow that ships a build, or nothing yet. `build` reads it in preflight and stops when it cannot find out how to run the tests; `ship` follows its deploy section. The skills name no platform of their own, so this file is where your platform choices live. Agents never edit it; keeping it right is your job.
 - **A test suite that runs.** `build` runs it once before changing anything, as the baseline.
-- **Optional: the execution skills.** See [tools/README.md](../tools/README.md). `build` works without them.
-- **Nothing else.** Specs live in Linear and plans live in `.superpowers/plans/`, which `build` ignores with its own `.gitignore`.
+- **Nothing else.** Specs live in Linear and plans live in `.factory/plans/`, which `build` ignores with its own `.gitignore`.
 
 ## 5. The skills
 

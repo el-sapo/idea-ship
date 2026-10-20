@@ -6,5 +6,6 @@ This is a plugin marketplace: the deliverable is the text of five agent skills u
 - Prose rules: no em dashes anywhere; neutral examples only (`ABC-12`, `main`); no real team keys, product names or people in skills or docs.
 - The two plugin manifests (`plugins/factory/.claude-plugin/plugin.json` and `plugins/factory/.codex-plugin/plugin.json`) carry the same version. A behaviour change bumps both and adds a line to `CHANGELOG.md`.
 - `docs/design.md` explains the shape; the skills are the truth. When they disagree, fix the doc.
-- Do not add skills from other projects by hand. `tools/superpowers-skills.py` is how third-party skills come in, with their license and a version record.
+- No third-party skills. The five skills stand on their own; do not copy skills from other projects in.
+- No platform names in the skills (no hosting, CI or store products). Platform facts belong in each project's instructions file; the skills read it and follow it.
 - Copies of these skills saved on an account or in another repository are mirrors; after editing here, tell the owner to re-save them.

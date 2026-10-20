@@ -89,7 +89,7 @@ On the parked lane there is nothing to explore: go to step 6.
 
 Gather only what changes the options or raises a flag:
 
-- **The code**, when a repository is attached or named: the README, the agent instructions file (CLAUDE.md or AGENTS.md), and the two or three areas the idea touches. Look for what the idea can reuse and for anything on the vocal list.
+- **The code**, when a repository is attached or named: the README, the agent instructions file (AGENTS.md or CLAUDE.md), and the two or three areas the idea touches. Look for what the idea can reuse and for anything on the vocal list.
 - **Linear**: search for an issue on the same idea. If one exists, add to it instead of creating a duplicate.
 - **The user's notes**, when a knowledge base connector is available: read only, never write.
 

@@ -70,6 +70,7 @@ The plugin is for sharing the process with a team or a friend; your account or t
 - **Linear** with the default statuses (Backlog, Todo, In Progress, In Review, Done) and the GitHub integration on, so branches link to issues. Nothing custom.
 - **GitHub** and a Linear connector in the sessions that run the skills.
 - **Hosting that deploys on merge** and builds a preview per pull request, for `ship` to watch. Without it, `ship` says "merged, not deployed" and stops there.
+- **An `AGENTS.md` in the repository** that says how to install, run, test and lint, and how the app deploys and where to check it live. The skills read it and follow it; they never edit it, and they name no platform of their own.
 - **A session that can run the project.** A cloud session cannot build native apps or grant device permissions; for those, run the session on your machine. The skills say what each situation leaves to you.
 
 ## The five skills
@@ -109,13 +110,9 @@ Agents stop on their own for an irreversible operation, anything touching secret
 
 [docs/design.md](docs/design.md) has the full design: lanes, templates, what each step generates, and the decisions with what was rejected. [docs/setup.md](docs/setup.md) walks through Linear, GitHub, hosting and a new repository.
 
-## Optional: Superpowers execution skills
-
-`build` keeps its own discipline (tests first, a fresh reviewer, evidence) and works on its own. When a repository carries eight execution skills from [Superpowers](https://github.com/obra/superpowers) (MIT) in `.claude/skills/`, `build` uses them for planning, test-driven work, debugging and reviews. `tools/superpowers-skills.py` copies those eight at a pinned release, records a hash per skill, and tells you when upstream has a newer release to review. See [tools/README.md](tools/README.md).
-
 ## Status
 
-v0.2. The loop has run on real tickets: `ideate`, `spec` and `build` on a native macOS app and a multiplatform app, `feature` on a four-issue feature across two repositories. That first `feature` run is what moved it from stacked pull requests to a feature branch with one final pull request; the new shape has not run on a real feature yet. `ship` has not yet run against hosting that deploys on merge. Dry runs with fresh agents are how each skill was tested before that. [docs/design.md](docs/design.md) says what is still untested and lists the known gaps, each with a workaround. Expect the skills to change as more tickets go through.
+v0.3. The loop has run on real tickets: `ideate`, `spec` and `build` on a native macOS app and a multiplatform app, `feature` on a four-issue feature across two repositories. That first `feature` run is what moved it from stacked pull requests to a feature branch with one final pull request; the new shape has not run on a real feature yet. `ship` has not yet run against hosting that deploys on merge. Dry runs with fresh agents are how each skill was tested before that. [docs/design.md](docs/design.md) says what is still untested and lists the known gaps, each with a workaround. Expect the skills to change as more tickets go through.
 
 ## Validate a checkout
 
@@ -127,7 +124,7 @@ claude plugin validate plugins/factory --strict
 
 ## Credits
 
-The triage idea behind the fast lane and the orchestrator comes from [Warp Factories](https://www.warp.dev/blog/open-infrastructure-for-building-a-software-factory) and Zach Lloyd's talk on software factories. The optional execution skills are [Superpowers](https://github.com/obra/superpowers) by Jesse Vincent.
+The triage idea behind the fast lane and the orchestrator comes from [Warp Factories](https://www.warp.dev/blog/open-infrastructure-for-building-a-software-factory) and Zach Lloyd's talk on software factories.
 
 ## License
 

@@ -29,4 +29,4 @@ Dry runs with fresh agents are the cheapest test: give a fresh session the chang
 
 ## What does not belong here
 
-Project-specific instructions (a stack, a repository's conventions) belong in that project's instructions file. Specs and plans belong in Linear and in ignored scratch folders. Third-party skills come in through `tools/superpowers-skills.py` with their license, not by hand.
+Project-specific instructions (a stack, a repository's conventions) belong in that project's instructions file. Specs and plans belong in Linear and in ignored scratch folders. Third-party skills are not copied in, and no platform (hosting, CI, a store) is named in a skill.

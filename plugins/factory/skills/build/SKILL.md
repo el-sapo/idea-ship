@@ -23,7 +23,7 @@ Read the description, the comments and any sub-issues, and the linked visual bri
 - **Sub-issues.** Build one pull request per run: the sub-issue the user named, or the first one not blocked by unmerged work. Name what remains in the report.
 - **Open decisions.** Take the default recorded for each and list them in the report.
 - **Already started.** If the issue has a branch, an open pull request or a Handoff comment, continue from there and do not start over.
-- **Changes to work in review.** Treat the user's message and the pull request's review comments as the task, on the same branch. Use `receiving-code-review` if it is available.
+- **Changes to work in review.** Treat the user's message and the pull request's review comments as the task, on the same branch. Read each comment as a claim to verify against the code, not as an order: fix what is right, and answer what is not with the evidence.
 
 Move the issue to In Progress.
 
@@ -32,53 +32,43 @@ Move the issue to In Progress.
 Check these before writing code, and report exactly what is missing instead of guessing:
 
 - A repository is attached and you can push a branch to it. Without this, stop.
-- How to install, run, test and lint, from the agent instructions file (CLAUDE.md or AGENTS.md), the README or the package scripts.
+- How to install, run, test and lint, from the agent instructions file (AGENTS.md or CLAUDE.md), the README or the package scripts. The same file says how the app is deployed and checked, when it has a deploy; follow it and name no platform of your own.
 - The baseline. Run the test suite once before changing anything. If tests already fail for reasons unrelated to this change, note which and continue; if the failures touch what you are about to change, stop.
 - Where the session runs. In the cloud it cannot build native apps or grant permissions, so say which checks that leaves to the user. On the user's own machine, installing a tool the build needs (a generator, a package manager formula) is a decision to record in the report; anything that would put a system permission prompt on their screen is a stop (see When to stop). Either way the report says where the session ran.
-- Whether the eight execution skills named in step 5 are in the repo's `.claude/skills/` folder. If they are missing, do not copy them in yourself: bringing third-party instructions into a repo is the user's step. Continue by hand as step 5 describes, and list "add the execution skills" under Follow-ups.
 
 ## 3. Answers given in advance
 
-The execution skills were written for a person at the keyboard, and they stop to ask in a few places. The user runs this step unattended, so those questions are answered here, once, for every run:
+This step runs unattended, so the questions a person at the keyboard would be asked are answered here, once, for every run:
 
 - The design is approved on the Linear issue. Do not brainstorm or write design documents.
-- The plan goes in `.superpowers/plans/`, which git ignores. Do not wait for a plan review.
-- Execute subagent-driven. If there is no subagent tool, execute inline.
+- The plan goes in `.factory/plans/`, which git ignores. Do not wait for a plan review.
+- Execute with a fresh implementer subagent per task. If there is no subagent tool, execute inline.
 - Work in place on the branch, in the worktree the prompt names if it names one. Do not create a worktree.
 - When finished, push the branch and open a pull request. Never merge.
 - Commit only code, tests and the docs the spec asks for. Never commit specs, plans or ledgers.
 
-If the repo's agent instructions file (CLAUDE.md or AGENTS.md) says otherwise on one of these, the file wins, and you mention it in the report.
+If the repo's agent instructions file (AGENTS.md or CLAUDE.md) says otherwise on one of these, the file wins, and you mention it in the report.
 
 ## 4. Branch and plan
 
 Create the branch with the name Linear suggests for the issue, so the pull request links itself to the issue. Otherwise use the identifier and a short slug, for example `abc-12-venue-sign-in`. Start it from the branch the prompt names, when an orchestrator names one (a feature branch, or the previous step's branch), otherwise from the default branch.
 
-Make `.superpowers/plans/` ignore itself by putting a `.gitignore` containing `*` inside it. The execution skills do the same for their own scratch folder, `.superpowers/sdd/`.
+Make `.factory/plans/` ignore itself by putting a `.gitignore` containing `*` inside it.
 
-Subagents cannot open Linear, so save the spec text as `.superpowers/plans/<identifier>-spec.md`. Then write the task plan to `.superpowers/plans/<identifier>.md`, with `writing-plans` if it is available, from the spec's Scope, Plan, Done when and Needs attention:
+Subagents cannot open Linear, so save the spec text as `.factory/plans/<identifier>-spec.md`. Then write the task plan to `.factory/plans/<identifier>.md` from the spec's Scope, Plan, Done when and Needs attention, as a numbered list of small tasks, each with the files it touches and the test that proves it:
 
 - Every Done when check that can be automated becomes a named test in the plan.
 - Every attention item with a high risk of breaking gets a test that would catch the break.
 
 ## 5. Execute
 
-The repo carries eight execution skills in `.claude/skills/`, copied unmodified from Superpowers: `writing-plans`, `subagent-driven-development`, `executing-plans`, `test-driven-development`, `systematic-debugging`, `verification-before-completion`, `requesting-code-review` and `receiving-code-review`.
+Run the plan one task at a time, with a fresh implementer subagent per task when the session has a subagent tool, and inline otherwise. For each task: write the failing test, watch it fail, write the least code that passes, watch it pass, and commit. Review each task's diff against the plan before the next one starts.
 
-With them, run the plan with `subagent-driven-development`: a fresh implementer per task, a review after each task, and a whole-branch review at the end. Use `test-driven-development` inside each task and `systematic-debugging` when something fails for a reason you do not understand. Fall back to `executing-plans` when there is no subagent tool.
+When something fails for a reason you do not understand, find the cause before changing code: reproduce it, read the error and the code path, form one hypothesis and test it. Never fix by trial.
 
-Because they are copies, their text has two quirks:
+When all tasks are done, have a fresh subagent review the whole diff against the spec. If the session has no way to get a fresh reviewer, review the diff yourself and say in the report that it was a self-review, so the user knows to look harder.
 
-- They refer to each other as `superpowers:<name>`. Read that as the skill of the same name in the repo's folder.
-- They point to three skills that are left out on purpose: `brainstorming`, `using-git-worktrees` and `finishing-a-development-branch`. The answers in step 3 and steps 7 and 8 here take their place.
-
-They also keep a ledger of the rulings they make along the way. Those go into the report's Decisions, and the report and ping below replace their closing summary.
-
-Without the execution skills, keep the same discipline by hand. For each step, write the failing test, watch it fail, write the least code that passes, watch it pass, and commit. When all steps are done, have a fresh subagent review the whole diff against the spec.
-
-If the session has no way to get a fresh reviewer, review the diff yourself and say in the report that it was a self-review, so the user knows to look harder.
-
-Either way:
+Always:
 
 - **Follow the repo.** Its agent instructions, linter, formatter and type checks, and one similar feature as the model for naming and layout.
 - **Stay in scope.** When you notice a problem outside the spec's Scope, do not fix it here. File it as a Backlog issue linked to this one and list it in the report.
@@ -86,7 +76,7 @@ Either way:
 
 ## 6. Verify with evidence
 
-Use `verification-before-completion` if it is available. Run the full test suite, the linter, the type check and the build. Then walk the Done when list, run each check's Verify, and keep the evidence: the command and its result, the test name, or a screenshot for a check that says what you see. For those, run the app and look at it with the session's browser tool when there is one.
+Run the full test suite, the linter, the type check and the build. Then walk the Done when list, run each check's Verify, and keep the evidence: the command and its result, the test name, or a screenshot for a check that says what you see. For those, run the app and look at it with the session's browser tool when there is one.
 
 A check without evidence is "not verified". It is never "passed". A check the spec marked as the user's to run, or that needs something only they can grant, is reported as "owner" with whatever partial evidence you have, and counted apart from the others, so "3 of 6 passed, 3 owner" says what it means.
 

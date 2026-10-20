@@ -2,6 +2,14 @@
 
 The plugin version lives in `plugins/factory/.claude-plugin/plugin.json` and `plugins/factory/.codex-plugin/plugin.json`; both move together.
 
+## 0.3.0 (2026-10-19)
+
+- `build`: no third-party execution skills. The by-hand discipline (tests first, a fresh implementer per task, a fresh reviewer at the end, evidence per check) is the only path, and the preflight no longer looks for copied skills. The scratch folder is `.factory/plans/`, in place of `.superpowers/plans/`.
+- `build`, `ship`: the repository's instructions file also says how the app deploys and where to check it live. The skills follow it and name no platform of their own, so hosting, CI and stores vary per app without touching the skills.
+- `build`, `ideate`, `spec`: the instructions file is named as `AGENTS.md` first, `CLAUDE.md` second.
+- Removed `tools/superpowers-skills.py` and its README; the CI step that compiled it is gone.
+- Docs and README updated to match; `docs/setup.md` says what the instructions file must cover.
+
 ## 0.2.0 (2026-10-17)
 
 From the first real `feature` run.

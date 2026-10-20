@@ -47,7 +47,7 @@ Then confirm the commits reached the base: `git merge-base --is-ancestor <head> 
 
 ## 4. Watch it go live
 
-If the repo deploys on merge, through a workflow on the default branch or a hosting integration, watch the deploy until it finishes. When it succeeds, check the result without changing anything: load the live URL or health endpoint, and repeat any Done when check that can be observed on the live site.
+If the repo deploys on merge, through a workflow on the default branch or a hosting integration, watch the deploy until it finishes. The repo's agent instructions file (AGENTS.md or CLAUDE.md) says how it deploys and where to look; follow it and name no platform of your own. When it succeeds, check the result without changing anything: load the live URL or health endpoint, and repeat any Done when check that can be observed on the live site.
 
 If the repo has no automatic deploy, say so plainly: merged, not deployed, and what a release would take.
 

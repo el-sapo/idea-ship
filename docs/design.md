@@ -129,7 +129,7 @@ Decisions and reports live on the Linear issue. Only code is committed.
 | `spec` | "Options considered" comment | Linear |
 | `spec` | Sub-issues in build order, only when larger than one pull request | Linear |
 | `spec` | Attention page, only when something needs the person's eyes | A published page or inline |
-| `build` | Spec copy and task plan | `.superpowers/plans/` in the working copy, ignored by git, never committed |
+| `build` | Spec copy and task plan | `.factory/plans/` in the working copy, ignored by git, never committed |
 | `build` | Branch, code and tests | GitHub, committed |
 | `build` | Pull request | GitHub |
 | `build` | Report: Built, Checks, Needs attention, Decisions, Follow-ups | A Linear comment, plus a visual report page |
@@ -167,9 +167,9 @@ Factory notes are one line for anything that made a ticket harder than it should
 | The agent decides the depth | Fixed limits (one sentence, a word count) | Not every ticket is that small |
 | No fixed look for the pages | A style template | Loose over strict; correct when needed |
 | The spec stays in Linear, never in the repository | Living specs in the repository | Linear already holds the spec; a second home would be a second truth |
-| `build` works by hand, execution skills optional | Requiring a copy of Superpowers in every repository | The by-hand path proved enough on the first real run; the copies are a bonus |
-| Eight Superpowers execution skills, as copies, when wanted | The whole Superpowers plugin | Its design and finishing steps overlap with `ideate`, `spec` and `ship`, and it stops four times to ask a person |
-| The owner brings third-party skills into a repository | The agent doing it, or editing the repository's instructions file | An agent's attempt was blocked as instruction poisoning in a test, and it should be |
+| `build` keeps its own discipline: tests first, a fresh reviewer, evidence | Copies of third-party execution skills in every repository | The by-hand path was enough on every real run, and the copies added a dependency and a version to track |
+| Platform facts live in the repository's instructions file; the skills name no platform | Deploy steps or platform adapters inside the skills | Every app deploys differently, and a platform written into a skill breaks the next app |
+| Agents never edit a repository's instructions file | The agent adding to it | An agent's attempt was blocked as instruction poisoning in a test, and it should be |
 | A fast lane in `ideate` | Every idea going through options and a spec turn | Taken from Warp Factories' triage step (implement, spec or wait) |
 | Visual proof in `build` stays a soft rule | Making it mandatory | Production is a single person for now |
 | No scoring of runs | Two facts recorded on each close-out | It would make the flow more complex |
@@ -185,7 +185,6 @@ Factory notes are one line for anything that made a ticket harder than it should
 Thought through and not built:
 
 - **A skill that reads the factory notes.** `ship` writes one line per friction on every close-out, and nothing reads them. A sixth skill could read those notes and the owner's corrections across recent issues and propose skill edits. A necessity for any factory in the long run, and a token cost, so a nice-to-have for now.
-- **A weekly version check.** A scheduled task that runs `tools/superpowers-skills.py check` and files an issue when a new Superpowers release touches one of the eight skills.
 - **A team layer for three to five developers.** Ticket ownership and a limit on work in progress, one teammate's review after the agent's, autonomy levels per repository, a release step.
 - **Parallel steps in `feature`.** v0.1 runs steps one at a time. Independent sub-issues could run at once, on separate files.
 
@@ -193,7 +192,7 @@ Considered and declined: mandatory visual proof in `build`; scoring each run; be
 
 ## Tested, and not
 
-Tested on real tickets: `ideate`, `spec` and `build` end to end on a native desktop app and on a multiplatform app, including a run on the person's machine with a tool install and an owner-only permission check; `feature` on a multi-issue feature. Tested in dry runs with fresh agents: the three lanes, the Foundation card, the feature plan against a fixture of four sub-issues, `build` with and without the execution skills.
+Tested on real tickets: `ideate`, `spec` and `build` end to end on a native desktop app and on a multiplatform app, including a run on the person's machine with a tool install and an owner-only permission check; `feature` on a multi-issue feature. Tested in dry runs with fresh agents: the three lanes, the Foundation card, the feature plan against a fixture of four sub-issues, `build` with and without a subagent tool.
 
 Not tested yet: `ship` against hosting that deploys on merge; a fast-lane spec going through `build`; the Codex manifest; `feature` continuing from a "Feature run" comment in a later session.
 
