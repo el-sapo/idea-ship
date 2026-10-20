@@ -1,0 +1,13 @@
+{
+  "name": "factory",
+  "version": "0.3.1",
+  "description": "The factory loop: ideate, spec, build, ship, and feature to run a whole feature. The Linear issue is the thread, sessions are disposable, and you step in at most four times per ticket.",
+  "author": {
+    "name": "Federico Lagarmilla"
+  },
+  "homepage": "https://github.com/el-sapo/sdlc-fede/tree/main/plugins/factory",
+  "repository": "https://github.com/el-sapo/sdlc-fede",
+  "license": "MIT",
+  "keywords": ["sdlc", "linear", "github", "pull-request", "agents", "workflow"],
+  "skills": "./skills/"
+}

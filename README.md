@@ -54,7 +54,11 @@ codex plugin marketplace add el-sapo/sdlc-fede
 codex plugin add factory@sdlc-fede
 ```
 
-Start a new Codex task afterwards so it discovers the skills. The Codex manifest ships; the skills have been exercised with Claude Code.
+Start a new Codex task afterwards so it discovers the skills.
+
+With Cursor, add `https://github.com/el-sapo/sdlc-fede` as a marketplace in the plugin settings, then add `factory` from the `sdlc-fede` marketplace.
+
+The Codex and Cursor manifests ship; the skills have been exercised with Claude Code.
 
 ### Where the skills load
 
@@ -121,6 +125,8 @@ python3 scripts/validate.py
 claude plugin validate .claude-plugin/marketplace.json --strict
 claude plugin validate plugins/factory --strict
 ```
+
+The validator also checks that the Codex and Cursor manifests list the same plugin at the same version.
 
 ## Credits
 

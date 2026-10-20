@@ -16,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 MARKETPLACE = ROOT / ".claude-plugin" / "marketplace.json"
 CODEX_MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
+CURSOR_MARKETPLACE = ROOT / ".cursor-plugin" / "marketplace.json"
 KEBAB = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
 EM_DASH = "—"
@@ -100,6 +101,25 @@ def check_codex_marketplace(expected):
             problem(CODEX_MARKETPLACE, f"plugin '{name}' points at {path}, Claude manifest points at {folder.relative_to(ROOT)}")
 
 
+def check_cursor_marketplace(expected):
+    data = load_json(CURSOR_MARKETPLACE)
+    if data is None:
+        return
+    for key in ("name", "owner", "plugins"):
+        if key not in data:
+            problem(CURSOR_MARKETPLACE, f"missing '{key}'")
+    listed = {}
+    for entry in data.get("plugins") or []:
+        source = entry.get("source")
+        listed[entry.get("name")] = source.get("path") if isinstance(source, dict) else source
+    for name, folder in expected:
+        path = listed.get(name)
+        if path is None:
+            problem(CURSOR_MARKETPLACE, f"plugin '{name}' is not listed")
+        elif (ROOT / path).resolve() != folder:
+            problem(CURSOR_MARKETPLACE, f"plugin '{name}' points at {path}, Claude manifest points at {folder.relative_to(ROOT)}")
+
+
 def check_plugin(name, folder):
     manifest = folder / ".claude-plugin" / "plugin.json"
     data = load_json(manifest)
@@ -119,6 +139,14 @@ def check_plugin(name, folder):
             problem(codex, f"name '{codex_data.get('name')}' differs from '{name}'")
         if codex_data.get("version") != data.get("version"):
             problem(codex, f"version {codex_data.get('version')} differs from Claude manifest {data.get('version')}")
+
+    cursor = folder / ".cursor-plugin" / "plugin.json"
+    cursor_data = load_json(cursor)
+    if cursor_data is not None and data is not None:
+        if cursor_data.get("name") != name:
+            problem(cursor, f"name '{cursor_data.get('name')}' differs from '{name}'")
+        if cursor_data.get("version") != data.get("version"):
+            problem(cursor, f"version {cursor_data.get('version')} differs from Claude manifest {data.get('version')}")
 
     skills = folder / "skills"
     if not skills.is_dir():
@@ -182,6 +210,7 @@ def check_root_files():
 def main():
     sources = check_marketplace()
     check_codex_marketplace(sources)
+    check_cursor_marketplace(sources)
     for name, folder in sources:
         check_plugin(name, folder)
     check_prose()

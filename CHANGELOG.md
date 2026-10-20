@@ -1,6 +1,10 @@
 # Changelog
 
-The plugin version lives in `plugins/factory/.claude-plugin/plugin.json` and `plugins/factory/.codex-plugin/plugin.json`; both move together.
+The plugin version lives in `plugins/factory/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`; the three move together.
+
+## 0.3.1 (2026-10-19)
+
+- Cursor manifests: `.cursor-plugin/marketplace.json` at the root and `plugins/factory/.cursor-plugin/plugin.json`, so Cursor shows the marketplace as `sdlc-fede` instead of a generated name. The validator checks them.
 
 ## 0.3.0 (2026-10-19)
 
