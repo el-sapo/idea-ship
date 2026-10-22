@@ -10,12 +10,11 @@ Those copies are mirrors. Nothing syncs them with the plugin, so re-save them af
 
 ## 2. Connect accounts
 
-The sessions that run the skills need two connections:
+The sessions that run the skills need the repository, with push access and a way to open pull requests, so `build` can open a pull request and `ship` can merge.
 
-- **The Linear connector.** Every skill reads the issue and writes back to it. The connector writes as you, so Linear will usually not notify you of an agent's comment; each skill ends with a short ping in the session for that reason.
-- **The repository, with push access and a way to open pull requests**, so `build` can open a pull request and `ship` can merge.
+The Linear connector is your choice. With it, every skill reads the issue and writes back to it, so any later session can pick up the work; the connector writes as you, so Linear will usually not notify you of an agent's comment, and each skill ends with a short ping in the session for that reason. Without it, the chat is the thread: each skill gives you its text to paste instead of saving it, and `feature`, which keeps a run's state on the parent issue, cannot run. Setup says this once and records the choice in the instructions file; no skill asks you to connect a tracker after that.
 
-In Linear, turn on the GitHub integration, so a branch named the way Linear suggests links its pull request to the issue. `build` uses Linear's suggested branch name when it can read it.
+If you use Linear, turn on the GitHub integration, so a branch named the way Linear suggests links its pull request to the issue. `build` uses Linear's suggested branch name when it can read it.
 
 Optionally, connect the hosting, if the app deploys and you want `ship` to watch the deploy and check the result live. CI is optional too: when it exists, `build` waits for it and fixes failures its change caused, and `ship` treats a red check as not ready.
 
@@ -38,7 +37,7 @@ Setup checks:
 
 - the commands: install, run, test and lint, each one run and seen to work;
 - the connections: Linear can be read, a branch can be pushed, a pull request can be opened, the hosting is visible when the repository shows any;
-- the Linear team, a project for the repository, and the statuses;
+- when Linear is connected, the team, a project for the repository, and the statuses;
 - branch protection on the default branch, which it reads and for which it recommends a rule.
 
 It leaves to you:

@@ -75,8 +75,8 @@ The plugin is for sharing the process with a team or a friend; your account or t
 
 ## What you need
 
-- **Linear** with the default statuses (Backlog, Todo, In Progress, In Review, Done) and the GitHub integration on, so branches link to issues. Nothing custom.
-- **GitHub** and a Linear connector in the sessions that run the skills.
+- **GitHub** in the sessions that run the skills.
+- **Linear, if you want the issue to be the thread**, with the default statuses (Backlog, Todo, In Progress, In Review, Done), the GitHub integration on so branches link to issues, and a Linear connector in the sessions. Nothing custom. Without it the chat is the thread: each skill gives you its text to paste, and `feature` cannot run. `setup` says so once and never asks again.
 - **Hosting that deploys on merge** and builds a preview per pull request, for `ship` to watch. Without it, `ship` says "merged, not deployed" and stops there.
 - **An `AGENTS.md` in the repository** that says how to install, run, test and lint, and how the app deploys and where to check it live. The skills read it and follow it, and they name no platform of their own. Every agent obeys it, so `setup` only proposes it, as a pull request you merge; after that, keeping it right is yours.
 - **A session that can run the project.** A cloud session cannot build native apps or grant device permissions; for those, run the session on your machine. The skills say what each situation leaves to you.

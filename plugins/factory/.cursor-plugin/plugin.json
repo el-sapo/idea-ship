@@ -1,6 +1,6 @@
 {
   "name": "factory",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "The factory loop: setup once per project, then ideate, spec, build, ship, and feature to run a whole feature. The Linear issue is the thread, sessions are disposable, and you step in at most four times per ticket.",
   "author": {
     "name": "Federico Lagarmilla"
