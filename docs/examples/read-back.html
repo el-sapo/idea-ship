@@ -1,0 +1,93 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Read-back: ABC-12</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#f3f1ec;--panel:#fff;--inset:#f6f4ef;--fg:#1b1f23;--muted:#5d646c;--line:#d9d4ca;--accent:#0d6b5e;--accent-soft:#d6ebe6;--p1:#5a6cab;--p1-soft:#e0e4f4;--human:#c7791a;--human-soft:#fbe9cf;--risk:#b23a3a;--risk-soft:#f7dcdc;--ok:#2f7d4f;--ok-soft:#dcefe2;
+--display:"Bricolage Grotesque",system-ui,sans-serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.45;padding:20px 16px 40px}
+.wrap{max-width:420px;margin:0 auto;display:grid;gap:22px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1}h1{font-size:28px;font-weight:800;letter-spacing:-.02em}h2{font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)}h3{font-size:16px;font-weight:700}
+p{margin:0}.muted{color:var(--muted);font-size:14px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{font:600 11.5px var(--mono);padding:3px 8px;border-radius:4px;white-space:nowrap}
+.low{background:var(--ok-soft);color:var(--ok)}.med{background:var(--human-soft);color:var(--human)}.high{background:var(--risk-soft);color:var(--risk)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px;box-shadow:0 1px 2px rgba(27,31,35,.06)}
+section{display:grid;gap:10px}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:6px;font-size:12.5px;text-align:center}
+.flow .box{background:var(--p1-soft);color:var(--p1);border-radius:8px;padding:8px 6px;font-weight:600}
+.flow .box.new{background:var(--accent-soft);color:var(--accent);outline:2px dashed var(--accent);outline-offset:-2px}
+.flow .arrow{color:var(--muted)}
+.wire{border:1.5px solid var(--fg);border-radius:14px;padding:10px;display:grid;gap:8px;font-size:12px;background:var(--inset)}
+.wire .bar{height:10px;background:var(--line);border-radius:5px}.wire .row{display:flex;justify-content:space-between;border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--panel)}
+.wire .btn{border:1.5px solid var(--fg);border-radius:6px;padding:6px;text-align:center;font-weight:600}
+.card{border-left:4px solid var(--human)}.card.r{border-left-color:var(--risk)}
+.card .k{font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+table{width:100%;border-collapse:collapse;font-size:12.5px}td,th{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
+ol{margin:0;padding-left:20px;display:grid;gap:8px;font-size:14px}ol b{font-family:var(--mono);font-size:12.5px}
+.def{color:var(--accent);font-weight:600}
+.lane{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted)}
+</style>
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <span class="eyebrow">ideate · read-back</span>
+    <h1>Weekly meal plan from saved recipes</h1>
+    <div class="tags"><span class="tag med">Complexity medium</span><span class="tag low">Risk of breaking low</span></div>
+    <p class="muted">You pick up to seven saved recipes, the app lays them out Monday to Sunday and builds one shopping list. The plan lives on the device; nothing syncs.</p>
+    <div class="lane"><span>Lane expected</span><span class="tag" style="background:var(--p1-soft);color:var(--p1)">options</span></div>
+  </header>
+
+  <section>
+    <h2>How it works</h2>
+    <div class="panel">
+      <div class="flow">
+        <div class="box">Saved recipes</div><div class="arrow">→</div>
+        <div class="box new">Plan (7 slots)</div><div class="arrow">→</div>
+        <div class="box new">Shopping list</div>
+      </div>
+      <p class="muted">The list merges ingredients across the week and groups them by aisle, the way the single-recipe list already does.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>What it looks like</h2>
+    <div class="wire">
+      <div class="bar" style="width:55%"></div>
+      <div class="row"><span>Mon</span><span>Lentil soup</span></div>
+      <div class="row"><span>Tue</span><span>+ add recipe</span></div>
+      <div class="row"><span>Wed</span><span>Pasta al limone</span></div>
+      <div class="row" style="color:var(--muted)"><span>Thu … Sun</span><span>empty</span></div>
+      <div class="btn">Shopping list (12 items)</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Needs your attention</h2>
+    <div class="panel card">
+      <span class="k">Scope surprise</span>
+      <h3>Ingredient units do not add up yet</h3>
+      <div class="tags"><span class="tag med">Complexity medium</span><span class="tag low">Risk of breaking low</span></div>
+      <table><tr><th>Recipe A</th><th>Recipe B</th><th>Merged</th></tr><tr><td>200 g rice</td><td>1 cup rice</td><td>?</td></tr></table>
+      <p class="muted">Recipes store units as free text. Merging a week's list needs a unit table, which is more than the plan screen itself.</p>
+      <p><span class="def">Default:</span> merge only exact unit matches, list the rest twice. Needs your answer.</p>
+    </div>
+    <div class="panel card r">
+      <span class="k">Behaviour change</span>
+      <h3>The shopping list becomes week-based</h3>
+      <div class="tags"><span class="tag low">Complexity low</span><span class="tag med">Risk of breaking medium</span></div>
+      <p class="muted">Today the list belongs to one recipe. If the plan owns it, opening a recipe's list from its page has to change or go.</p>
+      <p><span class="def">Default:</span> keep both; the recipe page shows its own list, the plan shows the merged one.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Decisions</h2>
+    <ol>
+      <li><b>Units.</b> A: exact matches only, rest listed twice <span class="def">(default)</span>. B: a small unit table now. C: no merging, one list per day.</li>
+      <li><b>Recipe list.</b> Keep per-recipe lists <span class="def">(default)</span>, or replace with the plan's.</li>
+      <li><b>Plan length.</b> Seven days <span class="def">(default)</span>, or five.</li>
+    </ol>
+    <p class="muted">Answer by number: "1 B, 2 ok, 3 ok".</p>
+  </section>
+</div>

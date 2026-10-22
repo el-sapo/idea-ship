@@ -1,4 +1,4 @@
-# sdlc-fede
+# Factory
 
 A lean software factory for solo builders and small teams. Six agent skills: `setup` readies a project once, and five carry a ticket from a spoken idea to a merged pull request. The Linear issue is the thread, sessions are disposable, and you step in at most four times per ticket.
 
@@ -23,6 +23,13 @@ flowchart LR
 
 You speak four times. Everything in between is an agent working alone, in the cloud or on your machine. Every status where the issue rests is your turn.
 
+<p align="center">
+  <img src="docs/examples/read-back.png" width="300" alt="The read-back ideate shows seconds after an idea: what it understood, a flow, a grey-box mockup, attention cards and numbered decisions">
+  &nbsp;&nbsp;
+  <img src="docs/examples/build-report.png" width="300" alt="The report build leaves on the issue: what was built, every check with its evidence, attention items and the decisions it took">
+</p>
+<p align="center"><sub>Left: the read-back you get seconds after an idea. Right: the report <code>build</code> leaves on the issue. Both are example pages from <a href="docs/examples/">docs/examples</a>; real ones vary with the idea.</sub></p>
+
 | You say | Skill | The agent does alone | On the issue | Status after |
 |---|---|---|---|---|
 | An idea, by voice is fine | `ideate` | Visual read-back at once, then explores and prepares options | Idea, flow, attention items, options, numbered decisions | Backlog |
@@ -33,6 +40,8 @@ You speak four times. Everything in between is an agent working alone, in the cl
 Before the first ticket, say "setup" once in the repository: it proves the project's commands, checks every connection, proposes `AGENTS.md` as a pull request you merge, and can hand a first small idea to `ideate`. When a ticket is small and clear, `ideate` takes the **fast lane** and files a ready-to-build spec, so you speak three times instead of four. When a feature is several tickets, `feature` runs them for you: it posts a plan, waits for your "go", then drives one build per sub-issue on a feature branch, verifies and integrates each, and hands you one pull request to ship.
 
 ## Install
+
+The plugin is `factory`, from the `sdlc-fede` marketplace.
 
 With Claude Code 2.1.275 or later, one step:
 

@@ -1,0 +1,77 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Build report: ABC-12</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;700&display=swap">
+<style>
+:root{--bg:#f3f1ec;--panel:#fff;--inset:#f6f4ef;--fg:#1b1f23;--muted:#5d646c;--line:#d9d4ca;--accent:#0d6b5e;--accent-soft:#d6ebe6;--p1:#5a6cab;--p1-soft:#e0e4f4;--human:#c7791a;--human-soft:#fbe9cf;--risk:#b23a3a;--risk-soft:#f7dcdc;--ok:#2f7d4f;--ok-soft:#dcefe2;
+--display:"Bricolage Grotesque",system-ui,sans-serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.45;padding:20px 16px 40px}
+.wrap{max-width:420px;margin:0 auto;display:grid;gap:22px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.1}h1{font-size:28px;font-weight:800;letter-spacing:-.02em}h2{font-size:14px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)}h3{font-size:16px;font-weight:700}
+p{margin:0}.muted{color:var(--muted);font-size:14px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{font:600 11.5px var(--mono);padding:3px 8px;border-radius:4px;white-space:nowrap}
+.low,.pass{background:var(--ok-soft);color:var(--ok)}.med,.owner{background:var(--human-soft);color:var(--human)}.high,.fail{background:var(--risk-soft);color:var(--risk)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px;box-shadow:0 1px 2px rgba(27,31,35,.06)}
+section{display:grid;gap:10px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.sum div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}.sum b{display:block;font:800 24px var(--display)}.sum span{font:500 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.check{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:10px 0;border-bottom:1px solid var(--line)}.check:last-child{border:0;padding-bottom:0}.check:first-child{padding-top:0}
+.check .tag{margin-top:2px}.check .ev{font:500 11.5px var(--mono);color:var(--muted);margin-top:3px;word-break:break-word}
+.card{border-left:4px solid var(--human)}.card .k{font:600 11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+table{width:100%;border-collapse:collapse;font-size:12.5px}td,th{text-align:left;padding:5px 6px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
+ol{margin:0;padding-left:20px;display:grid;gap:8px;font-size:14px}ol b{font-family:var(--mono);font-size:12.5px}.def{color:var(--accent);font-weight:600}
+.link{font:600 13px var(--mono);color:var(--p1)}
+.wire{border:1.5px solid var(--fg);border-radius:14px;padding:10px;display:grid;gap:8px;font-size:12px;background:var(--inset)}
+.wire .row{display:flex;justify-content:space-between;border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--panel)}.wire .btn{border:1.5px solid var(--fg);border-radius:6px;padding:6px;text-align:center;font-weight:600}
+</style>
+<div class="wrap">
+  <header style="display:grid;gap:8px">
+    <span class="eyebrow">build · report</span>
+    <h1>ABC-12 built: weekly meal plan</h1>
+    <p class="muted">Branch <code>abc-12-weekly-meal-plan</code>, 9 commits, 14 files. Pull request <span class="link">#41</span> · preview <span class="link">pr-41.example.app</span></p>
+    <div class="sum"><div><b>5</b><span>passed</span></div><div><b>1</b><span>owner</span></div><div><b>0</b><span>failed</span></div></div>
+  </header>
+
+  <section>
+    <h2>Built</h2>
+    <div class="wire">
+      <div class="row"><span>Mon</span><span>Lentil soup</span></div>
+      <div class="row"><span>Tue</span><span>Pasta al limone</span></div>
+      <div class="row" style="color:var(--muted)"><span>Wed … Sun</span><span>+ add</span></div>
+      <div class="btn">Shopping list (19 items, 2 unmerged)</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Checks</h2>
+    <div class="panel">
+      <div class="check"><span class="tag pass">pass</span><div>A plan holds up to seven recipes, one per day<div class="ev">PlanTests.testSevenSlots · 3 tests, 0 failed</div></div></div>
+      <div class="check"><span class="tag pass">pass</span><div>An eighth recipe is refused with a message<div class="ev">PlanTests.testEighthRefused</div></div></div>
+      <div class="check"><span class="tag pass">pass</span><div>Exact-unit ingredients merge, others are listed twice<div class="ev">ShoppingListTests.testMerge · 200 g + 300 g → 500 g; 1 cup kept apart</div></div></div>
+      <div class="check"><span class="tag pass">pass</span><div>The recipe page still shows its own list<div class="ev">RecipeListTests, unchanged, 11 tests green</div></div></div>
+      <div class="check"><span class="tag pass">pass</span><div>Full suite and lint green on CI<div class="ev">ci: 84 tests, 0 failed · lint clean · run 1829</div></div></div>
+      <div class="check"><span class="tag owner">owner</span><div>The plan survives an app restart on a device<div class="ev">Needs a device; simulator persistence differs. Steps on the pull request</div></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Needs attention</h2>
+    <div class="panel card">
+      <span class="k">Shaky assumption</span>
+      <h3>Aisle grouping uses the ingredient's first word</h3>
+      <div class="tags"><span class="tag low">Complexity low</span><span class="tag med">Risk of breaking medium</span></div>
+      <table><tr><th>Ingredient</th><th>Aisle today</th><th>Merged list</th></tr><tr><td>Fresh basil</td><td>Produce</td><td>Produce</td></tr><tr><td>Basil, dried</td><td>Spices</td><td>Produce</td></tr></table>
+      <p class="muted">The existing grouping was written for one recipe at a time; across a week the mismatch shows. Kept as is, in scope of the spec. A follow-up issue is filed.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Decisions</h2>
+    <ol>
+      <li><b>Empty day.</b> Shown as a slot with "add" <span class="def">(taken)</span>, rather than hidden. The spec did not say.</li>
+      <li><b>Plan storage.</b> The existing recipe store, one new table <span class="def">(taken)</span>. No new dependency.</li>
+    </ol>
+    <p class="muted">Review the pull request, then say "ship ABC-12" or what to change.</p>
+  </section>
+</div>
