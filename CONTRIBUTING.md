@@ -30,3 +30,5 @@ Dry runs with fresh agents are the cheapest test: give a fresh session the chang
 ## What does not belong here
 
 Project-specific instructions (a stack, a repository's conventions) belong in that project's instructions file. Specs and plans belong in Linear and in ignored scratch folders. Third-party skills are not copied in, and no platform (hosting, CI, a store) is named in a skill.
+
+A plugin folder holds only text, complete images (PNG, JPEG, GIF, WebP, SVG) and fonts: no system files such as `.DS_Store`, no symbolic links, no file names a Windows checkout cannot hold, no package manifests, lockfiles or package runners, nothing but images over 256 KiB, and at most 512 files. `python3 scripts/validate.py` checks all of it.
