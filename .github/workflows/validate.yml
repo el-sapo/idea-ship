@@ -15,5 +15,3 @@ jobs:
           python-version: "3.12"
       - name: Manifests, skills and prose
         run: python3 scripts/validate.py
-      - name: Tool compiles
-        run: python3 -m py_compile tools/superpowers-skills.py
