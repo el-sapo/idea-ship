@@ -1,9 +1,9 @@
-# factory
+# idea-ship
 
 Six skills: `setup` readies a project once, and five carry a Linear ticket from a spoken idea to a merged pull request. Install the plugin, connect Linear and GitHub in the session, say "setup" once per project, and speak four times per ticket.
 
 ```sh
-claude plugin install factory --marketplace el-sapo/sdlc-fede --scope user
+claude plugin install idea-ship --marketplace el-sapo/sdlc-fede --scope user
 ```
 
 One step on Claude Code 2.1.275 or later; older versions add the marketplace first (see the [repository README](../../README.md#install)).
@@ -17,7 +17,7 @@ One step on Claude Code 2.1.275 or later; older versions add the marketplace fir
 | `ship` | "ship ABC-12" | a merge, a live check, a close-out with factory notes | Done |
 | `feature` | "build the feature ABC-47" | a plan you approve, then a feature branch with each verified step merged in, a run comment, and one final pull request with its report | In Review |
 
-Every skill ends with a message short enough for a phone notification that says what to do next. The skills answer to plain words; `/factory:ideate` and friends work too.
+Every skill ends with a message short enough for a phone notification that says what to do next. The skills answer to plain words; `/idea-ship:ideate` and friends work too.
 
 ## Three things to know
 

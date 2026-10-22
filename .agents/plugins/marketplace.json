@@ -3,12 +3,15 @@
   "interface": {
     "displayName": "SDLC Fede"
   },
+  "renames": {
+    "factory": "idea-ship"
+  },
   "plugins": [
     {
-      "name": "factory",
+      "name": "idea-ship",
       "source": {
         "source": "local",
-        "path": "./plugins/factory"
+        "path": "./plugins/idea-ship"
       },
       "policy": {
         "installation": "AVAILABLE",

@@ -1,4 +1,4 @@
-# Factory
+# Idea Ship
 
 A lean software factory for solo builders and small teams. Six agent skills: `setup` readies a project once, and five carry a ticket from a spoken idea to a merged pull request. The Linear issue is the thread, sessions are disposable, and you step in at most four times per ticket.
 
@@ -41,33 +41,33 @@ Before the first ticket, say "setup" once in the repository: it proves the proje
 
 ## Install
 
-The plugin is `factory`, from the `sdlc-fede` marketplace.
+The plugin is `idea-ship` (display name "Idea Ship"), from the `sdlc-fede` marketplace.
 
 With Claude Code 2.1.275 or later, one step:
 
 ```sh
-claude plugin install factory --marketplace el-sapo/sdlc-fede --scope user
+claude plugin install idea-ship --marketplace el-sapo/sdlc-fede --scope user
 ```
 
 Or in two, which works on older versions too:
 
 ```sh
 claude plugin marketplace add el-sapo/sdlc-fede --scope user
-claude plugin install factory@sdlc-fede --scope user
+claude plugin install idea-ship@sdlc-fede --scope user
 ```
 
-Restart the session afterwards; skills are discovered at session start. The skills then answer to `/factory:setup`, `/factory:ideate`, `/factory:spec`, `/factory:build`, `/factory:ship` and `/factory:feature`, and to plain words such as "spec it", "code ABC-12", "ship ABC-12" and "build the feature ABC-47".
+Restart the session afterwards; skills are discovered at session start. The skills then answer to `/idea-ship:setup`, `/idea-ship:ideate`, `/idea-ship:spec`, `/idea-ship:build`, `/idea-ship:ship` and `/idea-ship:feature`, and to plain words such as "spec it", "code ABC-12", "ship ABC-12" and "build the feature ABC-47".
 
 With Codex:
 
 ```sh
 codex plugin marketplace add el-sapo/sdlc-fede
-codex plugin add factory@sdlc-fede
+codex plugin add idea-ship@sdlc-fede
 ```
 
 Start a new Codex task afterwards so it discovers the skills.
 
-With Cursor, add `https://github.com/el-sapo/sdlc-fede` as a marketplace in the plugin settings, then add `factory` from the `sdlc-fede` marketplace.
+With Cursor, add `https://github.com/el-sapo/sdlc-fede` as a marketplace in the plugin settings, then add `idea-ship` from the `sdlc-fede` marketplace.
 
 The Codex and Cursor manifests ship; the skills have been exercised with Claude Code.
 
@@ -77,7 +77,7 @@ Then open a session on your repository and say "setup". It tells you what is rea
 
 A plugin installed on your machine loads in local sessions, including the ones you steer from your phone through Remote Control. Claude Code cloud sessions do not install plugins. Two ways to have the skills there:
 
-- Save the six skills on your claude.ai account (open each `SKILL.md` under `plugins/factory/skills/` and add it as a skill). Account skills load in cloud, app and terminal sessions alike.
+- Save the six skills on your claude.ai account (open each `SKILL.md` under `plugins/idea-ship/skills/` and add it as a skill). Account skills load in cloud, app and terminal sessions alike.
 - Commit them into a repository's `.claude/skills/`, which loads in every session that opens that repository.
 
 The plugin is for sharing the process with a team or a friend; your account or the repository is how the skills reach cloud sessions.
@@ -96,12 +96,12 @@ Say "setup" once in the repository and it checks what a session can see of this 
 
 | Skill | Trigger | Job |
 |---|---|---|
-| [`setup`](plugins/factory/skills/setup/SKILL.md) | "setup" | Once per project, outside the loop: proves the install, run, test and lint commands by running them, checks Linear and every connection, proposes `AGENTS.md` as a pull request you merge, and reports ready or what is missing and where to fix it. Offers a first ticket. Never creates a repository, a team or hosting |
-| [`ideate`](plugins/factory/skills/ideate/SKILL.md) | an idea | A visual brief you can steer from a phone, then two or three options on a Linear issue, or a ready spec on the fast lane |
-| [`spec`](plugins/factory/skills/spec/SKILL.md) | "spec it" | A lean, buildable spec in the same issue: binary checks with how to verify them, real file names, a default for every open decision, sub-issues when it is more than one pull request |
-| [`build`](plugins/factory/skills/build/SKILL.md) | "code ABC-12" | A pull request built carefully and unattended: tests first, a fresh reviewer, evidence per check, a report on the issue. Never merges |
-| [`ship`](plugins/factory/skills/ship/SKILL.md) | "ship ABC-12" | Readiness checks, merge, watch the deploy, check it live, close out. One approval covers one pull request |
-| [`feature`](plugins/factory/skills/feature/SKILL.md) | "build the feature ABC-47" | The orchestrator: a plan you approve, then one fresh worker per sub-issue on a feature branch, each verified and merged into it before the next, one final pull request, and the state on the parent so any session can continue |
+| [`setup`](plugins/idea-ship/skills/setup/SKILL.md) | "setup" | Once per project, outside the loop: proves the install, run, test and lint commands by running them, checks Linear and every connection, proposes `AGENTS.md` as a pull request you merge, and reports ready or what is missing and where to fix it. Offers a first ticket. Never creates a repository, a team or hosting |
+| [`ideate`](plugins/idea-ship/skills/ideate/SKILL.md) | an idea | A visual brief you can steer from a phone, then two or three options on a Linear issue, or a ready spec on the fast lane |
+| [`spec`](plugins/idea-ship/skills/spec/SKILL.md) | "spec it" | A lean, buildable spec in the same issue: binary checks with how to verify them, real file names, a default for every open decision, sub-issues when it is more than one pull request |
+| [`build`](plugins/idea-ship/skills/build/SKILL.md) | "code ABC-12" | A pull request built carefully and unattended: tests first, a fresh reviewer, evidence per check, a report on the issue. Never merges |
+| [`ship`](plugins/idea-ship/skills/ship/SKILL.md) | "ship ABC-12" | Readiness checks, merge, watch the deploy, check it live, close out. One approval covers one pull request |
+| [`feature`](plugins/idea-ship/skills/feature/SKILL.md) | "build the feature ABC-47" | The orchestrator: a plan you approve, then one fresh worker per sub-issue on a feature branch, each verified and merged into it before the next, one final pull request, and the state on the parent so any session can continue |
 
 ### What agents are loud about
 
@@ -140,7 +140,7 @@ v0.4. The loop has run on real tickets: `ideate`, `spec` and `build` on a native
 ```sh
 python3 scripts/validate.py
 claude plugin validate .claude-plugin/marketplace.json --strict
-claude plugin validate plugins/factory --strict
+claude plugin validate plugins/idea-ship --strict
 ```
 
 The validator also checks that the Codex and Cursor manifests list the same plugin at the same version.

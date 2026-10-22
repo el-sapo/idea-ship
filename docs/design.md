@@ -1,6 +1,6 @@
 # Design
 
-How the factory works and why it is shaped this way. The skills themselves, under `plugins/factory/skills/`, are the source of truth for what agents do; this page explains the shape around them.
+How the factory works and why it is shaped this way. The skills themselves, under `plugins/idea-ship/skills/`, are the source of truth for what agents do; this page explains the shape around them.
 
 ## What it is for
 
