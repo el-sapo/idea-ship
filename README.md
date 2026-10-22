@@ -112,7 +112,7 @@ Agents stop on their own for an irreversible operation, anything touching secret
 - **Only code is committed.** Specs stay in Linear, plans stay in ignored scratch folders.
 - **Decide what you can, stop for what you must.** A question with a recorded default never blocks a build.
 
-[docs/design.md](docs/design.md) has the full design: lanes, templates, what each step generates, and the decisions with what was rejected. [docs/setup.md](docs/setup.md) walks through Linear, GitHub, hosting and a new repository.
+[docs/design.md](docs/design.md) has the full design: lanes, templates, what each step generates, and the decisions with what was rejected. [docs/setup.md](docs/setup.md) walks through Linear, GitHub, hosting and a new repository. [docs/factory-flow.en.html](docs/factory-flow.en.html) is an animated one-page explainer of the line, also in Spanish as [docs/factory-flow.es.html](docs/factory-flow.es.html); open it in a browser.
 
 ## Status
 

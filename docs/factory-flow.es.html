@@ -1,0 +1,524 @@
+<title>Factory sdlc-fede</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: una columna angosta. Las dos líneas de producción son verticales y abrazan su contenido (riel a la izquierda, tarjetas de ancho fijo).
+   Dos fases con color propio: pensar (ideate, spec) y construir (build, ship). Pictogramas en grilla de 24 escalada ×2, trazo uniforme. */
+:root{
+  --bg:#f3f1ec; --panel:#ffffff; --inset:#f6f4ef; --fg:#1b1f23; --muted:#5d646c; --line:#d9d4ca; --line2:#ebe7df;
+  --p1:#5a6cab; --p1-soft:#e0e4f4; --accent:#0d6b5e; --accent-soft:#d6ebe6; --human:#c7791a; --human-soft:#fbe9cf;
+  --risk:#b23a3a; --shadow:0 1px 2px rgba(27,31,35,.06),0 6px 18px -8px rgba(27,31,35,.18);
+  --display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#15181c; --panel:#1e2228; --inset:#181c21; --fg:#ebe8e1; --muted:#a4aab2; --line:#30363d; --line2:#272c33;
+  --p1:#9aa9ec; --p1-soft:#252c48; --accent:#4fc3ad; --accent-soft:#163b35; --human:#f0a74a; --human-soft:#3f2c12;
+  --risk:#ff7b7b; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 20px -8px rgba(0,0,0,.6); color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#15181c; --panel:#1e2228; --inset:#181c21; --fg:#ebe8e1; --muted:#a4aab2; --line:#30363d; --line2:#272c33;
+  --p1:#9aa9ec; --p1-soft:#252c48; --accent:#4fc3ad; --accent-soft:#163b35; --human:#f0a74a; --human-soft:#3f2c12;
+  --risk:#ff7b7b; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 20px -8px rgba(0,0,0,.6); color-scheme:dark }
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.5;
+  padding-block:28px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:560px;margin:0 auto;display:grid;gap:48px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+h1{font-size:clamp(32px,8vw,48px);font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(22px,5vw,26px);font-weight:700}
+h3{font-size:17px;font-weight:700}
+p{margin:0;max-width:60ch}
+.lead{font-size:17px;color:var(--muted)}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+section{display:grid;gap:16px}
+code,.chip{font-family:var(--mono);font-size:12.5px}
+.chip{display:inline-block;padding:2px 8px;border-radius:4px;background:var(--accent-soft);color:var(--accent);font-weight:500;white-space:nowrap}
+.chip.h{background:var(--human-soft);color:var(--human)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font:500 12px var(--mono);color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend .p i{background:var(--p1)}
+.legend .a i{background:var(--accent)}
+.legend .h i{background:var(--human);transform:rotate(45deg)}
+svg{display:block}
+
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);width:max-content;max-width:100%}
+.ctl{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 16px 12px;border-top:1px solid var(--line2);font-size:12.5px;color:var(--muted);min-height:22px}
+.ctl span{min-width:0}
+.ctl button{font:500 12px var(--mono);background:none;border:1px solid var(--line);color:var(--fg);padding:5px 10px;border-radius:6px;cursor:pointer;flex:none}
+.ctl button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* ===== Línea principal ===== */
+/* riel al centro: a la izquierda lo humano, a la derecha los skills */
+.vl{position:relative;padding:18px 14px 14px;display:grid;gap:10px;width:360px;max-width:100%}
+.rail{position:absolute;left:50%;margin-left:-5px;width:10px;border-radius:5px;overflow:hidden;background:var(--p1-soft)}
+.rail.p2{background:var(--accent-soft)}
+.rail::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 18px,var(--p1) 18px 24px);opacity:.55;animation:roll 1.2s linear infinite}
+.rail.p2::before{background:repeating-linear-gradient(180deg,transparent 0 18px,var(--accent) 18px 24px)}
+@keyframes roll{to{transform:translateY(24px)}}
+.row{position:relative;display:grid;grid-template-columns:1fr 56px 1fr;align-items:center}
+.row .l{justify-self:end;min-width:0}
+.row .r{justify-self:start;min-width:0}
+.node{position:relative;z-index:2;display:grid;place-items:center;width:56px}
+.io .node svg{width:36px;height:36px;padding:6px;color:var(--muted);background:var(--panel);border:1.5px solid var(--line);border-radius:50%;transition:color .3s,border-color .3s}
+.io{min-height:44px}
+.io.on .node svg,.io.done .node svg{color:var(--accent);border-color:var(--accent)}
+.setup{display:flex;align-items:center;gap:8px;padding:7px 12px 7px 9px;border:1.5px dashed var(--line);border-radius:10px;width:max-content;font-family:var(--display);font-weight:700;font-size:13.5px;background:var(--panel);color:var(--muted)}
+.setup svg{width:18px;height:18px}
+.setup small{font:500 11px var(--mono);margin-left:2px}
+/* estación: color por fase */
+.st{--c:var(--accent);--cs:var(--accent-soft)}
+.st.ph1{--c:var(--p1);--cs:var(--p1-soft)}
+.dot{width:14px;height:14px;border-radius:50%;background:var(--panel);border:3px solid var(--line);transition:border-color .3s,box-shadow .3s}
+.st.on .dot,.st.done .dot{border-color:var(--c)}
+.st.on .dot{box-shadow:0 0 0 5px var(--cs)}
+.card{display:grid;gap:6px;padding:8px 8px 8px;border:1.5px solid var(--line);border-radius:12px;background:var(--panel);transition:border-color .3s,box-shadow .3s}
+.st.on .card,.st.done .card{border-color:var(--c)}
+.st.on .card{box-shadow:0 0 0 4px var(--cs)}
+.card .t{display:flex;gap:8px;align-items:baseline;padding:0 2px}
+.card .n{font:500 10.5px var(--mono);color:var(--muted);letter-spacing:.06em}
+.card b{font-family:var(--display);font-size:16px;font-weight:700}
+.pic{width:90px;height:60px;border-radius:8px;background:var(--inset);color:var(--muted);transition:color .3s}
+.pic svg{width:90px;height:60px;overflow:visible}
+.st.on .pic,.st.done .pic{color:var(--c)}
+/* fase 2 arranca con una separación marcada */
+.sep{height:18px;border-top:1.5px dashed var(--line);margin:8px 0 -8px}
+/* rombo */
+.gt{min-height:60px}
+.diamond{width:22px;height:22px;transform:rotate(45deg);border:2px solid var(--line);background:var(--panel);border-radius:4px;transition:all .3s}
+.gt.on .diamond,.gt.done .diamond{border-color:var(--human);background:var(--human-soft)}
+.gt.on .diamond{box-shadow:0 0 0 5px var(--human-soft)}
+.cap{display:flex;align-items:center;gap:6px;padding:6px 10px 6px 10px;border:1.5px solid var(--line);border-radius:999px;background:var(--panel);color:var(--muted);transition:border-color .3s,color .3s,box-shadow .3s}
+.cap .me{width:22px;height:22px;flex:none}
+.cap .act{width:60px;height:26px;flex:none}
+.gt.on .cap,.gt.done .cap{color:var(--human);border-color:var(--human)}
+.gt.on .cap{box-shadow:0 0 0 4px var(--human-soft)}
+/* animaciones: "on" anima, "done" deja el estado final hasta el reset */
+.draw{stroke-dasharray:1;stroke-dashoffset:0}
+.on .draw{animation:draw .9s ease-out both}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.pop{transform-box:fill-box;transform-origin:center}
+.on .pop{animation:pop .4s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.grow{transform-box:fill-box;transform-origin:left center}
+.on .grow{animation:grow .45s ease-out both}
+@keyframes grow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.on .rise{animation:rise 1.1s ease-in-out infinite}
+@keyframes rise{0%{transform:translateY(5px);opacity:0}30%{opacity:1}100%{transform:translateY(-9px);opacity:0}}
+.on .slide{animation:slide 1.1s ease-in-out infinite}
+@keyframes slide{0%{transform:translateX(-5px);opacity:0}30%{opacity:1}100%{transform:translateX(9px);opacity:0}}
+.glass{fill:transparent;transition:fill .4s}
+.on .glass,.done .glass{fill:var(--cs)}
+.ray{opacity:0;transition:opacity .3s}
+.on .ray{animation:pop .4s .35s both}
+.done .ray{opacity:1}
+/* opciones del primer rombo: aparecen a b c, se marca b, a y c se van, y queda b hasta el reset */
+.opt{opacity:0}
+.on .opt{animation:pop .35s both}
+.on .opt.b{animation:pop .35s .12s both,pick .35s 1.1s both}
+.on .opt.c{animation-delay:.24s}
+@keyframes pick{to{fill:currentColor}}
+.on .opt.a,.on .opt.c{animation:pop .35s both,fade .4s 1.1s forwards}
+@keyframes fade{to{opacity:0}}
+.done .opt.b{opacity:1;fill:currentColor}
+.done .opt.a,.done .opt.c{opacity:0}
+.opt text{font:700 7.5px var(--mono);fill:currentColor;stroke:none}
+.on .opt.b text,.done .opt.b text{fill:var(--panel)}
+.bit{font:500 10.5px var(--mono);fill:currentColor;opacity:.4;font-variant-numeric:tabular-nums}
+.bit.hi{opacity:1;font-weight:700}
+.warn{fill:var(--human)}.bad{fill:var(--risk)}
+.conf{opacity:0;transform-box:fill-box;transform-origin:center}
+.on .conf{animation:burst .9s ease-out both}
+@keyframes burst{0%{opacity:0;transform:translate(0,0) scale(.3)}30%{opacity:1}100%{opacity:1;transform:translate(var(--dx),var(--dy)) scale(1)}}
+.done .conf{opacity:1;transform:translate(var(--dx),var(--dy))}
+.fast{position:absolute;left:50%;margin-left:9px;width:12px;border:1.5px dashed var(--p1);border-left:none;border-radius:0 8px 8px 0;opacity:.55;z-index:1}
+.fast svg{position:absolute;left:6px;top:50%;width:20px;height:20px;transform:translate(-50%,-50%);background:var(--panel);color:var(--p1);padding:2px}
+.token{position:absolute;z-index:3;left:50%;margin-left:-22px;width:44px;height:36px;margin-top:-18px;border-radius:8px;background:var(--p1);color:#fff;display:grid;place-items:center;box-shadow:0 3px 8px rgba(0,0,0,.28);will-change:top;transition:background .4s}
+.token svg{width:22px;height:22px}
+.token.p2{background:var(--accent)}
+.token.h{background:var(--human)}
+
+/* ===== Fichas de estación ===== */
+.cards{display:grid;gap:14px}
+.scard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:grid;gap:10px}
+.scard.once{border-style:dashed}
+.scard header{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:baseline}
+.scard header .n{font:700 13px var(--mono);color:var(--muted)}
+.kv{display:grid;grid-template-columns:62px 1fr;gap:6px 12px;font-size:14px}
+.kv dt{color:var(--muted);font:500 12px var(--mono);padding-top:2px}
+.kv dd{margin:0;min-width:0}
+
+/* ===== Feature ===== */
+.fw{position:relative;display:grid;gap:8px;padding:18px 16px 14px;justify-items:center;width:332px;max-width:100%}
+.fbox{width:100%;border:1.5px solid var(--line);border-radius:12px;background:var(--panel);padding:10px 12px;display:grid;gap:10px;transition:border-color .3s,box-shadow .3s}
+.fbox.on{border-color:var(--human);box-shadow:0 0 0 4px var(--human-soft)}
+.fhead{display:flex;align-items:center;gap:8px;font:500 11px var(--mono);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.fhead svg{width:16px;height:16px}
+.slots{display:flex;gap:8px;justify-content:center}
+.slot{width:78px;height:30px;border:1.5px dashed var(--line);border-radius:7px}
+.down{width:16px;height:16px;color:var(--line)}
+.plan{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:10px}
+.plan .diamond{margin:0 6px}
+.plan svg.seq{width:140px;height:28px;color:var(--muted)}
+.plan .ok{width:22px;height:22px;color:var(--human);opacity:0;transition:opacity .3s}
+.fbox.on .plan .ok{opacity:1}
+.orch{gap:8px}
+.orch .head{display:grid;grid-template-columns:78px 1fr;align-items:center;gap:10px}
+.orch .head b{font-family:var(--display);font-size:14px;line-height:1.15}
+.orch .head b small{display:block;font:500 10.5px var(--mono);color:var(--muted);margin-top:2px}
+.steps{display:grid;gap:4px;border-left:2px solid var(--line2);margin-left:6px;padding-left:12px}
+.step{display:flex;gap:8px;align-items:center;font-size:12.5px;color:var(--muted);position:relative;padding:3px 0;transition:color .3s}
+.step::before{content:"";position:absolute;left:-19px;width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .3s,box-shadow .3s}
+.step.on{color:var(--fg)}
+.step.on::before{background:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.orch .loop{display:flex;justify-content:space-between;align-items:center;font:500 10.5px var(--mono);color:var(--accent)}
+.orch .loop em{font-style:normal;color:var(--muted)}
+.orch .loop span{opacity:.35;transition:opacity .3s}
+.pr{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border:1.5px solid var(--line);border-radius:12px;font-family:var(--display);font-weight:700;font-size:14px;color:var(--muted);transition:all .3s}
+.pr svg{width:20px;height:20px}
+.pr.on{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft);color:var(--accent)}
+.fchip{position:absolute;z-index:2;width:78px;height:30px;border-radius:7px;border:1.5px solid var(--line);background:var(--panel);display:grid;place-items:center;font:700 11.5px var(--mono);box-shadow:var(--shadow);transition:left .7s cubic-bezier(.4,0,.2,1),top .7s cubic-bezier(.4,0,.2,1),border-color .3s,background .3s,color .3s}
+.fchip.work{border-color:var(--accent);background:var(--accent);color:#fff}
+.fchip.done{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+
+/* ===== Dónde vive, reglas ===== */
+.homes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.home{border-top:3px solid var(--accent);padding-top:10px;display:grid;gap:4px;min-width:0}
+.home b{font-family:var(--display);font-size:16px}
+.home span{font-size:13.5px;color:var(--muted)}
+.rules{display:grid;gap:10px;padding:0;margin:0;list-style:none}
+.rules li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:15px}
+.rules li::before{content:"";width:10px;height:10px;margin-top:7px;border-radius:2px;background:var(--accent);transform:rotate(45deg)}
+.rules li.r::before{background:var(--risk)}
+.foot{font-size:13px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-reduced-motion:reduce){.rail::before{animation:none}.fchip{transition:none}.on .draw,.on .pop,.on .grow,.on .rise,.on .ray,.on .opt,.on .conf{animation:none}.on .ray,.on .opt.b,.on .conf{opacity:1}}
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:12px">
+    <span class="eyebrow">sdlc-fede · plugin factory · <a href="factory-flow.en.html" style="color:inherit">english</a></span>
+    <h1>Entra una idea, sale un PR.</h1>
+    <p class="lead">Un proceso de desarrollo para equipos chicos que trabajan con agentes. Cinco estaciones, tres puntos donde intervenís vos, y nada que mantener a mano.</p>
+  </header>
+
+  <section>
+    <h2>La línea</h2>
+    <p>Cada ficha es una issue de tu tracker que cambia de forma a medida que avanza. Primero se piensa, después se construye. A la derecha del riel, los skills; a la izquierda, vos.</p>
+    <div class="legend"><span class="p"><i></i>pensar</span><span class="a"><i></i>construir</span><span class="h"><i></i>aprobación tuya</span></div>
+    <div class="panel">
+      <div class="vl" id="vl">
+        <div class="rail p1" id="rail1"></div><div class="rail p2" id="rail2"></div>
+        <div class="row"><div class="l"></div><div></div><div class="r"><div class="setup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>setup<small>×1</small></div></div></div>
+
+        <div class="row io" data-id="in"><div class="l"></div><div class="node"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"/></svg></div><div class="r"></div></div>
+
+        <div class="row st ph1" data-id="ideate">
+          <div class="l"></div><div class="node"><div class="dot"></div></div>
+          <div class="r card"><div class="t"><span class="n">01</span><b>ideate</b></div>
+            <div class="pic"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <g transform="translate(24 8) scale(2)" stroke-width=".875">
+                <path class="glass" d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                <path d="M9 18h6M10 22h4"/>
+                <g class="ray"><path d="M12 1V-1M4.5 2.5 3 1M19.5 2.5 21 1M2 9H0M22 9h2"/></g>
+              </g>
+            </svg></div>
+          </div>
+        </div>
+
+        <div class="row gt" data-id="g1">
+          <div class="l cap">
+            <svg class="me" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <svg class="act" viewBox="0 0 64 26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <g class="opt a"><rect x="4" y="4" width="16" height="18" rx="4"/><text x="12" y="16" text-anchor="middle">a</text></g>
+              <g class="opt b"><rect x="24" y="4" width="16" height="18" rx="4"/><text x="32" y="16" text-anchor="middle">b</text></g>
+              <g class="opt c"><rect x="44" y="4" width="16" height="18" rx="4"/><text x="52" y="16" text-anchor="middle">c</text></g>
+            </svg>
+          </div>
+          <div class="node"><div class="diamond"></div></div><div class="r"></div>
+        </div>
+
+        <div class="row st ph1" data-id="spec">
+          <div class="l"></div><div class="node"><div class="dot"></div></div>
+          <div class="r card"><div class="t"><span class="n">02</span><b>spec</b></div>
+            <div class="pic"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <g transform="translate(24 8) scale(2)" stroke-width=".875">
+                <path class="draw" pathLength="1" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path class="draw" pathLength="1" d="M14 2v6h6" style="animation-delay:.2s"/>
+                <path class="grow" d="M8 11h6" style="animation-delay:.5s"/><path class="grow" d="M8 15h5" style="animation-delay:.7s"/><path class="grow" d="M8 19h7" style="animation-delay:.9s"/>
+                <circle class="pop warn" cx="16.5" cy="15" r="1.4" stroke="none" style="animation-delay:1s"/>
+                <circle class="pop bad" cx="17.5" cy="19" r="1.4" stroke="none" style="animation-delay:1.25s"/>
+              </g>
+            </svg></div>
+          </div>
+        </div>
+
+        <div class="row gt" data-id="g2">
+          <div class="l cap">
+            <svg class="me" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <svg class="act" viewBox="0 0 64 26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="13" r="10"/><path class="draw" pathLength="1" d="M27 13l3.5 3.5L37.5 9" stroke-width="2.25" style="animation-delay:.3s"/></svg>
+          </div>
+          <div class="node"><div class="diamond"></div></div><div class="r"></div>
+        </div>
+
+        <div class="sep"></div>
+
+        <div class="row st" data-id="build">
+          <div class="l"></div><div class="node"><div class="dot"></div></div>
+          <div class="r card"><div class="t"><span class="n">03</span><b>build</b></div>
+            <div class="pic"><svg viewBox="0 0 96 64" id="bits"></svg></div>
+          </div>
+        </div>
+
+        <div class="row gt" data-id="g3">
+          <div class="l cap">
+            <svg class="me" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <svg class="act" viewBox="0 0 64 26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 7h10M14 13h7M14 19h12" opacity=".5"/><circle class="pop" cx="40" cy="12" r="7" style="animation-delay:.2s"/><path class="draw" pathLength="1" d="M45 17l6 6" stroke-width="2.25" style="animation-delay:.5s"/></svg>
+          </div>
+          <div class="node"><div class="diamond"></div></div><div class="r"></div>
+        </div>
+
+        <div class="row st" data-id="ship">
+          <div class="l"></div><div class="node"><div class="dot"></div></div>
+          <div class="r card"><div class="t"><span class="n">04</span><b>ship</b></div>
+            <div class="pic"><svg viewBox="0 0 96 64" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+              <rect class="draw" pathLength="1" x="10" y="14" width="20" height="38" rx="4"/><path d="M17 47h6" opacity=".6"/>
+              <path class="draw" pathLength="1" d="M56 46a9 9 0 0 1 2-17.6 11 11 0 0 1 21 2.6h1a7.5 7.5 0 0 1 1 15H56z" style="animation-delay:.3s"/>
+              <g class="slide"><path d="M34 33h12M41 28l5 5-5 5"/></g>
+              <g class="slide" style="animation-delay:.55s"><path d="M34 33h12M41 28l5 5-5 5"/></g>
+            </svg></div>
+          </div>
+        </div>
+
+        <div class="row io" data-id="out"><div class="l"></div><div class="node"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="overflow:visible">
+          <path d="M5.8 11.3 2 22l10.7-3.8M4 3h.01M22 8h.01M15 2h.01M22 20h.01"/><path d="M22 2l-2.2 .7a2.4 2.4 0 0 0-1.3 3.8l.4 .5a2.4 2.4 0 0 1-1.3 3.8L15 11"/><path d="M11 13a2.4 2.4 0 0 0 3.8-1.3l.4-.5"/>
+          <path d="M11 13c-1.6-1.6-2.5-2.5-4-4L5.8 11.3 12.7 18.2 14 17c-1.5-1.5-2.4-2.4-3-4z"/>
+          <circle class="conf" cx="9" cy="9" r="1.2" fill="currentColor" stroke="none" style="--dx:-4px;--dy:-6px"/>
+          <circle class="conf" cx="13" cy="7" r="1.2" fill="var(--human)" stroke="none" style="--dx:2px;--dy:-7px"/>
+          <circle class="conf" cx="17" cy="9" r="1.2" fill="var(--risk)" stroke="none" style="--dx:6px;--dy:-4px"/>
+          <circle class="conf" cx="16" cy="13" r="1.2" fill="var(--p1)" stroke="none" style="--dx:7px;--dy:1px"/>
+        </svg></div><div class="r"></div></div>
+
+        <div class="fast" id="fast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L5 14h6l-1 8 9-13h-6z"/></svg></div>
+        <div class="token" id="token"></div>
+      </div>
+      <div class="ctl"><span id="phase">una idea entra por voz o chat</span><button id="pp" type="button">pausar</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Qué hace cada estación</h2>
+    <div class="cards">
+      <article class="scard once">
+        <header><span class="n">00</span><h3>setup</h3><span class="chip">setup</span><span class="chip h">una vez por proyecto</span></header>
+        <dl class="kv">
+          <dt>hace</dt><dd>Arma el proyecto entero: repo, estructura base, AGENTS.md con las reglas, el proyecto en el tracker y el camino de deploy que corresponda.</dd>
+          <dt>deja</dt><dd>Un proyecto listo para recibir su primera idea.</dd>
+          <dt>vos</dt><dd>Solo conectás cuentas y accesos.</dd>
+        </dl>
+      </article>
+      <article class="scard">
+        <header><span class="n">01</span><h3>ideate</h3><span class="chip">una idea, aunque sea por voz</span></header>
+        <dl class="kv">
+          <dt>hace</dt><dd>Devuelve un brief visual con diagramas, directo, para que lo corrijas en segundos. Decide sola la granularidad y marca lo que necesita atención: cambios de comportamiento, seguridad, mal diseño.</dd>
+          <dt>deja</dt><dd>Una issue con 2 o 3 opciones. Si la idea es chica y clara va por el carril rápido: deja la spec lista y salta la siguiente estación.</dd>
+          <dt>vos</dt><dd>Elegís una opción.</dd>
+        </dl>
+      </article>
+      <article class="scard">
+        <header><span class="n">02</span><h3>spec</h3><span class="chip">spec it</span></header>
+        <dl class="kv">
+          <dt>hace</dt><dd>Escribe una spec lean y construible, con riesgos marcados con color. Sin ceremonias de empresa grande.</dd>
+          <dt>deja</dt><dd>La spec dentro de la misma issue. Para algo grande, una issue padre con sub-issues.</dd>
+          <dt>vos</dt><dd>La leés y editás en el tracker, después decís que la construya.</dd>
+        </dl>
+      </article>
+      <article class="scard">
+        <header><span class="n">03</span><h3>build</h3><span class="chip">code it</span> <span class="chip">build ABC-12</span></header>
+        <dl class="kv">
+          <dt>hace</dt><dd>Codea, testea y sigue AGENTS.md sin que nadie lo mire. Corre en Claude Code, Codex o Cursor; local cuando hacen falta emuladores, en la nube si no.</dd>
+          <dt>deja</dt><dd>Un PR y un comentario en la issue contando qué se hizo.</dd>
+          <dt>vos</dt><dd>Revisás el PR o pedís cambios.</dd>
+        </dl>
+      </article>
+      <article class="scard">
+        <header><span class="n">04</span><h3>ship</h3><span class="chip">ship it</span> <span class="chip">merge it</span></header>
+        <dl class="kv">
+          <dt>hace</dt><dd>Mergea, confirma el deploy y cierra la issue. El destino lo define el proyecto, no el plugin: hosting para una web, canal beta para una app, local para un prototipo.</dd>
+          <dt>deja</dt><dd>Código en prod y una línea sobre qué sigue.</dd>
+          <dt>vos</dt><dd>Nada.</dd>
+        </dl>
+      </article>
+    </div>
+  </section>
+
+  <section>
+    <h2>Feature: varias issues, un solo PR</h2>
+    <p>Cuando <code>spec</code> dejó una issue padre con sub-issues, <code>feature</code> toma la cola entera. Te muestra el plan y hasta dónde va a llegar, aprobás una sola vez, y después encadena un build por sub-issue sin que tengas que decir "continuá".</p>
+    <div class="panel">
+      <div class="fw" id="fw">
+        <div class="fbox">
+          <div class="fhead"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 9h8M8 13h5"/></svg>issue padre ABC-40 · 3 sub-issues</div>
+          <div class="slots"><div class="slot" id="q0"></div><div class="slot" id="q1"></div><div class="slot" id="q2"></div></div>
+        </div>
+        <svg class="down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+        <div class="fbox" id="fgate">
+          <div class="plan">
+            <div class="diamond"></div>
+            <svg class="seq" viewBox="0 0 140 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="22" height="18" rx="4"/><text x="13" y="18" text-anchor="middle" font-size="9" font-family="IBM Plex Mono,monospace" font-weight="700" fill="currentColor" stroke="none">1</text>
+              <path d="M26 14h8"/>
+              <rect x="36" y="5" width="22" height="18" rx="4"/><text x="47" y="18" text-anchor="middle" font-size="9" font-family="IBM Plex Mono,monospace" font-weight="700" fill="currentColor" stroke="none">2</text>
+              <path d="M60 14h8"/>
+              <rect x="70" y="5" width="22" height="18" rx="4"/><text x="81" y="18" text-anchor="middle" font-size="9" font-family="IBM Plex Mono,monospace" font-weight="700" fill="currentColor" stroke="none">3</text>
+              <path d="M94 14h10"/>
+              <path d="M108 4v20M108 6h14l-3 4 3 4h-14" stroke="var(--human)"/>
+            </svg>
+            <svg class="ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L19 7"/></svg>
+          </div>
+        </div>
+        <svg class="down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+        <div class="fbox orch">
+          <div class="head"><div class="slot" id="wslot"></div><b>sesión fresca por issue<small>modelo y esfuerzo a medida</small></b></div>
+          <div class="steps">
+            <div class="step" data-s="0">arranca con AGENTS.md + la issue</div>
+            <div class="step" data-s="1">build: codea y testea</div>
+            <div class="step" data-s="2">verifica el resultado</div>
+            <div class="step" data-s="3">integra al feature branch</div>
+          </div>
+          <div class="loop"><em id="fcount">0 / 3</em><span id="floop">siguiente ↺</span></div>
+        </div>
+        <svg class="down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+        <div class="fbox">
+          <div class="fhead"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="5" r="2.5"/><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 7.5v9M18 10.5c0 4-4 5-9 5"/></svg>feature/abc-40</div>
+          <div class="slots"><div class="slot" id="d0"></div><div class="slot" id="d1"></div><div class="slot" id="d2"></div></div>
+        </div>
+        <svg class="down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M6 14l6 6 6-6"/></svg>
+        <div class="pr" id="fpr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="5" r="2.5"/><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 7.5v9M18 10.5c0 4-4 5-9 5"/></svg>un PR en ABC-40</div>
+
+        <div class="fchip" id="c0">ABC-41</div>
+        <div class="fchip" id="c1">ABC-42</div>
+        <div class="fchip" id="c2">ABC-43</div>
+      </div>
+      <div class="ctl"><span id="fphase">tres sub-issues en cola</span><button id="fpp" type="button">pausar</button></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Dónde vive cada cosa</h2>
+    <p>Cada lugar tiene un dueño y un ciclo de vida. Nada se duplica y nada queda viejo esperando que alguien lo actualice.</p>
+    <div class="homes">
+      <div class="home"><b>Tracker de issues</b><span>El estado. Opciones, spec y reportes de cada corrida viven como comentarios en la issue. Cuando se cierra, se va. Funciona con el tracker que uses.</span></div>
+      <div class="home"><b>Repo</b><span>El código, los PRs y AGENTS.md: el único archivo que todo agente lee siempre, en cualquier harness. Cambia por PR como cualquier código.</span></div>
+      <div class="home"><b>Plugin factory</b><span>El proceso. Los skills de cada estación, con manifiestos para Claude Code, Codex y Cursor.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Reglas de la fábrica</h2>
+    <ul class="rules">
+      <li>El agente decide la granularidad. Una issue puede ser una línea o una página, según haga falta.</li>
+      <li>Lo que necesita tu atención se muestra con color: complejidad, riesgo de romper algo, cambio de comportamiento.</li>
+      <li>Una sesión fresca por issue. El contexto llega de AGENTS.md y de la issue, nunca de un resumen de sesiones anteriores.</li>
+      <li>Carril rápido para ideas chicas y claras: de la idea a la spec sin pasar por opciones.</li>
+      <li>El deploy lo define el proyecto, no el plugin.</li>
+      <li class="r">Sin memory banks, sin docs vivos mantenidos a mano, sin scoring de corridas. Lo que no se usa no se mantiene.</li>
+    </ul>
+  </section>
+
+  <p class="foot">Pensado para un dev solo o un equipo de 3 a 5: consistente, rápido y barato en tokens. Los IDs de issue y nombres de branch de esta página son de ejemplo.</p>
+</div>
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ===== Línea principal ===== */
+  var vl=document.getElementById('vl'),token=document.getElementById('token'),phase=document.getElementById('phase'),pp=document.getElementById('pp'),fast=document.getElementById('fast'),rail1=document.getElementById('rail1'),rail2=document.getElementById('rail2');
+  var rows={},order=[];vl.querySelectorAll('.row[data-id]').forEach(function(r){rows[r.dataset.id]=r;order.push(r.dataset.id)});
+  function cy(id){var r=rows[id];return r.offsetTop+r.offsetHeight/2}
+  var T=[
+    [0,7,'in','ideate','idea','','una idea entra por voz o chat'],
+    [7,16,'ideate','ideate','idea','ideate','ideate arma el brief visual y las opciones'],
+    [16,21,'ideate','g1','opciones','','la issue queda en el tracker'],
+    [21,28,'g1','g1','opciones','g1','vos elegís una opción'],
+    [28,33,'g1','spec','opción','','...'],
+    [33,42,'spec','spec','opción','spec','spec escribe la spec con sus riesgos'],
+    [42,46,'spec','g2','spec','','la spec queda en la issue'],
+    [46,52,'g2','g2','spec','g2','vos la revisás y decís code it'],
+    [52,57,'g2','build','spec','','...'],
+    [57,71,'build','build','spec','build','build codea y testea sin que nadie mire'],
+    [71,75,'build','g3','PR','','abre el PR y reporta en la issue'],
+    [75,81,'g3','g3','PR','g3','vos revisás el PR'],
+    [81,85,'g3','ship','PR','','ship it'],
+    [85,94,'ship','ship','PR','ship','merge, deploy, issue cerrada'],
+    [94,100,'ship','out','release','out','en producción']
+  ];
+  var S='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">';
+  var ICON={
+    idea:S+'<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/><path d="M8 10h8M8 14h5"/></svg>',
+    opciones:S+'<rect x="3" y="4" width="18" height="4" rx="2"/><rect x="3" y="10" width="18" height="4" rx="2" fill="currentColor"/><rect x="3" y="16" width="18" height="4" rx="2"/></svg>',
+    'opción':S+'<rect x="3" y="10" width="18" height="4" rx="2" fill="currentColor"/></svg>',
+    spec:S+'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>',
+    PR:S+'<circle cx="6" cy="5" r="2.5"/><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="8" r="2.5"/><path d="M6 7.5v9M18 10.5c0 4-4 5-9 5"/></svg>',
+    release:S+'<path d="M4.5 16.5c-1.5 1.3-2 5-2 5s3.7-.5 5-2c.7-.8.7-2 0-2.8a2.1 2.1 0 0 0-3 0z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.9 12.9 0 0 1 22 2c0 2.7-.7 7.5-6 11a22 22 0 0 1-4 2z"/><path d="M9 12H4s.5-3 2-4 4-1 4-1M15 12v5s3-.5 4-2 1-4 1-4"/></svg>'
+  };
+  // Riel en dos colores: pensar hasta el separador, construir desde ahí. Carril rápido al costado.
+  function layout(){
+    var top=rows['in'].offsetTop+rows['in'].offsetHeight/2,bottom=cy('out'),mid=(rows.g2.offsetTop+rows.g2.offsetHeight+rows.build.offsetTop)/2;
+    rail1.style.top=top+'px';rail1.style.height=(mid-top)+'px';rail2.style.top=mid+'px';rail2.style.height=(bottom-mid)+'px';
+    var a=cy('ideate'),b=cy('g2');fast.style.top=a+'px';fast.style.height=(b-a)+'px';
+  }
+  layout();addEventListener('resize',layout);
+  var bits=document.getElementById('bits'),cells=[];
+  for(var r=0;r<4;r++)for(var c=0;c<7;c++){var t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',11+c*12);t.setAttribute('y',17+r*13);t.setAttribute('class','bit');t.textContent=Math.random()<.5?'1':'0';bits.appendChild(t);cells.push(t)}
+  var lastBits=0;
+  function flicker(now){if(now-lastBits<110)return;lastBits=now;cells.forEach(function(t){if(Math.random()<.35){t.textContent=Math.random()<.5?'1':'0';t.setAttribute('class','bit'+(Math.random()<.3?' hi':''))}})}
+  var cur='',curIcon='';
+  function set(p){
+    if(p<7)order.forEach(function(k){rows[k].classList.remove('done')});
+    for(var i=0;i<T.length;i++){var s=T[i];if(p>=s[0]&&p<s[1]){
+      var f=(p-s[0])/(s[1]-s[0]),y=cy(s[2])+(cy(s[3])-cy(s[2]))*f;
+      token.style.top=y+'px';if(curIcon!==s[4]){token.innerHTML=ICON[s[4]];curIcon=s[4]}
+      token.className='token'+(s[5].charAt(0)==='g'?' h':'')+(p>=52?' p2':'');
+      if(cur!==s[5]){
+        // lo que ya pasó queda prendido
+        var upto=order.indexOf(s[5]==='' ? s[2] : s[5]);
+        order.forEach(function(k,j){rows[k].classList.toggle('on',k===s[5]);if(j<=upto&&k!==s[5]&&k!=='in')rows[k].classList.add('done')});
+        cur=s[5]}
+      if(s[6]!=='...')phase.textContent=s[6];return}}
+  }
+  var DUR=22000,paused=false,base=performance.now(),acc=0;
+  if(reduce){set(64);pp.hidden=true}
+  else{
+    (function tick(now){if(!paused){acc=(now-base)%DUR;set(acc/DUR*100);if(cur==='build')flicker(now)}requestAnimationFrame(tick)})(performance.now());
+    pp.addEventListener('click',function(){paused=!paused;if(!paused)base=performance.now()-acc;pp.textContent=paused?'seguir':'pausar'});
+  }
+
+  /* ===== Feature ===== */
+  var fw=document.getElementById('fw'),chips=[0,1,2].map(function(i){return document.getElementById('c'+i)}),steps=[].slice.call(document.querySelectorAll('.step')),
+      fgate=document.getElementById('fgate'),fpr=document.getElementById('fpr'),fph=document.getElementById('fphase'),fpp=document.getElementById('fpp'),floop=document.getElementById('floop'),fcount=document.getElementById('fcount');
+  var at=[null,null,null];
+  function place(i,slotId){var s=document.getElementById(slotId),c=chips[i];at[i]=slotId;var fr=fw.getBoundingClientRect(),sr=s.getBoundingClientRect();c.style.left=(sr.left-fr.left)+'px';c.style.top=(sr.top-fr.top)+'px'}
+  function relayout(){at.forEach(function(s,i){if(s)place(i,s)})}
+  addEventListener('resize',relayout);
+  function reset(){chips.forEach(function(c,i){c.className='fchip';place(i,'q'+i)});steps.forEach(function(s){s.classList.remove('on')});fgate.classList.remove('on');fpr.classList.remove('on');floop.style.opacity=.35;fcount.textContent='0 / 3'}
+  var F=[];
+  F.push([1200,function(){reset();fph.textContent='tres sub-issues en cola, specced'}]);
+  F.push([2600,function(){fgate.classList.add('on');fph.textContent='te muestra el plan: orden, modelo por issue y dónde para. Aprobás una vez.'}]);
+  F.push([400,function(){fgate.classList.remove('on')}]);
+  chips.forEach(function(c,i){
+    F.push([900,function(){c.className='fchip work';place(i,'wslot');fph.textContent='sesión fresca para '+c.textContent}]);
+    [0,1,2,3].forEach(function(k){F.push([k===1?1400:800,function(){steps.forEach(function(s,j){s.classList.toggle('on',j===k)})}])});
+    F.push([900,function(){steps.forEach(function(s){s.classList.remove('on')});c.className='fchip done';place(i,'d'+i);fcount.textContent=(i+1)+' / 3';floop.style.opacity=i<2?1:.35;fph.textContent=c.textContent+' integrada'+(i<2?', sigue sola con la próxima':'')}]);
+  });
+  F.push([2800,function(){fpr.classList.add('on');fph.textContent='un solo PR en la issue padre, con el reporte de toda la feature'}]);
+  var fi=0,ftimer=null,fpaused=false;
+  function fstep(){F[fi][1]();var d=F[fi][0];fi=(fi+1)%F.length;ftimer=setTimeout(fstep,d)}
+  if(reduce){reset();chips[0].className='fchip done';place(0,'d0');chips[1].className='fchip work';place(1,'wslot');steps[1].classList.add('on');fcount.textContent='1 / 3';fph.textContent='ABC-42 en build, ABC-41 integrada, ABC-43 en cola';fpp.hidden=true}
+  else{
+    fstep();
+    fpp.addEventListener('click',function(){fpaused=!fpaused;if(fpaused){clearTimeout(ftimer)}else{fstep()}fpp.textContent=fpaused?'seguir':'pausar'});
+  }
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){layout();relayout()});
+})();
+</script>
