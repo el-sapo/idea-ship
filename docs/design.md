@@ -108,7 +108,7 @@ The test for whether something earns a card: would the person be surprised or an
 
 | Issue rests in | They look at | They say | Their word approves |
 |---|---|---|---|
-| A project not set up yet | Setup's report and its pull request | "setup", then merge | The instructions every agent follows |
+| No issue yet: the project is not set up | Setup's report and its pull request | "setup", then merge | The instructions every agent follows |
 | Not filed yet | The read-back, if they are still there | The idea | Starting the work |
 | Backlog | The options page | "1 B, 2 ok, A. Spec it" | The direction. Skipped on the fast lane |
 | Todo | The spec in Linear, which they can edit | "Code ABC-12" | What gets built. This is where their time pays off most |

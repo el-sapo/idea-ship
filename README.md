@@ -79,7 +79,7 @@ The plugin is for sharing the process with a team or a friend; your account or t
 - **An `AGENTS.md` in the repository** that says how to install, run, test and lint, and how the app deploys and where to check it live. The skills read it and follow it, and they name no platform of their own. Every agent obeys it, so `setup` only proposes it, as a pull request you merge; after that, keeping it right is yours.
 - **A session that can run the project.** A cloud session cannot build native apps or grant device permissions; for those, run the session on your machine. The skills say what each situation leaves to you.
 
-Say "setup" once in the repository and it checks the rest of this list for you, then says what is missing and where to fix it.
+Say "setup" once in the repository and it checks what a session can see of this list, then says what is missing, where to fix it, and what only you can check.
 
 ## The six skills
 
