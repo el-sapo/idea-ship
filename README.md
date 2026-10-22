@@ -1,6 +1,6 @@
 # sdlc-fede
 
-A lean software factory for solo builders and small teams. Five agent skills carry a ticket from a spoken idea to a merged pull request. The Linear issue is the thread, sessions are disposable, and you step in at most four times per ticket.
+A lean software factory for solo builders and small teams. Six agent skills: `setup` readies a project once, and five carry a ticket from a spoken idea to a merged pull request. The Linear issue is the thread, sessions are disposable, and you step in at most four times per ticket.
 
 Built for people who do not want enterprise process but do want a process: no story points, no test-case tables, no retros. A loop, evidence for every claim, and agents that speak up about what needs your attention.
 
@@ -9,11 +9,13 @@ Built for people who do not want enterprise process but do want a process: no st
 ```mermaid
 flowchart LR
   I([You: an idea]) --> ideate
-  ideate -->|Backlog: options| P([You: pick, "spec it"])
+  O(["You, once: #quot;setup#quot;"]) --> setup
+  setup -. first ticket .-> ideate
+  ideate -->|Backlog: options| P(["You: pick, #quot;spec it#quot;"])
   P --> spec
-  spec -->|Todo: spec| C([You: "code ABC-12"])
+  spec -->|Todo: spec| C(["You: #quot;code ABC-12#quot;"])
   C --> build
-  build -->|In Review: PR + report| S([You: "ship ABC-12"])
+  build -->|In Review: PR + report| S(["You: #quot;ship ABC-12#quot;"])
   S --> ship
   ship -->|Done: merged, checked live| E([Live])
   ideate -. fast lane: small and clear .-> C
@@ -45,7 +47,7 @@ claude plugin marketplace add el-sapo/sdlc-fede --scope user
 claude plugin install factory@sdlc-fede --scope user
 ```
 
-Restart the session afterwards; skills are discovered at session start. The skills then answer to `/factory:ideate`, `/factory:spec`, `/factory:build`, `/factory:ship` and `/factory:feature`, and to plain words such as "spec it", "code ABC-12", "ship ABC-12" and "build the feature ABC-47".
+Restart the session afterwards; skills are discovered at session start. The skills then answer to `/factory:setup`, `/factory:ideate`, `/factory:spec`, `/factory:build`, `/factory:ship` and `/factory:feature`, and to plain words such as "spec it", "code ABC-12", "ship ABC-12" and "build the feature ABC-47".
 
 With Codex:
 
@@ -64,7 +66,7 @@ The Codex and Cursor manifests ship; the skills have been exercised with Claude 
 
 A plugin installed on your machine loads in local sessions, including the ones you steer from your phone through Remote Control. Claude Code cloud sessions do not install plugins. Two ways to have the skills there:
 
-- Save the five skills on your claude.ai account (open each `SKILL.md` under `plugins/factory/skills/` and add it as a skill). Account skills load in cloud, app and terminal sessions alike.
+- Save the six skills on your claude.ai account (open each `SKILL.md` under `plugins/factory/skills/` and add it as a skill). Account skills load in cloud, app and terminal sessions alike.
 - Commit them into a repository's `.claude/skills/`, which loads in every session that opens that repository.
 
 The plugin is for sharing the process with a team or a friend; your account or the repository is how the skills reach cloud sessions.
@@ -74,13 +76,16 @@ The plugin is for sharing the process with a team or a friend; your account or t
 - **Linear** with the default statuses (Backlog, Todo, In Progress, In Review, Done) and the GitHub integration on, so branches link to issues. Nothing custom.
 - **GitHub** and a Linear connector in the sessions that run the skills.
 - **Hosting that deploys on merge** and builds a preview per pull request, for `ship` to watch. Without it, `ship` says "merged, not deployed" and stops there.
-- **An `AGENTS.md` in the repository** that says how to install, run, test and lint, and how the app deploys and where to check it live. The skills read it and follow it; they never edit it, and they name no platform of their own.
+- **An `AGENTS.md` in the repository** that says how to install, run, test and lint, and how the app deploys and where to check it live. The skills read it and follow it, and they name no platform of their own. Every agent obeys it, so `setup` only proposes it, as a pull request you merge; after that, keeping it right is yours.
 - **A session that can run the project.** A cloud session cannot build native apps or grant device permissions; for those, run the session on your machine. The skills say what each situation leaves to you.
 
-## The five skills
+Say "setup" once in the repository and it checks what a session can see of this list, then says what is missing, where to fix it, and what only you can check.
+
+## The six skills
 
 | Skill | Trigger | Job |
 |---|---|---|
+| [`setup`](plugins/factory/skills/setup/SKILL.md) | "setup" | Once per project, outside the loop: proves the install, run, test and lint commands by running them, checks Linear and every connection, proposes `AGENTS.md` as a pull request you merge, and reports ready or what is missing and where to fix it. Offers a first ticket. Never creates a repository, a team or hosting |
 | [`ideate`](plugins/factory/skills/ideate/SKILL.md) | an idea | A visual brief you can steer from a phone, then two or three options on a Linear issue, or a ready spec on the fast lane |
 | [`spec`](plugins/factory/skills/spec/SKILL.md) | "spec it" | A lean, buildable spec in the same issue: binary checks with how to verify them, real file names, a default for every open decision, sub-issues when it is more than one pull request |
 | [`build`](plugins/factory/skills/build/SKILL.md) | "code ABC-12" | A pull request built carefully and unattended: tests first, a fresh reviewer, evidence per check, a report on the issue. Never merges |
@@ -101,7 +106,7 @@ Every skill flags the same things, each as its own card with tags for complexity
 | Feature plan | Steps, worker and reviewers per step, where the run stops | How far the orchestrator goes |
 | In Review, a feature | The final pull request and the "Feature built" report | The merge of the whole feature, which is the deploy |
 
-Agents stop on their own for an irreversible operation, anything touching secrets or permissions beyond the spec, a discovery that changes what you approved, or a plan too broken to follow. They never merge during `build`, weaken a test to get to green, force a merge, deploy by hand, edit a repository's instructions file, or commit specs and plans.
+Agents stop on their own for an irreversible operation, anything touching secrets or permissions beyond the spec, a discovery that changes what you approved, or a plan too broken to follow. They never merge during `build`, weaken a test to get to green, force a merge, deploy by hand, edit a repository's instructions file (`setup` only proposes it, as a pull request you merge), or commit specs and plans.
 
 ## Principles
 
@@ -112,11 +117,11 @@ Agents stop on their own for an irreversible operation, anything touching secret
 - **Only code is committed.** Specs stay in Linear, plans stay in ignored scratch folders.
 - **Decide what you can, stop for what you must.** A question with a recorded default never blocks a build.
 
-[docs/design.md](docs/design.md) has the full design: lanes, templates, what each step generates, and the decisions with what was rejected. [docs/setup.md](docs/setup.md) walks through Linear, GitHub, hosting and a new repository. [docs/factory-flow.en.html](docs/factory-flow.en.html) is an animated one-page explainer of the line, also in Spanish as [docs/factory-flow.es.html](docs/factory-flow.es.html); open it in a browser.
+[docs/design.md](docs/design.md) has the full design: lanes, templates, what each step generates, and the decisions with what was rejected. [docs/setup.md](docs/setup.md) covers installing the plugin, connecting your accounts and running `setup`. [docs/factory-flow.en.html](docs/factory-flow.en.html) is an animated one-page explainer of the line, also in Spanish as [docs/factory-flow.es.html](docs/factory-flow.es.html); open it in a browser.
 
 ## Status
 
-v0.3. The loop has run on real tickets: `ideate`, `spec` and `build` on a native macOS app and a multiplatform app, `feature` on a four-issue feature across two repositories. That first `feature` run is what moved it from stacked pull requests to a feature branch with one final pull request; the new shape has not run on a real feature yet. `ship` has not yet run against hosting that deploys on merge. Dry runs with fresh agents are how each skill was tested before that. [docs/design.md](docs/design.md) says what is still untested and lists the known gaps, each with a workaround. Expect the skills to change as more tickets go through.
+v0.4. The loop has run on real tickets: `ideate`, `spec` and `build` on a native macOS app and a multiplatform app, `feature` on a four-issue feature across two repositories. That first `feature` run is what moved it from stacked pull requests to a feature branch with one final pull request; the new shape has not run on a real feature yet. `ship` has not yet run against hosting that deploys on merge. Dry runs with fresh agents are how each skill was tested before that; `setup`, new in 0.4, has run only in dry runs so far. [docs/design.md](docs/design.md) says what is still untested and lists the known gaps, each with a workaround. Expect the skills to change as more tickets go through.
 
 ## Validate a checkout
 

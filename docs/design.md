@@ -18,6 +18,12 @@ A lean, repeatable way to take an idea to shipped code with agents doing most of
 
 **The Linear issue is the thread, and sessions are disposable.** Every agent run starts by reading the issue and ends by writing to it. That one rule is what makes the rest work: any session can continue from the issue and the branch, so the orchestrator, a phone session and a terminal session are interchangeable.
 
+## Setup
+
+`setup` runs once per project, and again when asked, outside the four moments the person triggers. It readies the repo for the loop: it proves the install, run, test and lint commands by running them, asks only how the app deploys and where to check it live, checks the connections and the Linear team, project and statuses, and reports ready or what is missing and where to fix it. It remembers nothing between runs, so a re-run checks everything again and, on a ready repo, changes nothing.
+
+The instructions file is what every later agent obeys, so a change to it is a change to every agent. That is why setup never writes it directly: it proposes the file, or only the sections an existing one is missing, as a pull request the owner merges, and it never rewrites what is already there. The owner stays the only one who changes the file, and the pull request also proves the session can push and open one, which `build` depends on. When a harness blocks the write, setup gives the draft in chat for the owner to commit. It verifies connections without creating them and reads branch protection without setting it, because accounts and repository settings are the owner's to grant, and a session should not hold admin rights.
+
 ## The loop
 
 One skill per stage. The person speaks, the agent works alone, and the result lands on the issue.
@@ -102,6 +108,7 @@ The test for whether something earns a card: would the person be surprised or an
 
 | Issue rests in | They look at | They say | Their word approves |
 |---|---|---|---|
+| No issue yet: the project is not set up | Setup's report and its pull request | "setup", then merge | The instructions every agent follows |
 | Not filed yet | The read-back, if they are still there | The idea | Starting the work |
 | Backlog | The options page | "1 B, 2 ok, A. Spec it" | The direction. Skipped on the fast lane |
 | Todo | The spec in Linear, which they can edit | "Code ABC-12" | What gets built. This is where their time pays off most |
@@ -112,16 +119,19 @@ The test for whether something earns a card: would the person be surprised or an
 
 **Agents stop and ping** when an operation cannot be undone; when the work touches secrets, credentials, payments or permissions beyond the spec; when a discovery changes what was approved; when the plan is so broken that every path is a guess; when the issue has no spec; when a readiness check fails before a merge; and on the person's own machine, when a system permission prompt would appear. For anything else the agent decides, records the call under Decisions, and keeps going. A question with a recorded default never blocks a build.
 
-**Agents never** merge during `build` or push to the integration branch outside `ship`; weaken a test to get to green; force a merge or use admin rights; deploy by hand or touch production data; merge a revert; edit a repository's instructions file or copy third-party skills into a repository; commit specs, plans or ledgers; ask for a secret in chat; or start two workers on the same files at once.
+**Agents never** merge during `build` or push to the integration branch outside `ship`; weaken a test to get to green; force a merge or use admin rights; deploy by hand or touch production data; merge a revert; edit a repository's instructions file (setup only proposes it, through a pull request the owner merges) or copy third-party skills into a repository; commit specs, plans or ledgers; ask for a secret in chat; or start two workers on the same files at once.
 
 The production rule has one shape of exception, and it is not a rule change: when a run stops on it and the person, in the session, reads the stated risk and says to continue, the agent continues. It never happens unattended, and the stop and the risk come first.
 
 ## What each step generates
 
-Decisions and reports live on the Linear issue. Only code is committed.
+Decisions and reports live on the Linear issue. Only code is committed, plus the instructions file that `setup` proposes for the owner to merge.
 
 | Skill | Output | Where it lives |
 |---|---|---|
+| `setup` | Report: ready, or what is missing and where to fix it | Inline in the chat |
+| `setup` | Instructions-file pull request | GitHub, left for the owner to merge |
+| `setup` | A Linear project for the repository, only on the owner's yes | Linear |
 | `ideate` | Visual read-back | Inline in the chat |
 | `ideate` | Options page | A published page, linked from the issue |
 | `ideate` | The issue: options, a ready spec, or a parked note | Linear, assigned to the person |
@@ -169,7 +179,9 @@ Factory notes are one line for anything that made a ticket harder than it should
 | The spec stays in Linear, never in the repository | Living specs in the repository | Linear already holds the spec; a second home would be a second truth |
 | `build` keeps its own discipline: tests first, a fresh reviewer, evidence | Copies of third-party execution skills in every repository | The by-hand path was enough on every real run, and the copies added a dependency and a version to track |
 | Platform facts live in the repository's instructions file; the skills name no platform | Deploy steps or platform adapters inside the skills | Every app deploys differently, and a platform written into a skill breaks the next app |
-| Agents never edit a repository's instructions file | The agent adding to it | An agent's attempt was blocked as instruction poisoning in a test, and it should be |
+| Agents never edit a repository's instructions file; setup's one route is a pull request the owner merges | The agent adding to it | An agent's attempt was blocked as instruction poisoning in a test, and it should be |
+| `setup` proposes the instructions file, or its missing sections, as a pull request the owner merges | `setup` writing the file, or rewriting it on a re-run | Every later agent obeys it, so the owner stays the only one who changes it; the pull request also proves push access; and a harness had blocked a direct write as instruction poisoning |
+| `setup` checks branch protection and recommends a rule | `setup` setting it | It needs admin rights, and it is the owner's choice |
 | A fast lane in `ideate` | Every idea going through options and a spec turn | Taken from Warp Factories' triage step (implement, spec or wait) |
 | Visual proof in `build` stays a soft rule | Making it mandatory | Production is a single person for now |
 | No scoring of runs | Two facts recorded on each close-out | It would make the flow more complex |
@@ -184,7 +196,7 @@ Factory notes are one line for anything that made a ticket harder than it should
 
 Thought through and not built:
 
-- **A skill that reads the factory notes.** `ship` writes one line per friction on every close-out, and nothing reads them. A sixth skill could read those notes and the owner's corrections across recent issues and propose skill edits. A necessity for any factory in the long run, and a token cost, so a nice-to-have for now.
+- **A skill that reads the factory notes.** `ship` writes one line per friction on every close-out, and nothing reads them. A skill could read those notes and the owner's corrections across recent issues and propose skill edits. A necessity for any factory in the long run, and a token cost, so a nice-to-have for now.
 - **A team layer for three to five developers.** Ticket ownership and a limit on work in progress, one teammate's review after the agent's, autonomy levels per repository, a release step.
 - **Parallel steps in `feature`.** v0.1 runs steps one at a time. Independent sub-issues could run at once, on separate files.
 
@@ -194,7 +206,7 @@ Considered and declined: mandatory visual proof in `build`; scoring each run; be
 
 Tested on real tickets: `ideate`, `spec` and `build` end to end on a native desktop app and on a multiplatform app, including a run on the person's machine with a tool install and an owner-only permission check; `feature` on a multi-issue feature. Tested in dry runs with fresh agents: the three lanes, the Foundation card, the feature plan against a fixture of four sub-issues, `build` with and without a subagent tool.
 
-Not tested yet: `ship` against hosting that deploys on merge; a fast-lane spec going through `build`; the Codex manifest; `feature` continuing from a "Feature run" comment in a later session.
+Not tested yet: `ship` against hosting that deploys on merge; a fast-lane spec going through `build`; the Codex manifest; `feature` continuing from a "Feature run" comment in a later session; `setup` on a real repository, tried only in dry runs against three fixture repositories (fresh, ready, missing pieces).
 
 ## Known gaps
 

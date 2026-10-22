@@ -2,6 +2,13 @@
 
 The plugin version lives in `plugins/factory/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`; the three move together.
 
+## 0.4.0 (2026-10-22)
+
+- `setup`: a sixth skill, outside the loop, that readies a project once and re-checks it on request. It proves the install, run, test and lint commands by running them, asks only how the app deploys and where to check it live, verifies the tracker, push access and hosting without creating any of them, checks the Linear team, project and statuses, reports ready or a table of what is missing and where to fix it, and offers a first ticket that it hands to `ideate`.
+- `setup`: the instructions file reaches the repository only through a pull request the owner merges. An existing file is never rewritten; setup proposes only its missing sections, the same way. Branch protection is read and a rule recommended, never set.
+- Docs updated for six skills: the README, `docs/setup.md` (now install, connect, setup), `docs/design.md`, and station 00 on the flow pages.
+- CI: removed the step that compiled the deleted `tools/superpowers-skills.py`. It had failed on every run since 0.3.0, although the 0.3.0 entry said it was gone.
+
 ## 0.3.1 (2026-10-19)
 
 - Cursor manifests: `.cursor-plugin/marketplace.json` at the root and `plugins/factory/.cursor-plugin/plugin.json`, so Cursor shows the marketplace as `sdlc-fede` instead of a generated name. The validator checks them.
