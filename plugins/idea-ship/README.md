@@ -57,14 +57,18 @@ Nothing is sent anywhere else, and the plugin stores nothing. The only files it 
 
 | Skill | Claude Code, local | Claude Code, cloud | claude.ai chat | Cowork |
 |---|---|---|---|---|
-| `setup` | yes | yes, native builds excluded | being verified | being verified |
-| `ideate` | yes | yes | being verified | being verified |
-| `spec` | yes | yes | being verified | being verified |
-| `build` | yes | yes | being verified | being verified |
-| `ship` | yes | yes | being verified | being verified |
-| `feature` | yes | yes | being verified | being verified |
+| `setup` | yes | not verified yet; expected yes, native builds excluded | not verified yet; expected to stop: no shell | not verified yet |
+| `ideate` | yes | not verified yet; expected yes | not verified yet; expected yes with Linear | not verified yet |
+| `spec` | yes | not verified yet; expected yes | not verified yet; expected yes when the repository is readable | not verified yet |
+| `build` | yes | not verified yet; expected yes | not verified yet; expected to stop: no shell | not verified yet; expected to stop |
+| `ship` | yes | not verified yet; expected yes | not verified yet; expected to stop: no shell | not verified yet; expected to stop |
+| `feature` | yes, up to the plan you approve | not verified yet; expected yes | not verified yet; expected to stop: no workers | not verified yet; expected to stop |
 
-The skills are built and exercised in Claude Code. A local session runs everything, including native builds and simulators, except a check that would raise a system permission prompt, which stays yours. A cloud session cannot build native apps or grant device permissions, and the skills say which checks that leaves to you. Claude Code cloud sessions do not install plugins, so there the skills load from your claude.ai account or from a repository's `.claude/skills/` (see the install section linked below). The claude.ai chat and Cowork columns are being verified; skills that need a shell and git are expected to say so in one line and stop there.
+The Claude Code, local column comes from runs on a fixture repository and a fixture Linear project, one fresh session per skill, triggered by the plain phrase. A local session runs everything, including native builds and simulators, except a check that would raise a system permission prompt, which stays yours. A cloud session cannot build native apps or grant device permissions, and the skills say which checks that leaves to you. Claude Code cloud sessions do not install plugins, so there the skills load from your claude.ai account or from a repository's `.claude/skills/` (see the install section linked below).
+
+Where a skill needs a shell and git and the session has none, it says so in its first line, changes nothing on the issue and stops. That was checked for `setup`, `build`, `ship` and `feature` in Claude Code sessions with the shell turned off and no checkout; the claude.ai chat and Cowork cells change from "not verified yet" only after real runs there.
+
+When the same skills are present twice, for example a plugin and an older copy saved on your account, either copy may answer the phrase. Keep one.
 
 ## Links
 

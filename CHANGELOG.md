@@ -5,6 +5,7 @@ The plugin version lives in `plugins/idea-ship/.claude-plugin/plugin.json`, `.co
 ## 0.5.0 (unreleased)
 
 - Renamed the plugin from `factory` to `idea-ship`, display name "Idea Ship", because `factory` collides with a listed plugin. The folder is now `plugins/idea-ship/` and the slash triggers are `/idea-ship:setup` and friends; plain-word triggers are unchanged. The three marketplace files map `factory` to `idea-ship` under `renames`, so an existing install migrates on its next `claude plugin marketplace update sdlc-fede` and `claude plugin update`.
+- `build`: checks for a shell and a checkout before touching the issue. Without them it says so in one line and stops, instead of moving the issue to In Progress and posting a Handoff it cannot act on. The README's "Where it works" table now records the Claude Code local runs and marks the other surfaces not verified yet.
 
 ## 0.4.1 (2026-10-22)
 
