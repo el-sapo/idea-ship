@@ -1,6 +1,10 @@
 # Changelog
 
-The plugin version lives in `plugins/factory/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`; the three move together.
+The plugin version lives in `plugins/idea-ship/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`; the three move together.
+
+## 0.5.0 (unreleased)
+
+- Renamed the plugin from `factory` to `idea-ship`, display name "Idea Ship", because `factory` collides with a listed plugin. The folder is now `plugins/idea-ship/` and the slash triggers are `/idea-ship:setup` and friends; plain-word triggers are unchanged. The three marketplace files map `factory` to `idea-ship` under `renames`, so an existing install migrates on its next `claude plugin marketplace update sdlc-fede` and `claude plugin update`.
 
 ## 0.4.1 (2026-10-22)
 

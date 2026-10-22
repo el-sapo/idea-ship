@@ -2,7 +2,7 @@
 
 ## This repository is the source of truth
 
-The skills under `plugins/factory/skills/` are the canonical text. Copies saved on a Claude account or committed into a project's `.claude/skills/` are mirrors: after a change here, re-save them there. Nothing syncs them for you, and git keeps no history of account skills.
+The skills under `plugins/idea-ship/skills/` are the canonical text. Copies saved on a Claude account or committed into a project's `.claude/skills/` are mirrors: after a change here, re-save them there. Nothing syncs them for you, and git keeps no history of account skills.
 
 ## Editing a skill
 
@@ -18,7 +18,7 @@ The skills under `plugins/factory/skills/` are the canonical text. Copies saved 
 ```sh
 python3 scripts/validate.py
 claude plugin validate .claude-plugin/marketplace.json --strict
-claude plugin validate plugins/factory --strict
+claude plugin validate plugins/idea-ship --strict
 ```
 
 The first runs in CI. The other two need the Claude Code CLI.
