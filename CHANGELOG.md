@@ -4,7 +4,7 @@ The plugin version lives in `plugins/factory/.claude-plugin/plugin.json`, `.code
 
 ## 0.4.1 (2026-10-22)
 
-- `setup`: no tracker connector is a choice, not a gap. The first run says once that the chat will be the thread and that `feature` needs a tracker, and records "none" in the instructions file's Tracker section; later runs say nothing about it. A configured connector that fails to connect is still a gap.
+- `setup`: a missing or failing tracker connector no longer blocks Ready. Setup suggests connecting (or reconnecting) Linear under Recommended on each of its runs, says that without it the chat is the thread and `feature` cannot run, and leaves the Tracker section out of the draft. No other skill asks for a tracker.
 - Docs: Linear is optional in the README and `docs/setup.md`. The README gains the setup step after install and a row for a project not set up yet; the thread rule covers runs in the loop; "only code is committed" names the instructions file; `CONTRIBUTING.md` adds setup's template to the cross-skill contract and counts three manifests.
 
 ## 0.4.0 (2026-10-22)

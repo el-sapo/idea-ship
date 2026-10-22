@@ -53,7 +53,7 @@ Never ask for a secret in chat, not even one the deploy uses. The hosting or CI 
 
 Check each connection the loop needs by using it, read-only:
 
-- **The tracker can be read.** List the Linear teams. A connector that is configured but fails to connect is a gap: say to reconnect it. No tracker connector at all is a choice, not a gap: every skill but `feature` then uses the chat as the thread, giving its text to paste instead of saving it, and `feature` needs a tracker. Say that once, on the run that drafts the file, and record it in the file's Tracker section (section 5). When the file already says there is no tracker, say nothing about it: the owner has heard it, and a reminder on every run is noise.
+- **The tracker can be read.** List the Linear teams. The loop works without a tracker, so a missing or failing connector never makes the repo not ready: it goes under Recommended. With no connector, suggest connecting Linear, because then the issue is the thread a later session continues from; without it every skill but `feature` gives its text to paste in the chat, and `feature` needs a tracker to run. With a configured connector that fails to connect, suggest reconnecting it. Suggesting a tracker is setup's job: the other skills never ask for one, so say it here, on every run, and nowhere else.
 - **A branch can be pushed.** Run `git push --dry-run origin HEAD:refs/heads/factory-setup-check`: it checks access and pushes nothing. When setup opens its pull request, that push proves it for real. Without push access `build` cannot open a pull request; say to give the session write access to the repository.
 - **A pull request can be opened.** The session needs a tool that opens pull requests on this repository; check that it reaches the repository by listing its pull requests, and setup's own pull request proves the rest. Without one, `build` can push its branch but not open its pull request, so it is a gap even when nothing else is missing; say to connect the code host to the sessions.
 - **The hosting is visible**, when the repo shows any (a config file, a deploy workflow, a live link in the README). Use a hosting tool the session already has to see the project and its last deploy, or load the live URL. When neither works, `ship` can merge but cannot watch the deploy; that is a recommendation, not a gap, so say under Recommended to connect the hosting to the sessions.
@@ -62,7 +62,7 @@ Never create an account, a token, an integration or a hosting project to make a 
 
 ## 4. Check the tracker
 
-With no tracker by choice, skip this section and say nothing about it. When a configured connector fails, section 3 already reported it: say in the report that the team, project and statuses were not checked, still list the link to the code host below as an owner check, and skip the rest.
+When the tracker cannot be read, section 3 already put it under Recommended: skip this section, and leave the Tracker section out of the draft. A file without a Tracker section is not missing one while there is no tracker to name.
 
 - **The team.** Use the one team when there is one. When several could fit, ask which, with the one whose name or existing issues match the repository as the default. Never create a team: with none, say where to create one in Linear's settings.
 - **The project.** Look for a project for this repository, by the name the repository gives itself (its package manifest or README title, else the remote's name) or by a link to the repository. Reuse a match; when several match, ask which. With none, ask whether to create one with that name, and create it only when the owner says yes in this session: silence is not a yes, and this question has no default, so an "ok" to the defaults does not create it. `ideate` files ideas into this project. No project is not a gap, since `ideate` can file into the team and say the project is not confirmed; list it under Recommended, and the ready line says the team alone.
@@ -103,7 +103,6 @@ The URL or health endpoint to load after a deploy, and what a healthy answer loo
 ## Tracker
 Linear team: <name> · Project: <name>
 Statuses: the defaults, or the team's names for them when they differ.
-Or: none, the chat is the thread.
 ````
 
 Each section holds a command setup ran and saw work, an answer the owner gave, or a plain statement that the repo has none. A section setup could not prove is left out, never filled with a guess.
@@ -131,7 +130,7 @@ When nothing is missing, the report is the ready line, plus the other two lines 
 ```
 Ready: <the commands proven, and "none" for any the repo does not have> · <deploys on merge, or not deployed yet> · <checked at URL, or nothing to check> · <Linear team / project, or no tracker> · Session: cloud
 Owner checks: <what only the owner can see, such as the tracker's link to the code host>
-Recommended: <branch protection rule, or "not checked">, <anything else worth fixing>
+Recommended: <connect Linear, when the session has no tracker>, <branch protection rule, or "not checked">, <anything else worth fixing>
 ```
 
 When the only thing left is setup's own pull request, the line starts "Ready when you merge <link>".
@@ -143,7 +142,7 @@ Otherwise say "Not ready" and give a table with one row per gap:
 | Missing | Why it matters | Where to fix it |
 |---|---|---|
 | A test command | `build` runs the suite before and after every change; without one it has no baseline and cannot prove what it built | Add tests and a script or config that runs them, then say "setup" again |
-| The Linear connector fails to connect | It is configured, so the skills expect to read and write the issue | Reconnect it in the connectors of the sessions that run the skills |
+| A way to open pull requests | `build` can push its branch but cannot open its pull request | Connect the code host to the sessions that run the skills |
 
 Instructions file: <pull request link, pushed branch, "draft in chat", or "none until a test command works"> · Proven: install, run · Session: cloud
 Not checked: <anything setup could not see, such as the tracker's team, project and statuses>

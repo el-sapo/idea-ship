@@ -12,7 +12,7 @@ Those copies are mirrors. Nothing syncs them with the plugin, so re-save them af
 
 The sessions that run the skills need the repository, with push access and a way to open pull requests, so `build` can open a pull request and `ship` can merge.
 
-The Linear connector is your choice. With it, every skill reads the issue and writes back to it, so any later session can pick up the work; the connector writes as you, so Linear will usually not notify you of an agent's comment, and each skill ends with a short ping in the session for that reason. Without it, the chat is the thread: each skill gives you its text to paste instead of saving it, and `feature`, which keeps a run's state on the parent issue, cannot run. Setup says this once and records the choice in the instructions file; no skill asks you to connect a tracker after that.
+The Linear connector is your choice. With it, every skill reads the issue and writes back to it, so any later session can pick up the work; the connector writes as you, so Linear will usually not notify you of an agent's comment, and each skill ends with a short ping in the session for that reason. Without it, the chat is the thread: each skill gives you its text to paste instead of saving it, and `feature`, which keeps a run's state on the parent issue, cannot run. Setup suggests connecting it each time it runs, and never holds back a Ready for it; no other skill asks.
 
 If you use Linear, turn on the GitHub integration, so a branch named the way Linear suggests links its pull request to the issue. `build` uses Linear's suggested branch name when it can read it.
 
