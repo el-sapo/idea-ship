@@ -53,7 +53,7 @@ Never ask for a secret in chat, not even one the deploy uses. The hosting or CI 
 
 Check each connection the loop needs by using it, read-only:
 
-- **The tracker can be read.** List the Linear teams. Without a Linear connector every skill but `feature` falls back to the chat, and `feature` stops; report it and say to add the connector to the sessions that run the skills. A connector that is configured but fails to connect needs reconnecting, not adding; say which.
+- **The tracker can be read.** List the Linear teams. The loop works without a tracker, so a missing or failing connector never makes the repo not ready: it goes under Recommended. With no connector, suggest connecting Linear, because then the issue is the thread a later session continues from; without it every skill but `feature` gives its text to paste in the chat, and `feature` needs a tracker to run. With a configured connector that fails to connect, suggest reconnecting it. Suggesting a tracker is setup's job: the other skills never ask for one, so say it here, on every run, and nowhere else.
 - **A branch can be pushed.** Run `git push --dry-run origin HEAD:refs/heads/factory-setup-check`: it checks access and pushes nothing. When setup opens its pull request, that push proves it for real. Without push access `build` cannot open a pull request; say to give the session write access to the repository.
 - **A pull request can be opened.** The session needs a tool that opens pull requests on this repository; check that it reaches the repository by listing its pull requests, and setup's own pull request proves the rest. Without one, `build` can push its branch but not open its pull request, so it is a gap even when nothing else is missing; say to connect the code host to the sessions.
 - **The hosting is visible**, when the repo shows any (a config file, a deploy workflow, a live link in the README). Use a hosting tool the session already has to see the project and its last deploy, or load the live URL. When neither works, `ship` can merge but cannot watch the deploy; that is a recommendation, not a gap, so say under Recommended to connect the hosting to the sessions.
@@ -62,7 +62,7 @@ Never create an account, a token, an integration or a hosting project to make a 
 
 ## 4. Check the tracker
 
-When the tracker cannot be read, section 3 already reported it: say in the report that the team, project and statuses were not checked, still list the link to the code host below as an owner check, and skip the rest.
+When the tracker cannot be read, section 3 already put it under Recommended: skip this section, and leave the Tracker section out of the draft. A file without a Tracker section is not missing one while there is no tracker to name.
 
 - **The team.** Use the one team when there is one. When several could fit, ask which, with the one whose name or existing issues match the repository as the default. Never create a team: with none, say where to create one in Linear's settings.
 - **The project.** Look for a project for this repository, by the name the repository gives itself (its package manifest or README title, else the remote's name) or by a link to the repository. Reuse a match; when several match, ask which. With none, ask whether to create one with that name, and create it only when the owner says yes in this session: silence is not a yes, and this question has no default, so an "ok" to the defaults does not create it. `ideate` files ideas into this project. No project is not a gap, since `ideate` can file into the team and say the project is not confirmed; list it under Recommended, and the ready line says the team alone.
@@ -128,9 +128,9 @@ Never change the setting. It needs admin rights a session should not have, and i
 When nothing is missing, the report is the ready line, plus the other two lines when they have something to say:
 
 ```
-Ready: <the commands proven, and "none" for any the repo does not have> · <deploys on merge, or not deployed yet> · <checked at URL, or nothing to check> · Linear <team> / <project> · Session: cloud
+Ready: <the commands proven, and "none" for any the repo does not have> · <deploys on merge, or not deployed yet> · <checked at URL, or nothing to check> · <Linear team / project, or no tracker> · Session: cloud
 Owner checks: <what only the owner can see, such as the tracker's link to the code host>
-Recommended: <branch protection rule, or "not checked">, <anything else worth fixing>
+Recommended: <connect Linear, when the session has no tracker>, <branch protection rule, or "not checked">, <anything else worth fixing>
 ```
 
 When the only thing left is setup's own pull request, the line starts "Ready when you merge <link>".
@@ -142,7 +142,7 @@ Otherwise say "Not ready" and give a table with one row per gap:
 | Missing | Why it matters | Where to fix it |
 |---|---|---|
 | A test command | `build` runs the suite before and after every change; without one it has no baseline and cannot prove what it built | Add tests and a script or config that runs them, then say "setup" again |
-| The Linear connector | Every skill reads and writes the issue | The connectors of the sessions that run the skills |
+| A way to open pull requests | `build` can push its branch but cannot open its pull request | Connect the code host to the sessions that run the skills |
 
 Instructions file: <pull request link, pushed branch, "draft in chat", or "none until a test command works"> · Proven: install, run · Session: cloud
 Not checked: <anything setup could not see, such as the tracker's team, project and statuses>
@@ -154,7 +154,7 @@ End with a ping short enough for a phone notification: ready or not, how many ga
 
 ## 8. First ticket
 
-Offer one, do not force it. A first ticket runs the whole loop once and shows what still slows it down. Offer it only when the report says ready, or ready once the pull request merges, and the project (or, without one, the team) has no issues for this repository yet. Such an issue means the loop has already started, so a re-run offers nothing.
+Offer one, do not force it. A first ticket runs the whole loop once and shows what still slows it down. Offer it only when the report says ready, or ready once the pull request merges, and the project (or, without one, the team) has no issues for this repository yet. Such an issue means the loop has already started, so a re-run offers nothing. With no tracker, offer it only on the run that drafts the file.
 
 Make the offer one line with one small idea grounded in what you read: a missing test for a function you saw, a README step that is out of date, a lint warning. Pick something that fits one pull request and has code to read, so `ideate` can take the fast lane. On the owner's yes, or with their own idea in its place, hand the idea to `ideate` exactly as if the owner had said it. `ideate` files it; setup writes no spec of its own.
 

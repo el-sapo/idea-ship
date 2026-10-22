@@ -30,7 +30,7 @@ You speak four times. Everything in between is an agent working alone, in the cl
 | "Code ABC-12" | `build` | Branch, tests first, code, review, evidence for every check, pull request | A report with evidence, attention items and decisions | In Review |
 | "Ship ABC-12" | `ship` | Checks it is ready, merges, watches the deploy, looks at the live result | A close-out with what is next and factory notes | Done |
 
-When a ticket is small and clear, `ideate` takes the **fast lane** and files a ready-to-build spec, so you speak three times instead of four. When a feature is several tickets, `feature` runs them for you: it posts a plan, waits for your "go", then drives one build per sub-issue on a feature branch, verifies and integrates each, and hands you one pull request to ship.
+Before the first ticket, say "setup" once in the repository: it proves the project's commands, checks every connection, proposes `AGENTS.md` as a pull request you merge, and can hand a first small idea to `ideate`. When a ticket is small and clear, `ideate` takes the **fast lane** and files a ready-to-build spec, so you speak three times instead of four. When a feature is several tickets, `feature` runs them for you: it posts a plan, waits for your "go", then drives one build per sub-issue on a feature branch, verifies and integrates each, and hands you one pull request to ship.
 
 ## Install
 
@@ -62,6 +62,8 @@ With Cursor, add `https://github.com/el-sapo/sdlc-fede` as a marketplace in the 
 
 The Codex and Cursor manifests ship; the skills have been exercised with Claude Code.
 
+Then open a session on your repository and say "setup". It tells you what is ready, what is missing and where to fix it; [docs/setup.md](docs/setup.md) walks through it.
+
 ### Where the skills load
 
 A plugin installed on your machine loads in local sessions, including the ones you steer from your phone through Remote Control. Claude Code cloud sessions do not install plugins. Two ways to have the skills there:
@@ -73,8 +75,8 @@ The plugin is for sharing the process with a team or a friend; your account or t
 
 ## What you need
 
-- **Linear** with the default statuses (Backlog, Todo, In Progress, In Review, Done) and the GitHub integration on, so branches link to issues. Nothing custom.
-- **GitHub** and a Linear connector in the sessions that run the skills.
+- **GitHub** in the sessions that run the skills.
+- **Linear, if you want the issue to be the thread**, with the default statuses (Backlog, Todo, In Progress, In Review, Done), the GitHub integration on so branches link to issues, and a Linear connector in the sessions. Nothing custom. Without it the chat is the thread: each skill gives you its text to paste, and `feature` cannot run. `setup` suggests connecting it without holding back a Ready; no other skill asks.
 - **Hosting that deploys on merge** and builds a preview per pull request, for `ship` to watch. Without it, `ship` says "merged, not deployed" and stops there.
 - **An `AGENTS.md` in the repository** that says how to install, run, test and lint, and how the app deploys and where to check it live. The skills read it and follow it, and they name no platform of their own. Every agent obeys it, so `setup` only proposes it, as a pull request you merge; after that, keeping it right is yours.
 - **A session that can run the project.** A cloud session cannot build native apps or grant device permissions; for those, run the session on your machine. The skills say what each situation leaves to you.
@@ -100,6 +102,7 @@ Every skill flags the same things, each as its own card with tags for complexity
 
 | Issue rests in | You look at | Your word approves |
 |---|---|---|
+| No issue yet: the project is not set up | Setup's report and its `AGENTS.md` pull request | The instructions every agent follows |
 | Backlog | The options page: options, attention cards, numbered decisions | The direction |
 | Todo | The spec in Linear, which you can edit | What gets built. This is where your time pays off most |
 | In Review | The pull request, the preview, the report with evidence per check | The merge, which is also the deploy |
@@ -110,11 +113,11 @@ Agents stop on their own for an irreversible operation, anything touching secret
 
 ## Principles
 
-- **The Linear issue is the thread.** Every run starts by reading the issue and ends by writing to it. Nobody has to find a chat again.
+- **The Linear issue is the thread.** Every run in the loop starts by reading the issue and ends by writing to it. Nobody has to find a chat again. `setup` runs before there is an issue and ends with a report in the session.
 - **Pictures steer faster than paragraphs.** The first answer to an idea is a visual brief, laid out for a phone.
 - **Depth follows the idea.** The agent decides how much to show and how to size the work.
 - **Evidence, not claims.** A check has passed only when something was run and seen to pass. Checks only you can run are counted apart.
-- **Only code is committed.** Specs stay in Linear, plans stay in ignored scratch folders.
+- **Only code is committed.** Specs stay in Linear, plans stay in ignored scratch folders. The one exception is the instructions file, which `setup` proposes and you merge.
 - **Decide what you can, stop for what you must.** A question with a recorded default never blocks a build.
 
 [docs/design.md](docs/design.md) has the full design: lanes, templates, what each step generates, and the decisions with what was rejected. [docs/setup.md](docs/setup.md) covers installing the plugin, connecting your accounts and running `setup`. [docs/factory-flow.en.html](docs/factory-flow.en.html) is an animated one-page explainer of the line, also in Spanish as [docs/factory-flow.es.html](docs/factory-flow.es.html); open it in a browser.

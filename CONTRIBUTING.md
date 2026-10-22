@@ -11,7 +11,7 @@ The skills under `plugins/factory/skills/` are the canonical text. Copies saved 
 - Keep the examples neutral: `ABC-12` for an issue, `main` for the default branch, no real team keys, product names or people.
 - No em dashes. Use a comma, a colon or a full stop.
 - Stay under 500 lines per skill. A skill that needs more is two skills.
-- A change in what a skill writes to Linear (a template, a section name) is a change every other skill reads. Check `build` reads what `spec` writes, `ship` reads what `build` writes, and `feature` reads all three.
+- A change in what a skill writes to Linear (a template, a section name) is a change every other skill reads. Check `build` reads what `spec` writes, `ship` reads what `build` writes, and `feature` reads all three. The same goes for the instructions file: when `build` or `ship` starts reading something new from it, `setup`'s template needs a section for it.
 
 ## Before a commit
 
@@ -25,7 +25,7 @@ The first runs in CI. The other two need the Claude Code CLI.
 
 ## Testing a change
 
-Dry runs with fresh agents are the cheapest test: give a fresh session the changed skill, a fixture issue in a scratch folder, and the trigger phrase, and read what it produces against what the skill promises. Then run a real small ticket. A skill change that alters behaviour gets a line in `CHANGELOG.md` and bumps the version in both plugin manifests.
+Dry runs with fresh agents are the cheapest test: give a fresh session the changed skill, a fixture issue in a scratch folder (for `setup`, a fixture repository with a local bare remote), and the trigger phrase, and read what it produces against what the skill promises. Then run a real small ticket. A skill change that alters behaviour gets a line in `CHANGELOG.md` and bumps the version in all three plugin manifests.
 
 ## What does not belong here
 

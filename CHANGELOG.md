@@ -2,6 +2,11 @@
 
 The plugin version lives in `plugins/factory/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`; the three move together.
 
+## 0.4.1 (2026-10-22)
+
+- `setup`: a missing or failing tracker connector no longer blocks Ready. Setup suggests connecting (or reconnecting) Linear under Recommended on each of its runs, says that without it the chat is the thread and `feature` cannot run, and leaves the Tracker section out of the draft. No other skill asks for a tracker.
+- Docs: Linear is optional in the README and `docs/setup.md`. The README gains the setup step after install and a row for a project not set up yet; the thread rule covers runs in the loop; "only code is committed" names the instructions file; `CONTRIBUTING.md` adds setup's template to the cross-skill contract and counts three manifests.
+
 ## 0.4.0 (2026-10-22)
 
 - `setup`: a sixth skill, outside the loop, that readies a project once and re-checks it on request. It proves the install, run, test and lint commands by running them, asks only how the app deploys and where to check it live, verifies the tracker, push access and hosting without creating any of them, checks the Linear team, project and statuses, reports ready or a table of what is missing and where to fix it, and offers a first ticket that it hands to `ideate`.

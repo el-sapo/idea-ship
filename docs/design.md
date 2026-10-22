@@ -16,13 +16,13 @@ A lean, repeatable way to take an idea to shipped code with agents doing most of
 
 ## The rule
 
-**The Linear issue is the thread, and sessions are disposable.** Every agent run starts by reading the issue and ends by writing to it. That one rule is what makes the rest work: any session can continue from the issue and the branch, so the orchestrator, a phone session and a terminal session are interchangeable.
+**The Linear issue is the thread, and sessions are disposable.** Every run in the loop starts by reading the issue and ends by writing to it; `setup`, which readies a project before there is an issue, ends with a report in the session instead. That one rule is what makes the rest work: any session can continue from the issue and the branch, so the orchestrator, a phone session and a terminal session are interchangeable.
 
 ## Setup
 
 `setup` runs once per project, and again when asked, outside the four moments the person triggers. It readies the repo for the loop: it proves the install, run, test and lint commands by running them, asks only how the app deploys and where to check it live, checks the connections and the Linear team, project and statuses, and reports ready or what is missing and where to fix it. It remembers nothing between runs, so a re-run checks everything again and, on a ready repo, changes nothing.
 
-The instructions file is what every later agent obeys, so a change to it is a change to every agent. That is why setup never writes it directly: it proposes the file, or only the sections an existing one is missing, as a pull request the owner merges, and it never rewrites what is already there. The owner stays the only one who changes the file, and the pull request also proves the session can push and open one, which `build` depends on. When a harness blocks the write, setup gives the draft in chat for the owner to commit. It verifies connections without creating them and reads branch protection without setting it, because accounts and repository settings are the owner's to grant, and a session should not hold admin rights.
+The instructions file is what every later agent obeys, so a change to it is a change to every agent. That is why setup never writes it directly: it proposes the file, or only the sections an existing one is missing, as a pull request the owner merges, and it never rewrites what is already there. The owner stays the only one who changes the file, and the pull request also proves the session can push and open one, which `build` depends on. When a harness blocks the write, setup gives the draft in chat for the owner to commit. It verifies connections without creating them and reads branch protection without setting it, because accounts and repository settings are the owner's to grant, and a session should not hold admin rights. No tracker is not a gap: setup suggests connecting Linear each time it runs, and the repo can still be ready. Setup is the one place that suggests a tracker; the other skills never ask for one.
 
 ## The loop
 
@@ -162,7 +162,7 @@ Factory notes are one line for anything that made a ticket harder than it should
 - Depth follows the idea. The agent decides how much to show.
 - Loud about what needs attention, quiet about the rest.
 - Evidence, not claims. A check has passed only when something was run and seen to pass. Checks only the owner can run are counted apart.
-- Only code is committed.
+- Only code is committed, plus the instructions file the owner merges from `setup`.
 - Decide what you can, stop for what you must.
 - One approval covers one pull request. Merging is the deploy, so agents need no production credentials.
 - The plan is the contract. An orchestrator builds nothing before the plan is approved, and stops where the plan says.
@@ -182,6 +182,7 @@ Factory notes are one line for anything that made a ticket harder than it should
 | Agents never edit a repository's instructions file; setup's one route is a pull request the owner merges | The agent adding to it | An agent's attempt was blocked as instruction poisoning in a test, and it should be |
 | `setup` proposes the instructions file, or its missing sections, as a pull request the owner merges | `setup` writing the file, or rewriting it on a re-run | Every later agent obeys it, so the owner stays the only one who changes it; the pull request also proves push access; and a harness had blocked a direct write as instruction poisoning |
 | `setup` checks branch protection and recommends a rule | `setup` setting it | It needs admin rights, and it is the owner's choice |
+| `setup` suggests a tracker on its own runs and never blocks on it | A missing tracker as a gap, or a reminder from every skill on every run | The skills already fall back to the chat; setup is the place to suggest one, and only there |
 | A fast lane in `ideate` | Every idea going through options and a spec turn | Taken from Warp Factories' triage step (implement, spec or wait) |
 | Visual proof in `build` stays a soft rule | Making it mandatory | Production is a single person for now |
 | No scoring of runs | Two facts recorded on each close-out | It would make the flow more complex |
