@@ -1,6 +1,6 @@
 # factory
 
-Five skills that carry a Linear ticket from a spoken idea to a merged pull request. Install the plugin, connect Linear and GitHub in the session, and speak four times per ticket.
+Six skills: `setup` readies a project once, and five carry a Linear ticket from a spoken idea to a merged pull request. Install the plugin, connect Linear and GitHub in the session, say "setup" once per project, and speak four times per ticket.
 
 ```sh
 claude plugin install factory --marketplace el-sapo/sdlc-fede --scope user
@@ -10,6 +10,7 @@ One step on Claude Code 2.1.275 or later; older versions add the marketplace fir
 
 | Skill | You say | It leaves on the issue | Status after |
 |---|---|---|---|
+| `setup` | "setup", once per project | no issue yet: a report that says ready, or what is missing and where to fix it, and `AGENTS.md` as a pull request you merge | none |
 | `ideate` | an idea, even half-formed or by voice | options with a visual brief, or a ready spec on the fast lane | Backlog, or Todo |
 | `spec` | "1 B, 2 ok, option A. Spec it" | a lean, buildable spec; sub-issues when it is larger than one pull request | Todo |
 | `build` | "code ABC-12" | a pull request and a report with evidence per check | In Review |
