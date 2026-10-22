@@ -2,13 +2,15 @@
 """Check this marketplace repository before a commit.
 
 Verifies the marketplace and plugin manifests, every skill's front matter,
-the links between them, and a few house rules for the written text. Prints one
+the links between them, the folder rules a plugin directory enforces on each
+plugin folder, and a few house rules for the written text. Prints one
 line per problem and exits 1 when there is any. Needs only Python 3.9+.
 
   python3 scripts/validate.py
 """
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -21,6 +23,25 @@ KEBAB = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
 EM_DASH = "—"
 PROSE_GLOBS = ["*.md", "docs/*.md", "plugins/*/README.md", "plugins/*/skills/*/SKILL.md"]
+PLUGINS = ROOT / "plugins"
+
+# Folder rules a plugin directory enforces on a submitted plugin folder.
+SYSTEM_FILES = {".ds_store", "thumbs.db", "desktop.ini"}
+DEVICE_NAMES = {"con", "prn", "aux", "nul"} | {f"com{n}" for n in range(1, 10)} | {f"lpt{n}" for n in range(1, 10)}
+PACKAGE_FILES = {
+    "package.json", "package-lock.json", "npm-shrinkwrap.json", "yarn.lock", "pnpm-lock.yaml",
+    "bun.lock", "bun.lockb", "uv.lock", "poetry.lock", "pipfile.lock", "gemfile.lock", "cargo.lock",
+    ".npmrc", "bunfig.toml", "uv.toml",
+}
+RUNNERS = re.compile(r"\b(?:npx|bunx|uvx) |\bpipx run\b|\buv run\b|\bpnpm dlx\b|\byarn dlx\b")
+TEXT_SUFFIXES = {
+    "", ".md", ".markdown", ".txt", ".json", ".jsonc", ".yaml", ".yml", ".toml", ".svg", ".xml",
+    ".html", ".css", ".js", ".mjs", ".cjs", ".ts", ".py", ".sh", ".csv", ".ini", ".cfg",
+}
+RASTER_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
+FONT_SUFFIXES = {".ttf", ".otf", ".woff", ".woff2"}
+MAX_FILE_BYTES = 256 * 1024
+MAX_FILES = 512
 
 problems = []
 
@@ -201,6 +222,112 @@ def check_prose():
                 problem(path, "no newline at end of file")
 
 
+def complete_image_or_font(suffix, data):
+    """True when data is a whole file of the type its suffix names."""
+    if suffix == ".png":
+        return data.startswith(b"\x89PNG\r\n\x1a\n") and data.endswith(b"IEND\xaeB`\x82")
+    if suffix in (".jpg", ".jpeg"):
+        return data.startswith(b"\xff\xd8\xff") and data.endswith(b"\xff\xd9")
+    if suffix == ".gif":
+        return data[:6] in (b"GIF87a", b"GIF89a") and data.endswith(b";")
+    if suffix == ".webp":
+        return (data[:4] == b"RIFF" and data[8:12] == b"WEBP"
+                and int.from_bytes(data[4:8], "little") + 8 == len(data))
+    if suffix == ".woff":
+        return data[:4] == b"wOFF"
+    if suffix == ".woff2":
+        return data[:4] == b"wOF2"
+    if suffix in (".ttf", ".otf"):
+        return data[:4] in (b"\x00\x01\x00\x00", b"OTTO", b"true")
+    return False
+
+
+def as_text(data):
+    """The file's text when it is UTF-8 without NUL bytes, otherwise None."""
+    if b"\x00" in data:
+        return None
+    try:
+        return data.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+
+
+def check_name(path):
+    name = path.name
+    lower = name.lower()
+    if lower in SYSTEM_FILES or lower == "__macosx":
+        problem(path, "system file; remove it")
+    if ":" in name:
+        problem(path, "file name has a colon")
+    if name.endswith((".", " ")):
+        problem(path, "file name ends with a dot or a space")
+    if lower.split(".")[0] in DEVICE_NAMES:
+        problem(path, "file name is a Windows device name")
+    if lower in PACKAGE_FILES:
+        problem(path, "package manifest, lockfile or package manager config; a plugin folder carries none")
+
+
+def check_file(path):
+    data = path.read_bytes()
+    suffix = path.suffix.lower()
+    if suffix in RASTER_SUFFIXES or suffix in FONT_SUFFIXES:
+        if not complete_image_or_font(suffix, data):
+            problem(path, f"not a complete {suffix[1:].upper()} file")
+    else:
+        text = as_text(data)
+        if text is None or suffix not in TEXT_SUFFIXES:
+            problem(path, "binary or unknown file type; only text, PNG, JPEG, GIF, WebP, SVG and fonts are allowed")
+        elif RUNNERS.search(text):
+            problem(path, f"runs a package with '{RUNNERS.search(text).group(0).strip()}'; a plugin folder must not")
+    if suffix not in RASTER_SUFFIXES and len(data) > MAX_FILE_BYTES:
+        problem(path, f"{len(data) // 1024} KiB; files other than images stay under {MAX_FILE_BYTES // 1024} KiB")
+
+
+def check_plugin_folder(folder):
+    """Apply the directory's folder rules to every entry under one plugin folder."""
+    count = 0
+    for current, dirs, files in os.walk(folder):
+        here = Path(current)
+        seen = {}
+        for name in sorted(dirs + files):
+            seen.setdefault(name.lower(), []).append(name)
+        for names in seen.values():
+            if len(names) > 1:
+                problem(here / names[0], f"names differ only by case: {', '.join(names)}")
+        for name in list(dirs):
+            path = here / name
+            check_name(path)
+            if path.is_symlink():
+                problem(path, "symbolic link; copy the content instead")
+                dirs.remove(name)
+        for name in files:
+            path = here / name
+            count += 1
+            check_name(path)
+            if path.is_symlink():
+                problem(path, "symbolic link; copy the content instead")
+            elif path.is_file():
+                check_file(path)
+            else:
+                problem(path, "not a regular file")
+    if count > MAX_FILES:
+        problem(folder, f"{count} files; a plugin folder holds at most {MAX_FILES}")
+
+
+def check_plugins_tree():
+    """Every folder under plugins/ follows the folder rules, listed in a marketplace or not."""
+    if not PLUGINS.is_dir():
+        return
+    for entry in sorted(PLUGINS.iterdir()):
+        check_name(entry)
+        if entry.is_symlink():
+            problem(entry, "symbolic link; copy the content instead")
+        elif entry.is_dir():
+            check_plugin_folder(entry)
+        else:
+            problem(entry, "loose file; everything under plugins/ belongs to a plugin folder")
+
+
 def check_root_files():
     for name in ("README.md", "LICENSE", "CHANGELOG.md"):
         if not (ROOT / name).is_file():
@@ -213,6 +340,7 @@ def main():
     check_cursor_marketplace(sources)
     for name, folder in sources:
         check_plugin(name, folder)
+    check_plugins_tree()
     check_prose()
     check_root_files()
     if problems:
