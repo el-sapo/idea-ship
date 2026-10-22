@@ -16,7 +16,7 @@ A lean, repeatable way to take an idea to shipped code with agents doing most of
 
 ## The rule
 
-**The Linear issue is the thread, and sessions are disposable.** Every agent run starts by reading the issue and ends by writing to it. That one rule is what makes the rest work: any session can continue from the issue and the branch, so the orchestrator, a phone session and a terminal session are interchangeable.
+**The Linear issue is the thread, and sessions are disposable.** Every run in the loop starts by reading the issue and ends by writing to it; `setup`, which readies a project before there is an issue, ends with a report in the session instead. That one rule is what makes the rest work: any session can continue from the issue and the branch, so the orchestrator, a phone session and a terminal session are interchangeable.
 
 ## Setup
 
@@ -162,7 +162,7 @@ Factory notes are one line for anything that made a ticket harder than it should
 - Depth follows the idea. The agent decides how much to show.
 - Loud about what needs attention, quiet about the rest.
 - Evidence, not claims. A check has passed only when something was run and seen to pass. Checks only the owner can run are counted apart.
-- Only code is committed.
+- Only code is committed, plus the instructions file the owner merges from `setup`.
 - Decide what you can, stop for what you must.
 - One approval covers one pull request. Merging is the deploy, so agents need no production credentials.
 - The plan is the contract. An orchestrator builds nothing before the plan is approved, and stops where the plan says.
