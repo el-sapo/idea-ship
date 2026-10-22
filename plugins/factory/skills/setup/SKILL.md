@@ -19,7 +19,7 @@ Five principles explain the rules below:
 
 ## 1. Read the repo and prove the commands
 
-Read the README, the instructions file if there is one (`AGENTS.md` or `CLAUDE.md`), the package scripts and build files (a package manifest, a lockfile, a makefile or task runner), and the CI configuration if there is one, since it often runs the real test and lint commands. Find the default branch from the remote; when the remote names none, or names a branch that does not exist, take the only branch or the one the README or CI names, and say so in the report. If no repository is attached to the session, stop and say where to attach one, because everything else depends on it.
+Read the README, the instructions file if there is one (`AGENTS.md` or `CLAUDE.md`), the package scripts and build files (a package manifest, a lockfile, a makefile or task runner), and the CI configuration if there is one, since it often runs the real test and lint commands. Find the default branch from the remote; when the remote names none, or names a branch that does not exist, take the only branch or the one the README or CI names, and recommend setting it as the default in the report. If no repository is attached to the session, stop and say where to attach one, because everything else depends on it.
 
 Find the commands to install, run, test and lint, and run each one in that order:
 
@@ -111,7 +111,7 @@ Each section holds a command setup ran and saw work, an answer the owner gave, o
 
 **No file yet.** Draft it from the template and show it to the owner in the session. If they ask for changes, make them and show it again; a change they ask for is theirs, even a command setup could not prove, which the report then marks as unproven. On their yes, create the branch `factory-setup` from the default branch, commit only the instructions file with the pull request's title as the message, push, and open a pull request titled "Add the agent instructions file", with what setup proved and how in the body. When the session has no way to open a pull request, push the branch, give the title and body in the report, and tell the owner to open one from it. Then switch back to the branch you started on. Never commit to the default branch, and never merge the pull request: merging is the owner's act.
 
-**A file already exists.** Never rewrite it. Prove its commands as in section 1, then compare it to the template by meaning, not by heading: a Commands section that gives the test command covers Test. List the gaps. When sections are missing, propose only those, appended at the end, and on the owner's yes deliver them the same way, in a pull request whose diff only adds lines. A command in the file that no longer works is a finding for the report, not a change setup makes. When nothing is missing, open nothing.
+**A file already exists.** Never rewrite it. Prove its commands as in section 1, then compare it to the template by meaning, not by heading: a Commands section that gives the test command covers Test. A section that is there counts as covered; a fact it lacks goes under Recommended. List the gaps. When sections are missing, propose only those, appended at the end, and on the owner's yes deliver them the same way, in a pull request whose diff only adds lines. A command in the file that no longer works is a finding for the report, not a change setup makes. When nothing is missing, open nothing.
 
 **An earlier run's pull request.** Look for a `factory-setup` branch or pull request before creating one. When one is open, link it in the report and leave it alone. When one was closed without merging, the owner said no once: ask before proposing again.
 
@@ -141,7 +141,7 @@ Otherwise say "Not ready" and give a table with one row per gap:
 ## Not ready
 | Missing | Why it matters | Where to fix it |
 |---|---|---|
-| A test command | `build` runs the suite before and after every change, and stops without one | Add a test script, then say "setup" again |
+| A test command | `build` runs the suite before and after every change, and stops without one | Add tests and a script or config that runs them, then say "setup" again |
 | The Linear connector | Every skill reads and writes the issue | The connectors of the sessions that run the skills |
 
 Instructions file: <pull request link, pushed branch, "draft in chat", or "none until a test command works"> · Proven: install, run · Session: cloud
@@ -150,7 +150,7 @@ Owner checks: <what only the owner can see>
 Recommended: <branch protection rule, failing tests, anything else worth fixing>
 ````
 
-End with a ping short enough for a phone notification: ready or not, how many gaps, the pull request link when there is one, and the next step, which is to merge the pull request, fix the rows, or say "setup" again to re-check. When section 8 makes an offer, it goes in the same message, just before the ping.
+End with a ping short enough for a phone notification: ready or not, how many gaps, the pull request link when there is one, and the next step, which is to merge the pull request, fix the rows and say "setup" again, or, when nothing is left, bring the first idea. When section 8 makes an offer, it goes in the same message, just before the ping.
 
 ## 8. First ticket
 
