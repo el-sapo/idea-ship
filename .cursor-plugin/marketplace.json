@@ -6,9 +6,6 @@
   "metadata": {
     "description": "A lean software factory for small teams and solo builders: six agent skills that take an idea to a merged pull request, with the Linear issue as the thread."
   },
-  "renames": {
-    "factory": "idea-ship"
-  },
   "plugins": [
     {
       "name": "idea-ship",
