@@ -41,19 +41,19 @@ Before the first ticket, say "setup" once in the repository: it proves the proje
 
 ## Install
 
-The plugin is `idea-ship` (display name "Idea Ship"), from the `sdlc-fede` marketplace.
+The plugin is `idea-ship` (display name "Idea Ship"), from the `idea-ship` marketplace.
 
 With Claude Code 2.1.275 or later, one step:
 
 ```sh
-claude plugin install idea-ship --marketplace el-sapo/sdlc-fede --scope user
+claude plugin install idea-ship --marketplace el-sapo/idea-ship --scope user
 ```
 
 Or in two, which works on older versions too:
 
 ```sh
-claude plugin marketplace add el-sapo/sdlc-fede --scope user
-claude plugin install idea-ship@sdlc-fede --scope user
+claude plugin marketplace add el-sapo/idea-ship --scope user
+claude plugin install idea-ship@idea-ship --scope user
 ```
 
 Restart the session afterwards; skills are discovered at session start. The skills then answer to `/idea-ship:setup`, `/idea-ship:ideate`, `/idea-ship:spec`, `/idea-ship:build`, `/idea-ship:ship` and `/idea-ship:feature`, and to plain words such as "spec it", "code ABC-12", "ship ABC-12" and "build the feature ABC-47".
@@ -61,15 +61,27 @@ Restart the session afterwards; skills are discovered at session start. The skil
 With Codex:
 
 ```sh
-codex plugin marketplace add el-sapo/sdlc-fede
-codex plugin add idea-ship@sdlc-fede
+codex plugin marketplace add el-sapo/idea-ship
+codex plugin add idea-ship@idea-ship
 ```
 
 Start a new Codex task afterwards so it discovers the skills.
 
-With Cursor, add `https://github.com/el-sapo/sdlc-fede` as a marketplace in the plugin settings, then add `idea-ship` from the `sdlc-fede` marketplace.
+With Cursor, add `https://github.com/el-sapo/idea-ship` as a marketplace in the plugin settings, then add `idea-ship` from the `idea-ship` marketplace.
 
 The Codex and Cursor manifests ship; the skills have been exercised with Claude Code.
+
+### Moving from `factory@sdlc-fede`
+
+Until 0.5.0 the plugin was `factory` and the marketplace and repository were `sdlc-fede`. An install made then does not update in place: remove the old marketplace, add the new one and install the plugin again.
+
+```sh
+claude plugin marketplace remove sdlc-fede
+claude plugin marketplace add el-sapo/idea-ship --scope user
+claude plugin install idea-ship@idea-ship --scope user
+```
+
+With Codex or Cursor, remove the `sdlc-fede` marketplace the same way and add `el-sapo/idea-ship` as above. Restart the session afterwards.
 
 Then open a session on your repository and say "setup". It tells you what is ready, what is missing and where to fix it; [docs/setup.md](docs/setup.md) walks through it.
 

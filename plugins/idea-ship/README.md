@@ -17,9 +17,9 @@ A lean software factory for solo builders and small teams: six skills that take 
 
 Every skill ends with a message short enough for a phone notification that says what to do next. The skills answer to plain words; `/idea-ship:ideate` and friends work too. `ABC-12`, `ABC-47` and `main` are example identifiers; your team key and branch names come from Linear and the repository at run time.
 
-![The read-back ideate shows seconds after an idea: what it understood, a flow, a grey-box mockup, attention cards and numbered decisions](https://raw.githubusercontent.com/el-sapo/sdlc-fede/main/docs/examples/read-back.png)
+![The read-back ideate shows seconds after an idea: what it understood, a flow, a grey-box mockup, attention cards and numbered decisions](https://raw.githubusercontent.com/el-sapo/idea-ship/main/docs/examples/read-back.png)
 
-![The report build leaves on the issue: what was built, every check with its evidence, attention items and the decisions it took](https://raw.githubusercontent.com/el-sapo/sdlc-fede/main/docs/examples/build-report.png)
+![The report build leaves on the issue: what was built, every check with its evidence, attention items and the decisions it took](https://raw.githubusercontent.com/el-sapo/idea-ship/main/docs/examples/build-report.png)
 
 Three rules hold throughout:
 
@@ -72,25 +72,31 @@ When the same skills are present twice, for example a plugin and an older copy s
 
 ## Links
 
-- Repository: https://github.com/el-sapo/sdlc-fede
-- Install, every client and version: https://github.com/el-sapo/sdlc-fede#install
-- Design: https://github.com/el-sapo/sdlc-fede/blob/main/docs/design.md
-- Changelog: https://github.com/el-sapo/sdlc-fede/blob/main/CHANGELOG.md
+- Repository: https://github.com/el-sapo/idea-ship
+- Install, every client and version: https://github.com/el-sapo/idea-ship#install
+- Design: https://github.com/el-sapo/idea-ship/blob/main/docs/design.md
+- Changelog: https://github.com/el-sapo/idea-ship/blob/main/CHANGELOG.md
 
 Installing from the git marketplace instead of the directory, on Claude Code before 2.1.275:
 
 ```sh
-claude plugin marketplace add el-sapo/sdlc-fede --scope user
-claude plugin install idea-ship@sdlc-fede --scope user
+claude plugin marketplace add el-sapo/idea-ship --scope user
+claude plugin install idea-ship@idea-ship --scope user
 ```
 
 With Codex:
 
 ```sh
-codex plugin marketplace add el-sapo/sdlc-fede
-codex plugin add idea-ship@sdlc-fede
+codex plugin marketplace add el-sapo/idea-ship
+codex plugin add idea-ship@idea-ship
 ```
 
-With Cursor, add `https://github.com/el-sapo/sdlc-fede` as a marketplace in the plugin settings, then add `idea-ship` from the `sdlc-fede` marketplace.
+With Cursor, add `https://github.com/el-sapo/idea-ship` as a marketplace in the plugin settings, then add `idea-ship` from the `idea-ship` marketplace.
 
-The plugin was called `factory` until 0.5.0. The marketplace maps `factory` to `idea-ship`, so an existing install migrates on its next `claude plugin marketplace update sdlc-fede` and `claude plugin update`.
+The plugin was called `factory`, in the `sdlc-fede` marketplace, until 0.5.0. That install does not update in place; move it with three commands:
+
+```sh
+claude plugin marketplace remove sdlc-fede
+claude plugin marketplace add el-sapo/idea-ship --scope user
+claude plugin install idea-ship@idea-ship --scope user
+```

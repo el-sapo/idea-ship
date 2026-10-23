@@ -5,8 +5,8 @@
   "author": {
     "name": "Federico Lagarmilla"
   },
-  "homepage": "https://github.com/el-sapo/sdlc-fede/tree/main/plugins/idea-ship",
-  "repository": "https://github.com/el-sapo/sdlc-fede",
+  "homepage": "https://github.com/el-sapo/idea-ship/tree/main/plugins/idea-ship",
+  "repository": "https://github.com/el-sapo/idea-ship",
   "license": "MIT",
   "keywords": ["sdlc", "linear", "github", "pull-request", "agents", "workflow"],
   "skills": "./skills/"

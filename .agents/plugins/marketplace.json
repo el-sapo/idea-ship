@@ -1,7 +1,7 @@
 {
-  "name": "sdlc-fede",
+  "name": "idea-ship",
   "interface": {
-    "displayName": "SDLC Fede"
+    "displayName": "Idea Ship"
   },
   "renames": {
     "factory": "idea-ship"
