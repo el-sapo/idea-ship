@@ -192,6 +192,7 @@ Factory notes are one line for anything that made a ticket harder than it should
 | The orchestrator merges verified steps into the feature branch | Approving each step's merge | Nothing deploys from the feature branch, so the merge is integration, not release; "steps on my word" keeps the other option |
 | One reviewer by default, two on complex or integration-heavy steps | Two reviewers on every step | Two found real things on the first run, but at a token cost that only pays on the risky steps |
 | Owner checks counted apart | Reporting them as not passing | "3 of 6 passed, 3 owner" says what it means; "3 of 6" does not |
+| The plugin directory is the distribution for Claude surfaces; the git marketplace stays for Codex, Cursor and following `main` | Skill copies saved on the account, or a git marketplace added on claude.ai, to reach cloud sessions | A directory install syncs to the account, so it reaches chat, Cowork and every Claude Code session, and it updates when a version is published; copies had to be re-saved after every change, and an old copy kept answering beside the new one |
 
 ## Parked
 

@@ -4,9 +4,9 @@ How a project gets ready for the first ticket: install the plugin, connect accou
 
 ## 1. Install the plugin
 
-Install the plugin for local sessions. Cloud sessions do not install plugins, so for those save the six skills on your account or commit them to the repository's `.claude/skills/`; the [README](../README.md#where-the-skills-load) says why both exist.
+Add Idea Ship from the plugin directory on claude.ai. A directory install syncs to your account, so the skills load in claude.ai chat, Cowork and every Claude Code session, local or cloud, and they update when a new version is published. For Codex or Cursor, or to follow the repository instead of published versions, install from the git marketplace; the [README](../README.md#install) has the commands and says where each install loads.
 
-Those copies are mirrors. Nothing syncs them with the plugin, so re-save them after every update, or cloud sessions keep running the old skills.
+Keep one install per surface. If you installed the skills on claude.ai from the git marketplace before the listing existed, remove that install once the directory one is in place, or two copies answer the same phrase.
 
 ## 2. Connect accounts
 
