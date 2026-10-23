@@ -81,18 +81,6 @@ With Cursor, add `https://github.com/el-sapo/idea-ship` as a marketplace in the 
 
 The Codex and Cursor manifests ship; the skills have been exercised with Claude Code.
 
-### Moving from `factory@sdlc-fede`
-
-Until 0.5.0 the plugin was `factory` and the marketplace and repository were `sdlc-fede`. An install made then does not update in place: remove the old marketplace, add the new one and install the plugin again.
-
-```sh
-claude plugin marketplace remove sdlc-fede
-claude plugin marketplace add el-sapo/idea-ship --scope user
-claude plugin install idea-ship@idea-ship --scope user
-```
-
-With Codex or Cursor, remove the `sdlc-fede` marketplace the same way and add `el-sapo/idea-ship` as above. Restart the session afterwards.
-
 Then open a session on your repository and say "setup". It tells you what is ready, what is missing and where to fix it; [docs/setup.md](docs/setup.md) walks through it.
 
 ### Where the skills load
