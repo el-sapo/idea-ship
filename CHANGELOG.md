@@ -2,10 +2,16 @@
 
 The plugin version lives in `plugins/idea-ship/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`; the three move together.
 
-## 0.5.0 (unreleased)
+## 0.5.0 (2026-10-23)
 
-- Renamed the plugin from `factory` to `idea-ship`, display name "Idea Ship", because `factory` collides with a listed plugin. The folder is now `plugins/idea-ship/` and the slash triggers are `/idea-ship:setup` and friends; plain-word triggers are unchanged. The three marketplace files map `factory` to `idea-ship` under `renames`, so an existing install migrates on its next `claude plugin marketplace update sdlc-fede` and `claude plugin update`.
-- Icon: the plugin ships a listing icon, a folded-paper sailboat rendered at 1024 px from `assets/mark.svg` (with a dark variant and the paper-boat direction kept beside it). `scripts/render-icon.py` regenerates it and `scripts/validate.py` checks it is a square PNG the directory accepts.
+Ready for a plugin directory listing: the plugin folder now carries its own name, display name, icon, README and licence, and passes the folder rules a directory enforces. The directory tracks `main`; auto-publish stays off, so a merge shows up as a scanned version and goes live only on a Publish click.
+
+- Renamed the plugin from `factory` to `idea-ship`, because `factory` collides with a listed plugin. The folder is now `plugins/idea-ship/` and the slash triggers are `/idea-ship:setup` and friends; plain-word triggers are unchanged. The three marketplace files map `factory` to `idea-ship` under `renames`, so an existing install migrates on its next `claude plugin marketplace update sdlc-fede` and `claude plugin update`.
+- `displayName`: the plugin manifests show it as "Idea Ship".
+- Icon and mark: the plugin ships a listing icon, a folded-paper sailboat in the Harbour Coral palette rendered at 1024 px from `assets/mark.svg`, with a dark variant and the paper-boat direction kept beside it under `assets/`. `scripts/render-icon.py` regenerates it and `scripts/validate.py` checks it is a square PNG the directory accepts.
+- README: the plugin README is rewritten as the directory listing, with a one-line pitch, the loop table, what you need, what the skills run and send, a "Where it works" table per surface, and absolute links only, so the folder carries no screenshots.
+- `LICENSE`: a copy now sits in `plugins/idea-ship/`, so a zip of the plugin folder is self-contained.
+- Validator: `scripts/validate.py` applies the directory's folder rules to each plugin folder: no system files, unsafe names, case collisions or symbolic links; only text, complete images and fonts; a size and file count budget; and no package manifests, lockfiles or package runners.
 - `build`: checks for a shell and a checkout before touching the issue. Without them it says so in one line and stops, instead of moving the issue to In Progress and posting a Handoff it cannot act on. The README's "Where it works" table now records the Claude Code local runs and marks the other surfaces not verified yet.
 - `ship`: checks for a shell and a checkout before finding the work. Without them it says so in one line and stops, changing nothing on the issue or the pull request, instead of reading the pull request through a connector (such as the tracker's link to the code host) that it cannot verify a merge with. The README's "What it runs and sends" also names the worktree `feature` makes when the checkout is in use and the file a secret pasted in chat is moved into.
 
