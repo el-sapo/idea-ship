@@ -51,19 +51,19 @@ The skills then answer to `/idea-ship:setup`, `/idea-ship:ideate`, `/idea-ship:s
 
 ### From the git marketplace: Codex, Cursor, or following the repository
 
-The `sdlc-fede` marketplace in this repository serves the same plugin. Use it for Codex and Cursor, or in Claude Code when you want what is on `main` rather than the published version.
+The `idea-ship` marketplace in this repository serves the same plugin. Use it for Codex and Cursor, or in Claude Code when you want what is on `main` rather than the published version.
 
 With Claude Code 2.1.275 or later, one step:
 
 ```sh
-claude plugin install idea-ship --marketplace el-sapo/sdlc-fede --scope user
+claude plugin install idea-ship --marketplace el-sapo/idea-ship --scope user
 ```
 
 Or in two, which works on older versions too:
 
 ```sh
-claude plugin marketplace add el-sapo/sdlc-fede --scope user
-claude plugin install idea-ship@sdlc-fede --scope user
+claude plugin marketplace add el-sapo/idea-ship --scope user
+claude plugin install idea-ship@idea-ship --scope user
 ```
 
 Restart the session afterwards.
@@ -71,15 +71,27 @@ Restart the session afterwards.
 With Codex:
 
 ```sh
-codex plugin marketplace add el-sapo/sdlc-fede
-codex plugin add idea-ship@sdlc-fede
+codex plugin marketplace add el-sapo/idea-ship
+codex plugin add idea-ship@idea-ship
 ```
 
 Start a new Codex task afterwards so it discovers the skills.
 
-With Cursor, add `https://github.com/el-sapo/sdlc-fede` as a marketplace in the plugin settings, then add `idea-ship` from the `sdlc-fede` marketplace.
+With Cursor, add `https://github.com/el-sapo/idea-ship` as a marketplace in the plugin settings, then add `idea-ship` from the `idea-ship` marketplace.
 
 The Codex and Cursor manifests ship; the skills have been exercised with Claude Code.
+
+### Moving from `factory@sdlc-fede`
+
+Until 0.5.0 the plugin was `factory` and the marketplace and repository were `sdlc-fede`. An install made then does not update in place: remove the old marketplace, add the new one and install the plugin again.
+
+```sh
+claude plugin marketplace remove sdlc-fede
+claude plugin marketplace add el-sapo/idea-ship --scope user
+claude plugin install idea-ship@idea-ship --scope user
+```
+
+With Codex or Cursor, remove the `sdlc-fede` marketplace the same way and add `el-sapo/idea-ship` as above. Restart the session afterwards.
 
 Then open a session on your repository and say "setup". It tells you what is ready, what is missing and where to fix it; [docs/setup.md](docs/setup.md) walks through it.
 
@@ -89,7 +101,7 @@ A directory install is on your account, so the skills load wherever you sign in:
 
 A plugin installed with `claude plugin install` from the git marketplace loads only in local sessions on the machine that installed it.
 
-If you added the `sdlc-fede` marketplace on claude.ai before the listing existed, to get the skills into cloud sessions, remove that install (and the older `factory` one, in every organization you use) once Idea Ship from the directory is in place, so only one copy answers.
+If your skills reach cloud sessions through the `sdlc-fede` marketplace you added earlier on claude.ai, from before the listing and the rename to `idea-ship`, remove that install (and the older `factory` one, in every organization you use) once Idea Ship from the directory is in place, so only one copy answers.
 
 A repository can also commit the skills into its own `.claude/skills/`, which loads in every session that opens it with no install at all. That copy is a mirror: nothing updates it, so it has to be copied again after each release ([CONTRIBUTING.md](CONTRIBUTING.md)).
 

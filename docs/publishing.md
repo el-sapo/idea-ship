@@ -22,7 +22,7 @@ Local check, from the repository root: `claude plugin validate plugins/<name> --
 | Date | What happened |
 |---|---|
 | 22 Oct 2026 | Portal Validate on the old name; rename decided. Plan approved; rename, listing README, folder checks and local surface runs built. Icon direction picked |
-| 23 Oct 2026 | Icon palette picked, icon committed, release 0.5.0 prepared, portal visited read-only, docs updated |
+| 23 Oct 2026 | Icon palette picked, icon committed, release 0.5.0 prepared, portal visited read-only, docs updated. Repository and marketplace renamed to `idea-ship` |
 | Pending, fill in after step 8 | Submitted, review started |
 | Pending, fill in after step 8 | Review finished, published, listing live |
 
@@ -30,11 +30,13 @@ Local check, from the repository root: `claude plugin validate plugins/<name> --
 
 **Do.** Run the portal's Validate on the folder before anything else. It is the only check that tells you whether the name will be held. Pick the name before the icon, the README and the first portal save, because none of them can change it later.
 
-**Happened.** Validate on 22 Oct 2026, on the folder then called `factory` at `main@7b33d0c`: 7 checks, 1 warning (no icon) and 1 policy hold, because `factory` matched the display name "Factory" of a plugin already listed. A search also found an existing Claude Code plugin with a near name in the same category, and a coding-agent company with the same word. The plugin was renamed `idea-ship`, display name "Idea Ship": it names the loop (ideate to ship), had no collision in developer tooling, and gave the mark its subject. The marketplace kept its name, `sdlc-fede`.
+**Happened.** Validate on 22 Oct 2026, on the folder then called `factory` at `main@7b33d0c`: 7 checks, 1 warning (no icon) and 1 policy hold, because `factory` matched the display name "Factory" of a plugin already listed. A search also found an existing Claude Code plugin with a near name in the same category, and a coding-agent company with the same word. The plugin was renamed `idea-ship`, display name "Idea Ship": it names the loop (ideate to ship), had no collision in developer tooling, and gave the mark its subject. The marketplace and the repository kept the name `sdlc-fede` at first, and were renamed `idea-ship` the next day (below).
 
-The rename moved the folder, set `name` and `displayName` in the three plugin manifests, and added a `renames` map from `factory` to `idea-ship` in all three marketplace files, without which existing installs fail with "not found in marketplace" on their next update. Slash triggers changed to `/idea-ship:<skill>`; plain-word triggers did not. Five of six checks passed. The migration of an existing install is an owner check that runs only after the rename reaches `main`, which the marketplace serves: Pending, fill in after step 8.
+The rename moved the folder, set `name` and `displayName` in the three plugin manifests, and added a `renames` map from `factory` to `idea-ship` in all three marketplace files. Slash triggers changed to `/idea-ship:<skill>`; plain-word triggers did not. Five of six checks passed. With the marketplace renamed too, an existing `factory@sdlc-fede` install does not update in place; it moves with three commands: `claude plugin marketplace remove sdlc-fede`, `claude plugin marketplace add el-sapo/idea-ship --scope user` and `claude plugin install idea-ship@idea-ship --scope user`. Running them on an existing install is an owner check, once the rename is on `main`: Pending, fill in after step 8.
 
-**For Itakua.** Decide the name and run Validate on it first; avoid a generic word.
+**Renamed again, 23 Oct 2026.** The owner renamed the GitHub repository from `el-sapo/sdlc-fede` to `el-sapo/idea-ship` and the marketplace from `sdlc-fede` to `idea-ship`, so the plugin installs as `idea-ship@idea-ship`. Why: the portal fixes the submission's repository and folder at submit, so a later rename would mean a new submission, and the owner wanted one name everywhere. What it cost: existing `factory@sdlc-fede` installs move with the three commands above instead of updating in place, and GitHub Pages moved to `el-sapo.github.io/idea-ship/` with no redirect from the old address. Every link, install id and marketplace command in the repository moved with it.
+
+**For Itakua.** Decide the name and run Validate on it first; avoid a generic word. Settle the repository and marketplace names before submitting too, since the submission fixes the repository and folder.
 
 ## 2. Draw the mark and the icon
 
@@ -125,7 +127,7 @@ Every session loaded two copies of the skills: the branch's `idea-ship` and an o
 
 ## The order for the next plugin
 
-1. Name: run Validate on the candidate in the portal; avoid a generic word. Permanent.
+1. Name: run Validate on the candidate in the portal; avoid a generic word. Permanent. Settle the repository and marketplace names at the same time.
 2. Icon: SVG source, PNG render, the owner's pick at 48 px. Fixed at the first portal save.
 3. Folder README as the listing, with the disclosure written from the skill text.
 4. Folder checks in the validator, so the listing cannot regress.
