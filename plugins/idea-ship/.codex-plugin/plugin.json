@@ -1,18 +1,18 @@
 {
-  "name": "factory",
-  "version": "0.4.1",
+  "name": "idea-ship",
+  "version": "0.5.0",
   "description": "The factory loop: setup once per project, then ideate, spec, build, ship, and feature to run a whole feature. The Linear issue is the thread, sessions are disposable, and you step in at most four times per ticket.",
   "author": {
     "name": "Federico Lagarmilla",
     "url": "https://github.com/el-sapo"
   },
-  "homepage": "https://github.com/el-sapo/sdlc-fede/tree/main/plugins/factory",
-  "repository": "https://github.com/el-sapo/sdlc-fede",
+  "homepage": "https://github.com/el-sapo/idea-ship/tree/main/plugins/idea-ship",
+  "repository": "https://github.com/el-sapo/idea-ship",
   "license": "MIT",
   "keywords": ["sdlc", "linear", "github", "pull-request", "agents", "workflow"],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Factory",
+    "displayName": "Idea Ship",
     "shortDescription": "A lean software factory: idea to merged pull request, with Linear as the thread.",
     "longDescription": "Six skills, starting with setup, which readies a project, proves its commands and connections, and proposes its instructions file as a pull request the owner merges. The other five carry a ticket from a spoken idea to a merged pull request: ideate files options, spec writes a buildable spec, build opens the pull request with evidence, ship merges and checks it live, and feature drives a whole parent issue sub-issue by sub-issue. Every run in the loop starts by reading the Linear issue and ends by writing to it.",
     "developerName": "Federico Lagarmilla",
@@ -21,7 +21,7 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/el-sapo/sdlc-fede",
+    "websiteURL": "https://github.com/el-sapo/idea-ship",
     "defaultPrompt": [
       "I have an idea for the app: ...",
       "code ABC-12",

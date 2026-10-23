@@ -1,12 +1,12 @@
 {
-  "name": "factory",
-  "version": "0.4.1",
+  "name": "idea-ship",
+  "version": "0.5.0",
   "description": "The factory loop: setup once per project, then ideate, spec, build, ship, and feature to run a whole feature. The Linear issue is the thread, sessions are disposable, and you step in at most four times per ticket.",
   "author": {
     "name": "Federico Lagarmilla"
   },
-  "homepage": "https://github.com/el-sapo/sdlc-fede/tree/main/plugins/factory",
-  "repository": "https://github.com/el-sapo/sdlc-fede",
+  "homepage": "https://github.com/el-sapo/idea-ship/tree/main/plugins/idea-ship",
+  "repository": "https://github.com/el-sapo/idea-ship",
   "license": "MIT",
   "keywords": ["sdlc", "linear", "github", "pull-request", "agents", "workflow"],
   "skills": "./skills/"

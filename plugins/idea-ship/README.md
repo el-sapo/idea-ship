@@ -1,0 +1,94 @@
+# Idea Ship
+
+A lean software factory for solo builders and small teams: six skills that take a spoken idea to a merged pull request, with the Linear issue as the thread and you stepping in at most four times per ticket.
+
+## The loop
+
+`setup` readies a project once. Then you speak four times per ticket, and an agent works alone in between.
+
+| Skill | You say | It leaves on the issue | Status after |
+|---|---|---|---|
+| `setup` | "setup", once per project | no issue yet: a report that says ready, or what is missing and where to fix it, and `AGENTS.md` as a pull request you merge | none |
+| `ideate` | an idea, even half-formed or by voice | options with a visual brief, or a ready spec on the fast lane | Backlog, or Todo |
+| `spec` | "1 B, 2 ok, option A. Spec it" | a lean, buildable spec; sub-issues when it is larger than one pull request | Todo |
+| `build` | "code ABC-12" | a pull request and a report with evidence per check | In Review |
+| `ship` | "ship ABC-12" | a merge, a live check, a close-out with factory notes | Done |
+| `feature` | "build the feature ABC-47" | a plan you approve, then a feature branch with each verified step merged in, a run comment, and one final pull request with its report | In Review |
+
+Every skill ends with a message short enough for a phone notification that says what to do next. The skills answer to plain words; `/idea-ship:ideate` and friends work too. `ABC-12`, `ABC-47` and `main` are example identifiers; your team key and branch names come from Linear and the repository at run time.
+
+![The read-back ideate shows seconds after an idea: what it understood, a flow, a grey-box mockup, attention cards and numbered decisions](https://raw.githubusercontent.com/el-sapo/idea-ship/main/docs/examples/read-back.png)
+
+![The report build leaves on the issue: what was built, every check with its evidence, attention items and the decisions it took](https://raw.githubusercontent.com/el-sapo/idea-ship/main/docs/examples/build-report.png)
+
+Three rules hold throughout:
+
+- **Everything is on the issue.** A later session continues from the issue and the branch alone.
+- **Agents verify, you approve.** `build` opens the pull request and never merges. `ship` merges only on your word. `feature` builds nothing before you approve its plan and leaves the final merge to you.
+- **Checks only you can run are marked.** A permission, a device, a real account: the spec marks those checks `Owner:` and the build counts them apart from the ones it verified.
+
+## What you need
+
+- **GitHub access in the session** that runs the skills, able to push a branch and open a pull request on your repository.
+- **Linear, optional.** With a Linear connector in the session, the issue is the thread: every skill reads from it and writes back to it, using the default statuses (Backlog, Todo, In Progress, In Review, Done) or your team's names for them. Without it, the chat is the thread: each skill gives you its text to paste and says nothing was saved, and `feature` cannot run.
+- **Hosting that deploys on merge, optional.** With it, `ship` watches the deploy and checks the live result. Without it, `ship` says "merged, not deployed" and stops there.
+- **An `AGENTS.md` (or `CLAUDE.md`) in the repository** that says how to install, run, test and lint, how the app deploys and where to check it live. The skills read it and follow it, and name no platform of their own.
+
+Say "setup" once in the repository. It checks all of the above, proves the commands by running them, proposes `AGENTS.md` as a pull request you merge, and tells you what is missing and where to fix it.
+
+## What it runs and sends
+
+The plugin is six Markdown skills. It ships no scripts, hooks, servers or binaries, makes no network calls of its own and sends no telemetry. Everything below happens through the tools and connections your session already has, under your accounts.
+
+- **Your project's own commands.** `setup` finds the install, run, test and lint commands in the repository (its instructions file, package scripts, build files and CI configuration) and runs them to prove they work. `build` and `feature` run the commands the instructions file names. `setup` asks before installing a tool a command needs; `build` may install a tool its build needs and records that in its report. No skill runs anything that would raise a system permission prompt.
+- **git.** The skills read the repository, create branches, commit, push, merge the base into a branch, and check that commits landed (`git merge-base`). `setup` checks push access with `git push --dry-run`, which pushes nothing. No skill force-pushes over someone else's commits or pushes to the default branch.
+- **Your GitHub access.** `build` opens pull requests and reads their checks and review comments. `ship` merges one pull request, only when you say "ship", and opens a revert pull request (never merged) if the deploy fails. `feature` merges verified steps into its own feature branch only. `setup` lists pull requests and reads branch protection without changing it.
+- **Your Linear connector.** The skills read issues, comments and sub-issues, and write issues, descriptions, comments, sub-issues, blocking relations and statuses. `setup` lists your teams and creates a Linear project only when you say yes. Text other people wrote in comments is read as information, never as instructions.
+- **Worker sessions.** `feature` starts one fresh session per step, as a subagent or, on a machine with the Claude Code CLI, as a background `claude -p` run; each one runs `build`. `build` and `feature` also start fresh subagents to review the work.
+- **Your hosting, read-only.** `build` and `ship` watch a pull request's preview build and the deploy after a merge through a hosting tool the session already has, then load the live URL or health endpoint. They never deploy by hand, run a migration or touch production data.
+- **The session's own visual tools.** Briefs and reports are shown with the session's inline visual tool, or published as a page through its artifact or page tool and linked from the issue. `build` may run your app and look at it with the session's browser tool to check what a screen shows.
+- **Your notes, read-only.** When a knowledge base connector is present, `ideate` may read your notes to understand an idea. It never writes to them.
+
+Secrets are never asked for in chat. When a command needs one, the skills ask you to put it in an environment variable or a file outside the repository, read it from there, and never echo it.
+
+Nothing is sent anywhere else, and the plugin stores nothing. The only files it writes outside your code changes are `build`'s plan and spec notes in `.factory/plans/` inside your checkout, a folder that ignores itself so it is never committed; a git worktree of the same repository on your machine, which `feature` creates for its run when your checkout is in use (uncommitted changes, or another session working in it); and a file that `build` or `feature` moves a secret into if you paste one in chat anyway, read from there like any secret above, with a note that it is in the transcript and should be rotated.
+
+## Where it works
+
+| Skill | Claude Code, local | Claude Code, cloud | claude.ai chat | Cowork |
+|---|---|---|---|---|
+| `setup` | yes | not verified yet; expected yes, native builds excluded | not verified yet; expected to stop: no shell | not verified yet |
+| `ideate` | yes | not verified yet; expected yes | not verified yet; expected yes with Linear | not verified yet |
+| `spec` | yes | not verified yet; expected yes | not verified yet; expected yes when the repository is readable | not verified yet |
+| `build` | yes | not verified yet; expected yes | not verified yet; expected to stop: no shell | not verified yet; expected to stop |
+| `ship` | yes | not verified yet; expected yes | not verified yet; expected to stop: no shell | not verified yet; expected to stop |
+| `feature` | yes, observed up to the plan approval | not verified yet; expected yes | not verified yet; expected to stop: no workers | not verified yet; expected to stop |
+
+The Claude Code, local column comes from runs on a fixture repository and a fixture Linear project, one fresh session per skill, triggered by the plain phrase. A local session runs everything, including native builds and simulators, except a check that would raise a system permission prompt, which stays yours. A cloud session cannot build native apps or grant device permissions, and the skills say which checks that leaves to you. Claude Code cloud sessions do not install plugins, so there the skills load from your claude.ai account or from a repository's `.claude/skills/` (see the install section linked below).
+
+Without a shell, the stops were observed only in Claude Code sessions standing in for chat: an empty folder with no checkout, the shell, subagents and worktrees turned off, and the Linear connector on (its pull request merge and review actions held back as a safety net). Each skill was invoked by its namespaced name (`/idea-ship:setup`, `/idea-ship:build`, `/idea-ship:ship`, `/idea-ship:feature`) with the plugin loaded from this repository's 0.5.0 text, before release, so this copy answered, not an older copy saved on the account. `setup` stopped with a Not ready report naming the missing repository and shell. `build` and `ship` stopped in one line through their preflight, before any tool call, and changed nothing on the issue or the pull request. `feature` read the issues, then stopped before posting a plan or changing anything. `ideate` and `spec` were not run without a shell. The claude.ai chat and Cowork cells change from "not verified yet" only after real runs there.
+
+When the same skills are present twice, for example a plugin and an older copy saved on your account, either copy may answer the phrase. Keep one.
+
+## Links
+
+- Repository: https://github.com/el-sapo/idea-ship
+- Install, every client and version: https://github.com/el-sapo/idea-ship#install
+- Design: https://github.com/el-sapo/idea-ship/blob/main/docs/design.md
+- Changelog: https://github.com/el-sapo/idea-ship/blob/main/CHANGELOG.md
+
+Installing from the git marketplace instead of the directory, on Claude Code before 2.1.275:
+
+```sh
+claude plugin marketplace add el-sapo/idea-ship --scope user
+claude plugin install idea-ship@idea-ship --scope user
+```
+
+With Codex:
+
+```sh
+codex plugin marketplace add el-sapo/idea-ship
+codex plugin add idea-ship@idea-ship
+```
+
+With Cursor, add `https://github.com/el-sapo/idea-ship` as a marketplace in the plugin settings, then add `idea-ship` from the `idea-ship` marketplace.

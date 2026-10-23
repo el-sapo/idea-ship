@@ -1,5 +1,5 @@
 {
-  "name": "sdlc-fede",
+  "name": "idea-ship",
   "owner": {
     "name": "Federico Lagarmilla",
     "url": "https://github.com/el-sapo"
@@ -7,8 +7,8 @@
   "description": "A lean software factory for small teams and solo builders: six agent skills that take an idea to a merged pull request, with the Linear issue as the thread.",
   "plugins": [
     {
-      "name": "factory",
-      "source": "./plugins/factory",
+      "name": "idea-ship",
+      "source": "./plugins/idea-ship",
       "description": "The factory loop: setup once per project, then ideate, spec, build, ship, and feature to run a whole feature. Linear is the thread, sessions are disposable, you step in at most four times per ticket.",
       "category": "Development",
       "tags": ["sdlc", "linear", "github", "agents", "workflow"]

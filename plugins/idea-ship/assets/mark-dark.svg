@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <rect id="tile" width="256" height="256" rx="46" fill="#163a57"/>
+  <path id="sheet" d="M26.67 29.33 L224 29.33 L224 226.67 L26.67 226.67 Z" fill="#de5a39" opacity="0"/>
+  <path id="sail-main" d="M128 38 L128 150 L213.33 150 Z" fill="#fcf7ec"/>
+  <path id="sail-small" d="M122.67 92 L122.67 150 L45.33 150 Z" fill="#d6c6a4"/>
+  <path id="hull" d="M37.33 160 L213.33 160 L181.33 208 L69.33 208 Z" fill="#de5a39"/>
+  <path id="hull-top" d="M26.67 144 L224 144 L213.33 160 L37.33 160 Z" fill="#f7a78b"/>
+  <path id="crease" d="M125.33 160 L125.33 208" stroke="#163a57" stroke-width="5.33"/>
+</svg>

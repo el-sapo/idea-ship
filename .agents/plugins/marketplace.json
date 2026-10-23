@@ -1,14 +1,14 @@
 {
-  "name": "sdlc-fede",
+  "name": "idea-ship",
   "interface": {
-    "displayName": "SDLC Fede"
+    "displayName": "Idea Ship"
   },
   "plugins": [
     {
-      "name": "factory",
+      "name": "idea-ship",
       "source": {
         "source": "local",
-        "path": "./plugins/factory"
+        "path": "./plugins/idea-ship"
       },
       "policy": {
         "installation": "AVAILABLE",
