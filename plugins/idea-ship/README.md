@@ -92,11 +92,3 @@ codex plugin add idea-ship@idea-ship
 ```
 
 With Cursor, add `https://github.com/el-sapo/idea-ship` as a marketplace in the plugin settings, then add `idea-ship` from the `idea-ship` marketplace.
-
-The plugin was called `factory`, in the `sdlc-fede` marketplace, until 0.5.0. That install does not update in place; move it with three commands:
-
-```sh
-claude plugin marketplace remove sdlc-fede
-claude plugin marketplace add el-sapo/idea-ship --scope user
-claude plugin install idea-ship@idea-ship --scope user
-```

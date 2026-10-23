@@ -3,9 +3,6 @@
   "interface": {
     "displayName": "Idea Ship"
   },
-  "renames": {
-    "factory": "idea-ship"
-  },
   "plugins": [
     {
       "name": "idea-ship",
