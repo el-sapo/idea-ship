@@ -2,8 +2,9 @@
 """Check this marketplace repository before a commit.
 
 Verifies the marketplace and plugin manifests, every skill's front matter,
-the links between them, the folder rules a plugin directory enforces on each
-plugin folder, and a few house rules for the written text. Prints one
+the links between them, the listing icon, the folder rules a plugin
+directory enforces on each plugin folder, and a few house rules for the
+written text. Prints one
 line per problem and exits 1 when there is any. Needs only Python 3.9+.
 
   python3 scripts/validate.py
@@ -42,6 +43,9 @@ RASTER_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
 FONT_SUFFIXES = {".ttf", ".otf", ".woff", ".woff2"}
 MAX_FILE_BYTES = 256 * 1024
 MAX_FILES = 512
+# The directory's listing icon, found by its place: a square PNG.
+ICON_MIN, ICON_MAX = 512, 2048
+MAX_ICON_BYTES = 2 * 1024 * 1024
 
 problems = []
 
@@ -169,6 +173,8 @@ def check_plugin(name, folder):
         if cursor_data.get("version") != data.get("version"):
             problem(cursor, f"version {cursor_data.get('version')} differs from Claude manifest {data.get('version')}")
 
+    check_icon(folder / ".claude-plugin" / "icon.png")
+
     skills = folder / "skills"
     if not skills.is_dir():
         problem(folder, "no skills/ folder")
@@ -178,6 +184,22 @@ def check_plugin(name, folder):
         problem(skills, "empty")
     for skill_dir in found:
         check_skill(skill_dir)
+
+
+def check_icon(icon):
+    """When a plugin ships a listing icon, it is a square PNG the directory accepts."""
+    if not icon.is_file():
+        return
+    data = icon.read_bytes()
+    if not data.startswith(b"\x89PNG\r\n\x1a\n") or data[12:16] != b"IHDR":
+        problem(icon, "not a PNG")
+        return
+    width = int.from_bytes(data[16:20], "big")
+    height = int.from_bytes(data[20:24], "big")
+    if width != height or not ICON_MIN <= width <= ICON_MAX:
+        problem(icon, f"{width} by {height} px; the icon is square, {ICON_MIN} to {ICON_MAX} px")
+    if len(data) >= MAX_ICON_BYTES:
+        problem(icon, f"{len(data)} bytes; the icon stays under {MAX_ICON_BYTES // (1024 * 1024)} MB")
 
 
 def check_skill(skill_dir):
