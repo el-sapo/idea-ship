@@ -89,8 +89,6 @@ A directory install is on your account, so the skills load wherever you sign in:
 
 A plugin installed with `claude plugin install` from the git marketplace loads only in local sessions on the machine that installed it.
 
-If your skills reach cloud sessions through the `sdlc-fede` marketplace you added earlier on claude.ai, from before the listing and the rename to `idea-ship`, remove that install (and the older `factory` one, in every organization you use) once Idea Ship from the directory is in place, so only one copy answers.
-
 A repository can also commit the skills into its own `.claude/skills/`, which loads in every session that opens it with no install at all. That copy is a mirror: nothing updates it, so it has to be copied again after each release ([CONTRIBUTING.md](CONTRIBUTING.md)).
 
 ## What you need
