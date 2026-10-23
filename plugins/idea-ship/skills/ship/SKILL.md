@@ -16,6 +16,8 @@ Four principles explain the rules below:
 
 ## 1. Find the work
 
+First check that this session can merge and verify at all: a shell that runs git and the repository's tools, and a checkout of the repository. Without them you cannot check the pull request, merge it or confirm that it landed, so say in one line which is missing and where ship does run (a session with a shell and the repository checked out), and stop. Do not read or act on the pull request through a connector instead, and change nothing on the issue or the pull request.
+
 Open the issue, its build report and its pull request. If the issue has more than one open pull request and the user did not say which, ask.
 
 The identifier may be a parent issue whose feature was built by `feature`. Then the pull request is the final one, from the feature branch into the integration branch, its report is the "Feature built" comment, and the sub-issues' pull requests are already merged into the feature branch. Ship it like any other: one approval, one pull request.

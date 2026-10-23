@@ -51,7 +51,7 @@ The plugin is six Markdown skills. It ships no scripts, hooks, servers or binari
 
 Secrets are never asked for in chat. When a command needs one, the skills ask you to put it in an environment variable or a file outside the repository, read it from there, and never echo it.
 
-Nothing is sent anywhere else, and the plugin stores nothing. The only files it writes outside your code changes are `build`'s plan and spec notes in `.factory/plans/` inside your checkout, a folder that ignores itself so it is never committed.
+Nothing is sent anywhere else, and the plugin stores nothing. The only files it writes outside your code changes are `build`'s plan and spec notes in `.factory/plans/` inside your checkout, a folder that ignores itself so it is never committed; a git worktree of the same repository on your machine, which `feature` creates for its run when your checkout is in use (uncommitted changes, or another session working in it); and a file that `build` or `feature` moves a secret into if you paste one in chat anyway, read from there like any secret above, with a note that it is in the transcript and should be rotated.
 
 ## Where it works
 
@@ -62,11 +62,11 @@ Nothing is sent anywhere else, and the plugin stores nothing. The only files it 
 | `spec` | yes | not verified yet; expected yes | not verified yet; expected yes when the repository is readable | not verified yet |
 | `build` | yes | not verified yet; expected yes | not verified yet; expected to stop: no shell | not verified yet; expected to stop |
 | `ship` | yes | not verified yet; expected yes | not verified yet; expected to stop: no shell | not verified yet; expected to stop |
-| `feature` | yes, up to the plan you approve | not verified yet; expected yes | not verified yet; expected to stop: no workers | not verified yet; expected to stop |
+| `feature` | yes, observed up to the plan approval | not verified yet; expected yes | not verified yet; expected to stop: no workers | not verified yet; expected to stop |
 
 The Claude Code, local column comes from runs on a fixture repository and a fixture Linear project, one fresh session per skill, triggered by the plain phrase. A local session runs everything, including native builds and simulators, except a check that would raise a system permission prompt, which stays yours. A cloud session cannot build native apps or grant device permissions, and the skills say which checks that leaves to you. Claude Code cloud sessions do not install plugins, so there the skills load from your claude.ai account or from a repository's `.claude/skills/` (see the install section linked below).
 
-Where a skill needs a shell and git and the session has none, it says so in its first line, changes nothing on the issue and stops. That was checked for `setup`, `build`, `ship` and `feature` in Claude Code sessions with the shell turned off and no checkout; the claude.ai chat and Cowork cells change from "not verified yet" only after real runs there.
+Without a shell, the stops were observed only in Claude Code sessions standing in for chat: an empty folder with no checkout, the shell, subagents and worktrees turned off, and the Linear connector on (its pull request merge and review actions held back as a safety net). Each skill was invoked by its namespaced name (`/idea-ship:setup`, `/idea-ship:build`, `/idea-ship:ship`, `/idea-ship:feature`) with the plugin loaded from this repository's 0.5.0 text, before release, so this copy answered, not an older copy saved on the account. `setup` stopped with a Not ready report naming the missing repository and shell. `build` and `ship` stopped in one line through their preflight, before any tool call, and changed nothing on the issue or the pull request. `feature` read the issues, then stopped before posting a plan or changing anything. `ideate` and `spec` were not run without a shell. The claude.ai chat and Cowork cells change from "not verified yet" only after real runs there.
 
 When the same skills are present twice, for example a plugin and an older copy saved on your account, either copy may answer the phrase. Keep one.
 
