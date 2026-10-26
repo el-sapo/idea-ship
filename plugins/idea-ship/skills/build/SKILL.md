@@ -80,6 +80,8 @@ Always:
 
 Run the full test suite, the linter, the type check and the build. Then walk the Done when list, run each check's Verify, and keep the evidence: the command and its result, the test name, or a screenshot for a check that says what you see. For those, run the app and look at it with the session's browser tool when there is one.
 
+Take the evidence last, on the branch's final head, and name that commit in the report. A check that looks at the running app looks at a build of that head, installed after its last commit. A commit after the evidence (a CI fix, a review change, a rename) means running again, before the report, every check it could touch.
+
 A check without evidence is "not verified". It is never "passed". A check the spec marked as the user's to run, or that needs something only they can grant, is reported as "owner" with whatever partial evidence you have, and counted apart from the others, so "3 of 6 passed, 3 owner" says what it means.
 
 ## 7. Pull request
@@ -97,7 +99,7 @@ Post one comment from this template, move the issue to In Review, and ping. Drop
 ````markdown
 ## Built
 What now works, in a line or two.
-Pull request: <link, or "not opened" and why> · Preview: <link, if any> · Visual report: <link, if published>
+Pull request: <link> at <short sha> · Preview: <link, if any> · Visual report: <link, if published>
 
 ## Checks
 - [x] The check. Evidence: test name, command result or screenshot.
