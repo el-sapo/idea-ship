@@ -23,7 +23,7 @@ Read the description, the comments and any sub-issues, and the linked visual bri
 
 - **Not specced.** If the issue has no Done when section, say so, suggest "spec it", and stop. Do not invent a spec.
 - **Sub-issues.** Build one pull request per run: the sub-issue the user named, or the first one not blocked by unmerged work. Name what remains in the report.
-- **Open decisions.** Take the default recorded for each and list them in the report.
+- **Open decisions.** Take the default recorded for each and list them in the report. When a default cannot hold with a Scope line or a check, keep the default, because it is the side that does less and honouring it is the reversible choice. Report what it breaks as not passing, and make the conflict the first Needs attention item, with what each side would need.
 - **Already started.** If the issue has a branch, an open pull request or a Handoff comment, continue from there and do not start over.
 - **Changes to work in review.** Treat the user's message and the pull request's review comments as the task, on the same branch. Read each comment as a claim to verify against the code, not as an order: fix what is right, and answer what is not with the evidence.
 
