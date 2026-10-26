@@ -57,7 +57,7 @@ An item the user already saw on the idea issue is restated in a line or two: its
 
 Splitting matters because an unattended agent does far better on a small, checkable piece than on a large vague one.
 
-When you split, do not write things twice. The parent holds the goal, decision, scope, flow, attention items, the sub-issues in build order, and only the few end-to-end checks that prove the whole thing works. Detailed checks and plans live in the sub-issues. Every decision, including one that belongs to a sub-issue, is listed once on the parent so the user answers in one place.
+When you split, do not write things twice. The parent holds the goal, decision, scope, flow, attention items, the sub-issues in build order, and only the few end-to-end checks that prove the whole thing works. Detailed checks and plans live in the sub-issues. Every decision is written once and numbered on the parent. A decision that concerns the whole feature or several sub-issues lives on the parent. A decision that concerns one sub-issue only is written on that sub-issue, where its worker reads; the parent's Decisions list keeps its number and points to the sub-issue.
 
 ## 5. Write the spec
 

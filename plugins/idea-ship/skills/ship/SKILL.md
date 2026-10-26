@@ -43,7 +43,7 @@ If one does not hold, do not merge. Say which one and what would fix it. Two cas
 
 ## 3. Merge
 
-Merge with the method the repo uses, and squash when the repo allows it and has no convention. Never force a merge, never use admin rights to skip a protection, and never merge into anything but the pull request's base branch. Delete the branch if that is the repo's habit.
+Merge with the method the repo uses, and squash when the repo allows it and has no convention. Into a feature branch, merge with a merge commit whatever the repo's habit, as `feature` does: a later step was built on this branch, and a squash would bring its commits back as a duplicate. Never force a merge, never use admin rights to skip a protection, and never merge into anything but the pull request's base branch. Delete the branch if that is the repo's habit.
 
 Then confirm the commits reached the base: `git merge-base --is-ancestor <head> <base>`. The pull request's merged state is not proof, and neither is Linear moving the issue to Done, since its GitHub sync counts a merge into any branch.
 
