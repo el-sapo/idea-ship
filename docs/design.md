@@ -200,7 +200,7 @@ Thought through and not built:
 - **A skill that reads the factory notes.** `ship` writes one line per friction on every close-out, and nothing reads them. A skill could read those notes and the owner's corrections across recent issues and propose skill edits. A necessity for any factory in the long run, and a token cost, so a nice-to-have for now.
 - **A team layer for three to five developers.** Ticket ownership and a limit on work in progress, one teammate's review after the agent's, autonomy levels per repository, a release step.
 - **Other trackers.** The issue templates are Linear-shaped. A tracker adapter would let the same skills read and write another tool; until then the chat fallback is the only alternative.
-- **Parallel steps in `feature`.** feature runs steps one at a time. Independent sub-issues could run at once, on separate files.
+- **Parallel steps in `feature`.** `feature` runs steps one at a time. Independent sub-issues could run at once, on separate files.
 
 Considered and declined: mandatory visual proof in `build`; scoring each run; benchmarks re-run when a skill changes; a foreman agent that routes work (the person is the router).
 
