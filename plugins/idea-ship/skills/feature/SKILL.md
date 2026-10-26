@@ -143,7 +143,7 @@ Decisions: <the calls made during the run, numbered after the plan's>
 Next: <the next step, or what the run is waiting for>
 ````
 
-Statuses: taken, waiting, holding, building, verifying, rework, verified, integrated, stopped, queued.
+Statuses: taken, waiting, holding, building, verifying, rework, verified, integrated, stopped, queued. A verified step whose merge is left to the user, under "steps on my word" or after a refused merge, is "verified, waiting for ship".
 
 When the user clears a hold or reports an owner check passed, record it here and post one line on that sub-issue ("Owner checks 1 and 2 passed, <date>"), so `ship` can read it later without the run.
 
