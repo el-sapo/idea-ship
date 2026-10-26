@@ -200,13 +200,13 @@ Thought through and not built:
 - **A skill that reads the factory notes.** `ship` writes one line per friction on every close-out, and nothing reads them. A skill could read those notes and the owner's corrections across recent issues and propose skill edits. A necessity for any factory in the long run, and a token cost, so a nice-to-have for now.
 - **A team layer for three to five developers.** Ticket ownership and a limit on work in progress, one teammate's review after the agent's, autonomy levels per repository, a release step.
 - **Other trackers.** The issue templates are Linear-shaped. A tracker adapter would let the same skills read and write another tool; until then the chat fallback is the only alternative.
-- **Parallel steps in `feature`.** v0.1 runs steps one at a time. Independent sub-issues could run at once, on separate files.
+- **Parallel steps in `feature`.** feature runs steps one at a time. Independent sub-issues could run at once, on separate files.
 
 Considered and declined: mandatory visual proof in `build`; scoring each run; benchmarks re-run when a skill changes; a foreman agent that routes work (the person is the router).
 
 ## Tested, and not
 
-Tested on real tickets: `ideate`, `spec` and `build` end to end on a native desktop app and on a multiplatform app, including a run on the person's machine with a tool install and an owner-only permission check; `feature` on a multi-issue feature. Tested in dry runs with fresh agents: the three lanes, the Foundation card, the feature plan against a fixture of four sub-issues, `build` with and without a subagent tool.
+Tested on real tickets: `ideate`, `spec` and `build` end to end on a native desktop app and on a multiplatform app, including a run on the person's machine with a tool install and an owner-only permission check; `feature` on a multi-issue feature; `feature` with a feature branch, one final pull request and a mid-run change. Tested in dry runs with fresh agents: the three lanes, the Foundation card, the feature plan against a fixture of four sub-issues, `build` with and without a subagent tool.
 
 Not tested yet: `ship` against hosting that deploys on merge; a fast-lane spec going through `build`; the Codex manifest; `feature` continuing from a "Feature run" comment in a later session; `setup` on a real repository, tried only in dry runs against three fixture repositories (fresh, ready, missing pieces).
 
@@ -215,4 +215,3 @@ Not tested yet: `ship` against hosting that deploys on merge; a fast-lane spec g
 Found on real runs and not fixed yet. Each has a workaround.
 
 - **Workers without a subagent tool self-review.** When a worker runs somewhere it cannot start a fresh reviewer, `build`'s whole-branch review is a self-review and its report says so. `feature`'s own reviewer covers the gap; a single `build` run does not have that cover, so read the report harder.
-- **The feature branch flow has not run on a real feature yet.** 0.2.0 replaced stacked pull requests with a feature branch after the first real run exposed the retarget problem. Until a feature has gone through it, check the final pull request's diff against the steps before shipping it.
