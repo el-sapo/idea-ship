@@ -99,6 +99,8 @@ On approval, in this order: create the feature branch from the integration branc
 3. Wait. The worker's return is the signal that it finished. Do not poll the issue, do not read the worker's transcript, and do not do its work yourself if it is slow.
 4. When it returns, read the worker's report on the sub-issue. If it posted a Handoff instead, stop (section 8).
 
+**A change the user asks for during the run.** Never interrupt a running worker: the run has one worktree, and a device a check needs serves one worker at a time. Add the change to "Feature run" as a row C1, C2, with status queued and the user's words, and run it after the current worker returns and before the next step starts, unless the user says it can wait for the end. The user's message approves it, so the plan is not revised, unless the change alters a shape a later step builds on: then stop as in section 5. Verify the queued change like a step before integrating it. A change to a step not built yet is an answer on that step's spec: record it under the sub-issue's Decisions with the user's words and the date, and its worker builds it. Any other change runs as a change request on the feature branch, once every step it touches is integrated.
+
 ## 5. Verify the step
 
 Start a fresh reviewer (a smaller model at medium effort is fine) with the sub-issue's spec, the worker's report and the branch, diffed against what the step builds on. It answers five questions: does every check marked passed have evidence that holds when re-run; is the evidence from the head the report names (files and installs dated after that commit); are the checks marked owner the ones the spec marked, or the ones that need a permission, a device, a real account or a real conversation; does the diff stay in the spec's scope and match what the report says; and does anything in the report's Needs attention change what the plan assumed for later steps. With one reviewer, one prompt carries all five. With two, one re-runs the evidence and the other takes the rest. Reviewers never trigger a permission prompt either; a check that would needs the owner.
@@ -134,13 +136,14 @@ Plan approved: <date> · Feature branch: <name> → <integration branch> · Stop
 | 1 | ABC-48 | integrated | <branch> | <link>, merged | 4 passed · 2 owner | 0 |
 | 2 | ABC-49 | building | <branch> | | | |
 | 3 | ABC-50 | waiting | | | | |
+| C1 | change to step 1 | queued | | | | |
 
 Owner checks confirmed: <issue and check numbers, with the date, as the user clears holds or reports results>
 Decisions: <the calls made during the run, numbered after the plan's>
 Next: <the next step, or what the run is waiting for>
 ````
 
-Statuses: taken, waiting, holding, building, verifying, rework, verified, integrated, stopped.
+Statuses: taken, waiting, holding, building, verifying, rework, verified, integrated, stopped, queued.
 
 When the user clears a hold or reports an owner check passed, record it here and post one line on that sub-issue ("Owner checks 1 and 2 passed, <date>"), so `ship` can read it later without the run.
 
