@@ -99,7 +99,7 @@ On approval, in this order: create the feature branch from the integration branc
 3. Wait. The worker's return is the signal that it finished. Do not poll the issue, do not read the worker's transcript, and do not do its work yourself if it is slow.
 4. When it returns, read the worker's report on the sub-issue. If it posted a Handoff instead, stop (section 8).
 
-**A change the user asks for during the run.** Never interrupt a running worker: the run has one worktree, and a device a check needs serves one worker at a time. Add the change to "Feature run" as a row C1, C2, with status queued and the user's words, and run it after the current worker returns and before the next step starts, unless the user says it can wait for the end. The user's message approves it, so the plan is not revised, unless the change alters a shape a later step builds on: then stop as in section 5. Verify the queued change like a step before integrating it. A change to a step not built yet is an answer on that step's spec: record it under the sub-issue's Decisions with the user's words and the date, and its worker builds it. Any other change runs as a change request on the feature branch, once every step it touches is integrated.
+**A change the user asks for during the run.** A change to a step no worker has started yet is an answer on that step's spec: record it under the sub-issue's Decisions with the user's words and the date, and its worker builds it. It gets no row. Any other change waits its turn. Never interrupt a running worker: the run has one worktree, and a device a check needs serves one worker at a time. Add the change to "Feature run" as a row C1, C2, with status queued and the user's words, and run it after the current worker returns and before the next step starts, unless the user says it can wait for the end. The user's message approves it, so the plan is not revised, unless the change alters a shape a later step builds on: then stop as in section 5. It runs as a change request on the feature branch, once every step it touches is integrated, and is verified like a step before it is integrated.
 
 ## 5. Verify the step
 
@@ -162,7 +162,7 @@ For everything else, decide, record it under Decisions in "Feature run", and kee
 
 ## 9. Finish
 
-When the stop line is reached and every step up to it is integrated:
+When the stop line is reached and every step up to it is integrated, first run any change still queued (section 4), so a change the user let wait for the end is not lost. Then:
 
 1. Bring the feature branch up to date: merge the integration branch into it, never rebase. A conflict goes to a worker as in section 6.
 2. Run the full test suite, the linter, the type check and the build on the feature branch, with the commands the repository's instructions file names, as `build` does. Then run the parent's own Done when checks that an agent can run; the rest are the owner's.
