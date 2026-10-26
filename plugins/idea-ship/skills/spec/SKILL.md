@@ -109,7 +109,7 @@ What makes it buildable:
 - **Every item with a high risk of breaking has a check that would catch the break.** A flag without a check only moves the worry to the build.
 - **Plan** names real files and areas from the code you read, not generic layers.
 - **Decisions** always carry a default, so an unanswered question never blocks the build. Record the ones the user already answered under Decision, and number new ones after the last number used on the issue, so a reply like "2 B" is never ambiguous.
-- **Read every default against the scope.** Read every default against every Scope line and Done when check it touches, including a parent's decisions against each sub-issue. If one cannot hold with the other, fix the default, move the line to Out, or write each option so it says which Scope lines and checks it keeps.
+- **Defaults hold with the scope.** Read every default against every Scope line and Done when check it touches, including a parent's decisions against each sub-issue. If one cannot hold with the other, fix the default, move the line to Out, or write each option so it says which Scope lines and checks it keeps.
 
 What keeps it lean: no user-story phrasing, no scenario tables, no estimates in points. Reuse the chosen option's flow, updated, and keep the link to the visual brief if the issue had one. Include a wireframe only for a screen this spec builds, as an attached image when the session can render and upload one, otherwise as a box-drawing wireframe in a code block no wider than 36 characters. Write in the language the issue is already in.
 
