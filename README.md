@@ -41,7 +41,17 @@ Before the first ticket, say "setup" once in the repository: it proves the proje
 
 ## Install
 
-The plugin is `idea-ship` (display name "Idea Ship"), from the `idea-ship` marketplace.
+The plugin is `idea-ship` (display name "Idea Ship"). Install it one way per surface: the same skills installed twice can both answer a phrase.
+
+### From the directory: claude.ai, Cowork and Claude Code
+
+On claude.ai, find Idea Ship in the plugin directory and add it. A directory install belongs to your account, so it syncs: it loads in claude.ai chat, in Cowork, and in Claude Code sessions on your machine and in the cloud, where `claude plugin list` shows it as `idea-ship@synced`. It updates when a new version is published, with nothing to copy or re-save.
+
+The skills then answer to `/idea-ship:setup`, `/idea-ship:ideate`, `/idea-ship:spec`, `/idea-ship:build`, `/idea-ship:ship` and `/idea-ship:feature`, and to plain words such as "spec it", "code ABC-12", "ship ABC-12" and "build the feature ABC-47". Start a new session after adding it; skills are discovered at session start.
+
+### From the git marketplace: Codex, Cursor, or following the repository
+
+The `idea-ship` marketplace in this repository serves the same plugin. Use it for Codex and Cursor, or in Claude Code when you want what is on `main` rather than the published version.
 
 With Claude Code 2.1.275 or later, one step:
 
@@ -56,7 +66,7 @@ claude plugin marketplace add el-sapo/idea-ship --scope user
 claude plugin install idea-ship@idea-ship --scope user
 ```
 
-Restart the session afterwards; skills are discovered at session start. The skills then answer to `/idea-ship:setup`, `/idea-ship:ideate`, `/idea-ship:spec`, `/idea-ship:build`, `/idea-ship:ship` and `/idea-ship:feature`, and to plain words such as "spec it", "code ABC-12", "ship ABC-12" and "build the feature ABC-47".
+Restart the session afterwards.
 
 With Codex:
 
@@ -75,12 +85,11 @@ Then open a session on your repository and say "setup". It tells you what is rea
 
 ### Where the skills load
 
-A plugin installed on your machine loads in local sessions, including the ones you steer from your phone through Remote Control. Claude Code cloud sessions do not install plugins. Two ways to have the skills there:
+A directory install is on your account, so the skills load wherever you sign in: claude.ai chat, Cowork, and Claude Code sessions, local or cloud, including the ones you steer from your phone through Remote Control. What each skill can do differs by surface (a chat has no shell to run your project); the [plugin README](plugins/idea-ship/README.md#where-it-works) has the table.
 
-- Save the six skills on your claude.ai account (open each `SKILL.md` under `plugins/idea-ship/skills/` and add it as a skill). Account skills load in cloud, app and terminal sessions alike.
-- Commit them into a repository's `.claude/skills/`, which loads in every session that opens that repository.
+A plugin installed with `claude plugin install` from the git marketplace loads only in local sessions on the machine that installed it.
 
-The plugin is for sharing the process with a team or a friend; your account or the repository is how the skills reach cloud sessions.
+A repository can also commit the skills into its own `.claude/skills/`, which loads in every session that opens it with no install at all. That copy is a mirror: nothing updates it, so it has to be copied again after each release ([CONTRIBUTING.md](CONTRIBUTING.md)).
 
 ## What you need
 
@@ -129,7 +138,7 @@ Agents stop on their own for an irreversible operation, anything touching secret
 - **Only code is committed.** Specs stay in Linear, plans stay in ignored scratch folders. The one exception is the instructions file, which `setup` proposes and you merge.
 - **Decide what you can, stop for what you must.** A question with a recorded default never blocks a build.
 
-[docs/design.md](docs/design.md) has the full design: lanes, templates, what each step generates, and the decisions with what was rejected. [docs/setup.md](docs/setup.md) covers installing the plugin, connecting your accounts and running `setup`. [docs/factory-flow.en.html](docs/factory-flow.en.html) is an animated one-page explainer of the line, also in Spanish as [docs/factory-flow.es.html](docs/factory-flow.es.html); open it in a browser.
+[docs/design.md](docs/design.md) has the full design: lanes, templates, what each step generates, and the decisions with what was rejected. [docs/setup.md](docs/setup.md) covers installing the plugin, connecting your accounts and running `setup`. [docs/factory-flow.en.html](docs/factory-flow.en.html) is an animated one-page explainer of the line, also in Spanish as [docs/factory-flow.es.html](docs/factory-flow.es.html); open it in a browser. [docs/publishing.md](docs/publishing.md) records how the plugin went into the directory, step by step.
 
 ## Status
 

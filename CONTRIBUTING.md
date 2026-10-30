@@ -2,7 +2,11 @@
 
 ## This repository is the source of truth
 
-The skills under `plugins/idea-ship/skills/` are the canonical text. Copies saved on a Claude account or committed into a project's `.claude/skills/` are mirrors: after a change here, re-save them there. Nothing syncs them for you, and git keeps no history of account skills.
+The skills under `plugins/idea-ship/skills/` are the canonical text. People get them through the directory listing, which syncs to their account and updates when a version is published, or through the git marketplace in this repository. Neither is a copy to maintain.
+
+The one copy that is a mirror is a project that commits the skills into its own `.claude/skills/`. Nothing updates it: after a release, copy the changed skills there again, or that project keeps running the old text.
+
+With the directory tracking `main`, every merge is scanned as a new directory version, and it goes live only when someone selects Publish. [docs/publishing.md](docs/publishing.md) has the steps.
 
 ## Editing a skill
 
