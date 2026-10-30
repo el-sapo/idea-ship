@@ -6,7 +6,7 @@ The skills under `plugins/idea-ship/skills/` are the canonical text. Copies save
 
 ## Editing a skill
 
-- Keep the five principles at the top of each skill true. A new rule should follow from one of them, or earn a sixth.
+- Keep the principles at the top of each skill true. A new rule should follow from one of them, or earn a new one.
 - Prefer a sentence that explains the reason over a rule that forbids. Agents follow reasons better than lists.
 - Keep the examples neutral: `ABC-12` for an issue, `main` for the default branch, no real team keys, product names or people.
 - No em dashes. Use a comma, a colon or a full stop.

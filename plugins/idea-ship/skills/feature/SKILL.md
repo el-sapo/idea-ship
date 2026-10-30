@@ -22,7 +22,7 @@ Read the parent issue, every sub-issue, their blocking relations and their comme
 
 - **Not a feature.** If the issue has no sub-issues, say so and suggest "code" with the identifier: `build` handles a single issue.
 - **Not all specced.** A sub-issue without a Done when section cannot be built. Name it, suggest "spec it", and stop. Do not plan around it. A child the parent lists as related and not blocking (a spike, a follow-up) is not a step: leave it out and say so under Decisions.
-- **Already started.** If the parent has a "Feature plan" comment, continue from the "Feature run" comment below it, on the feature branch it names: do not plan again unless the user asks for a new plan or the sub-issues changed. "Continue the feature" means this.
+- **Already started.** If the parent has a "Feature plan" comment, continue from the "Feature run" comment below it, on the feature branch it names: do not plan again unless the user asks for a new plan or the sub-issues changed. "Continue the feature" means this. When decision 5 is at its default and this session may merge (section 2), say in your first message that this session will merge verified pull requests into the feature branch under the approved plan, and that a refused merge follows section 6.
 - **Partly done.** A sub-issue with a pull request is a step already taken. The plan shows it as taken and keeps its number. If its commits are in the integration branch (`git merge-base --is-ancestor` says so), it needs nothing more. Otherwise, whatever its status says, it is verified (section 5) and integrated (section 6) before anything builds on it: Linear marks an issue Done on a merge into any branch, so Done alone proves nothing.
 - **In Progress with nothing behind it.** A sub-issue In Progress with no pushed branch, no pull request and no Handoff comment is a step not started. Say so under the plan's Decisions, because someone may be working on it outside the run.
 
@@ -33,6 +33,7 @@ Find out, and say in the plan:
 - That Linear is connected. Without it the workers have no input and the run has no thread: stop and say so.
 - Where this session runs: in the cloud, or on the user's machine. On the machine, tools such as simulators, emulators or Xcode are available and the checks that need them can run, except a check that needs a system permission prompt, which stays the owner's because workers stop rather than trigger one. In the cloud, none of those checks can run.
 - How you can start workers. In order of preference: a subagent with a chosen model and effort; on a machine with the Claude Code CLI, `claude -p "code <identifier>" --model <model>` run as a background command, which you wait for; nothing else. If neither exists, stop: this skill cannot run here.
+- Whether this session may merge. Only the session the user is talking to merges, because the grant lives in that conversation. A session a script or another agent started is not that session: its instructions came from them, not from the user's own message. A worker, a reviewer, or such a session never merges, even after a grant in words. If this session is one of those, set decision 5 to "steps on my word" and say so in one line: each step waits for a merge by the user or by the session they talk to, and the final pull request opens once every step is merged.
 - That the repository is attached and a branch can be pushed. Without this, stop.
 - The integration branch: the repository's default branch, unless the user names another one (a long-lived branch a team integrates on). The feature branch: the name Linear suggests for the parent, otherwise the parent's identifier and a short slug in the same shape as the sub-issues' suggested names. If it already exists, the run continues on it.
 - Whether the checkout is in use. On the user's machine, uncommitted changes or another session working in the checkout mean you make a git worktree for the run and hand every worker its path. Workers never create worktrees themselves.
@@ -54,7 +55,7 @@ Post one comment on the parent titled "Feature plan", from this template, and sh
 | 2 | ABC-49 · title | high | Opus, xhigh (ultracode if available) | feature branch | 2 reviewers | agent 3 · owner 4 |
 | 3 | ABC-50 · title | low | Opus, medium | feature branch | 1 reviewer | agent 5 · owner 3 |
 
-Every step's pull request targets the feature branch `<name>`, and verified steps merge into it as the run goes. The feature reaches `<integration branch>` through one final pull request, which you ship.
+Every step's pull request targets the feature branch `<name>`. <Decision 5 at its default:> "Go" lets me merge into `<name>` from this session, with a merge commit, each verified pull request, and never into `<integration branch>` or any other branch. <Under "steps on my word":> Each step's pull request waits for your merge, and each later step builds on the previous step's branch. The feature reaches `<integration branch>` through one final pull request, which you ship.
 
 ## Stops
 - After step <N>: the stop line. Default: after the last step.
@@ -77,7 +78,7 @@ How to fill it:
 
 - **Order and numbers** come from the parent's "Sub-issues, in build order" and the blocking relations. A step already taken keeps its number and is shown as taken, so "stop after step 2" means the same thing to you and to the parent. Steps are sequential in this version: no two workers at once.
 - **Worker** comes from the complexity in the sub-issue's Goal line: low is Opus at medium effort, medium is Opus at high, high is Opus at xhigh with ultracode when the session can start a worker that way. Say so when it cannot. If the user has told you different mappings before, use theirs.
-- **Builds on.** Every step builds on the feature branch, which starts at the integration branch and grows as verified steps merge into it, so a step always starts from everything before it. Every step's pull request targets the feature branch, never another step's branch, so once a step merges the next pull request shows only its own diff. Under "steps on my word" nothing merges during the run, so each later step builds on the previous step's branch instead, and the table says so. A taken step whose open pull request targets something else is retargeted at the feature branch once the branch exists.
+- **Builds on.** Every step builds on the feature branch, which starts at the integration branch and grows as verified steps merge into it, so a step always starts from everything before it. Every step's pull request targets the feature branch, never another step's branch, so once a step merges the next pull request shows only its own diff. Under "steps on my word" nothing merges during the run, so each later step builds on the previous step's branch instead, and the table says so. A taken step whose open pull request targets something else is retargeted at the feature branch once the branch exists. Keep the labelled merge sentence that matches decision 5, and drop the other and the label.
 - **Review** is one reviewer by default. Two when the step is high complexity, depends on an integration outside the repository (an API, a CMS, a service), or touches many areas of the code. Say which in the table.
 - **Checks** counts, per step, the Done when checks an agent can run and the owner's. Owner checks are the ones the spec marks "Owner:" or, when it marks none, the ones that need a permission, a device, a real account or a real conversation. For a step already taken, count what its report says passed, and as owner checks the ones it says only the owner can run, whether or not it uses the label. Checks are numbered in the spec's Done when order.
 - **Holds** are the exception, not the rule. Add one only when an earlier step's report says an assumption stays unproven until an owner check, and the next step builds on that assumption. Name the exact checks. Without a hold the run continues on the agent-verified checks alone, which is the point of the run.
@@ -85,9 +86,9 @@ How to fill it:
 
 The visual page, phone first: the steps as a chain with the stop line drawn on it, a card per step with its worker, its reviewers and its checks, and the decisions numbered. Publish it and link it from the comment, or use the session's inline visual tool. Without either, the comment is the presentation.
 
-**The ping:** the parent's identifier and link, how many steps and which are already taken, the feature branch and where it will land, the default stop line and any holds, and that you are waiting for "go".
+**The ping:** the parent's identifier and link, how many steps and which are already taken, the feature branch and where it will land, the default stop line and any holds, that "go" also lets you merge verified pull requests into the feature branch and never into the integration branch, and that you are waiting for "go".
 
-**The answer.** "Go" approves the plan as posted, holds included: the run goes to the first hold that is not cleared and pings there. Numbered answers change the plan: update the comment, say what changed in one line, and start without asking again when the changes are only answers to the decisions or cleared holds. Any other change (a step removed, a different order, a different integration branch) is posted as a revised plan and waits again. If Linear is not connected, the chat replaces the comment, and the plan still waits.
+**The answer.** "Go" approves the plan as posted, holds included: the run goes to the first hold that is not cleared and pings there. Numbered answers change the plan: update the comment, say what changed in one line, and start without asking again when the changes are only answers to the decisions or cleared holds. Any other change (a step removed, a different order, a different integration branch) is posted as a revised plan and waits again. If Linear is not connected, the chat replaces the comment, and the plan still waits. With decision 5 at its default, "go" is also the grant for the merges in section 6.
 
 ## 4. Run a step
 
@@ -98,22 +99,27 @@ On approval, in this order: create the feature branch from the integration branc
 3. Wait. The worker's return is the signal that it finished. Do not poll the issue, do not read the worker's transcript, and do not do its work yourself if it is slow.
 4. When it returns, read the worker's report on the sub-issue. If it posted a Handoff instead, stop (section 8).
 
+**A change the user asks for during the run.** A change to a step no worker has started yet is an answer on that step's spec: record it under the sub-issue's Decisions with the user's words and the date, and its worker builds it. It gets no row. Any other change waits its turn. Never interrupt a running worker: the run has one worktree, and a device a check needs serves one worker at a time. Add the change to "Feature run" as a row C1, C2, with status queued and the user's words, and run it after the current worker returns and before the next step starts, unless the user says it can wait for the end. The user's message approves it, so the plan is not revised, unless the change alters a shape a later step builds on: then stop as in section 5. It runs as a change request on the feature branch, once every step it touches is integrated, and is verified like a step before it is integrated.
+
 ## 5. Verify the step
 
-Start a fresh reviewer (a smaller model at medium effort is fine) with the sub-issue's spec, the worker's report and the branch, diffed against what the step builds on. It answers four questions: does every check marked passed have evidence that holds when re-run; are the checks marked owner the ones the spec marked, or the ones that need a permission, a device, a real account or a real conversation; does the diff stay in the spec's scope and match what the report says; and does anything in the report's Needs attention change what the plan assumed for later steps. With one reviewer, one prompt carries all four. With two, one re-runs the evidence and the other takes the rest. Reviewers never trigger a permission prompt either; a check that would needs the owner.
+Start a fresh reviewer (a smaller model at medium effort is fine) with the sub-issue's spec, the worker's report and the branch, diffed against what the step builds on. It answers five questions: does every check marked passed have evidence that holds when re-run; is the evidence from the head the report names (files and installs dated after that commit); are the checks marked owner the ones the spec marked, or the ones that need a permission, a device, a real account or a real conversation; does the diff stay in the spec's scope and match what the report says; and does anything in the report's Needs attention change what the plan assumed for later steps. With one reviewer, one prompt carries all five. With two, one re-runs the evidence and the other takes the rest. Reviewers never trigger a permission prompt either; a check that would needs the owner.
 
 - **The report holds.** Record the step as verified in "Feature run" and integrate it (section 6).
 - **It does not hold.** Send one change request to a new worker, as a `build` run for changes to work in review, with the reviewer's findings as the message: on the step's branch while its pull request is open, or on the feature branch with a new pull request once it is integrated. Verify again. After the number of rework rounds the plan allows, stop.
+- **A default the scope contradicts.** A check reported as not passing because of a conflict the spec left is not rework. Integrate the step, record the conflict under Decisions in "Feature run", and carry it to "Feature built"'s Needs attention. If a later step builds on the side the default gave up, stop as under "Changes a later step".
 - **Changes a later step.** Stop only when a shape a later step builds on has changed: a schema, an interface, a dependency, a count or a value a later spec relies on. Post what changed under the plan and wait for the user. A name that differs between a spec and the code (a field called one thing in the spec and another in the repository) is a clarification the next worker resolves by reading the code: record it under Decisions in "Feature run" and continue.
 - **Leaves a later step on an unproven assumption.** When the report says an assumption stays unproven until an owner check and the next step builds on it, add a hold before that step in "Feature run" and treat it as the plan's holds: the run stops there and pings.
 
 ## 6. Integrate the step
 
-With decision 5 at its default, merge the step's pull request into the feature branch with a merge commit, never a squash, so the branch keeps the step's history and later diffs stay clean; the final pull request can squash if the repository wants. Keep the step's branch until the final pull request merges. Confirm it landed: `git merge-base --is-ancestor <step head> <feature branch>`. A merged pull request is not proof by itself. Record "integrated" in "Feature run". Linear may mark the sub-issue Done on that merge; that is fine, the parent is what ships.
+With decision 5 at its default, the orchestrator merges from its own session, never through a worker, reviewer, script or workflow step. Merge the step's pull request into the feature branch with a merge commit, never a squash, so the branch keeps the step's history and later diffs stay clean; the final pull request can squash if the repository wants. Keep the step's branch until the final pull request merges. Confirm it landed: `git merge-base --is-ancestor <step head> <feature branch>`. A merged pull request is not proof by itself. Record "integrated" in "Feature run". Linear may mark the sub-issue Done on that merge; that is fine, the parent is what ships.
+
+If the merge is refused, do not retry it another way and do not hand it to a worker or a script. The rest of the run follows "steps on my word", so no later step tries a merge that would bring this one in out of order: record that under Decisions in "Feature run", record the step as "verified, waiting for ship", and build the next step on that step's branch. When the user is talking to this session, send one message with the pull request, its base and the merge commit; they can merge the waiting steps themselves, or grant the merge in a reply, and you try once more, merging the waiting steps in order. If that works, the run goes back to merging as it goes. When a script or another agent started this session, put that same line in "Feature run" and in what you return, and keep going: the user, or whoever started you, merges the waiting steps in order, then says "continue the feature".
 
 A conflict is a change request to a new worker on the step's branch: merge the feature branch in, resolve, run the tests. It counts as a rework round, and a resolution that changes behaviour becomes a Needs attention item on the step's report.
 
-Under "steps on my word", leave the pull request open, record the step as "verified, waiting for ship", and continue: the next step builds on the previous step's branch, so it needs no merge.
+Under "steps on my word", leave the pull request open, record the step as "verified, waiting for ship", and continue: the next step builds on the previous step's branch, so it needs no merge. A waiting step whose head is in the feature branch (`git merge-base --is-ancestor` says so) is integrated: record it.
 
 Never merge into the integration branch, and never merge a step that is not verified.
 
@@ -130,13 +136,14 @@ Plan approved: <date> · Feature branch: <name> → <integration branch> · Stop
 | 1 | ABC-48 | integrated | <branch> | <link>, merged | 4 passed · 2 owner | 0 |
 | 2 | ABC-49 | building | <branch> | | | |
 | 3 | ABC-50 | waiting | | | | |
+| C1 | change to step 1 | queued | | | | |
 
 Owner checks confirmed: <issue and check numbers, with the date, as the user clears holds or reports results>
 Decisions: <the calls made during the run, numbered after the plan's>
 Next: <the next step, or what the run is waiting for>
 ````
 
-Statuses: taken, waiting, holding, building, verifying, rework, verified, integrated, stopped.
+Statuses: taken, waiting, holding, building, verifying, rework, verified, integrated, stopped, queued. A verified step whose merge is left to the user, under "steps on my word" or after a refused merge, is "verified, waiting for ship".
 
 When the user clears a hold or reports an owner check passed, record it here and post one line on that sub-issue ("Owner checks 1 and 2 passed, <date>"), so `ship` can read it later without the run.
 
@@ -155,7 +162,7 @@ For everything else, decide, record it under Decisions in "Feature run", and kee
 
 ## 9. Finish
 
-When the stop line is reached and every step up to it is integrated:
+When the stop line is reached and every step up to it is integrated, first run any change still queued (section 4), so a change the user let wait for the end is not lost. Then:
 
 1. Bring the feature branch up to date: merge the integration branch into it, never rebase. A conflict goes to a worker as in section 6.
 2. Run the full test suite, the linter, the type check and the build on the feature branch, with the commands the repository's instructions file names, as `build` does. Then run the parent's own Done when checks that an agent can run; the rest are the owner's.

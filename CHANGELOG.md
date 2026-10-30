@@ -2,6 +2,16 @@
 
 The plugin version lives in `plugins/idea-ship/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`; the three move together.
 
+## 0.6.0 (2026-10-26)
+
+A feature run merges its own verified steps from the session that holds the grant, evidence is taken on the final head, a default that fights the scope is reported, and a change asked for mid-run waits its turn.
+
+- `feature`: the plan's "go" grants merges into the feature branch, and only the session the user is talking to merges. After a refused merge the run continues as under "steps on my word". `ship` keeps a merge commit into a feature branch.
+- `build`: evidence is taken last, on the branch's final head, and the report names that commit. `feature` asks the reviewer whether the evidence is from that head.
+- `spec`: a default is read against every Scope line and check it touches. `build` keeps the default when they conflict, because it does less. `feature` integrates that step instead of sending it back as rework.
+- `feature`: a change the user asks for during the run is queued, then verified like a step before it is integrated. A change to a step no worker has started goes on that step's spec, and a change left for the end runs before the final pull request.
+- Docs: six skills, both feature-branch modes, and the feature-branch flow recorded as run.
+
 ## 0.5.0 (2026-10-23)
 
 Ready for a plugin directory listing: the plugin folder now carries its own name, display name, icon, README and licence, and passes the folder rules a directory enforces. The directory tracks `main`; auto-publish stays off, so a merge shows up as a scanned version and goes live only on a Publish click.

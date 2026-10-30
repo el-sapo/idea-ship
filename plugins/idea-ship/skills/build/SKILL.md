@@ -23,7 +23,7 @@ Read the description, the comments and any sub-issues, and the linked visual bri
 
 - **Not specced.** If the issue has no Done when section, say so, suggest "spec it", and stop. Do not invent a spec.
 - **Sub-issues.** Build one pull request per run: the sub-issue the user named, or the first one not blocked by unmerged work. Name what remains in the report.
-- **Open decisions.** Take the default recorded for each and list them in the report.
+- **Open decisions.** Take the default recorded for each and list them in the report. When a default cannot hold with a Scope line or a check, keep the default, because it is the side that does less and honouring it is the reversible choice. Report what it breaks as not passing, and make the conflict the first Needs attention item, with what each side would need.
 - **Already started.** If the issue has a branch, an open pull request or a Handoff comment, continue from there and do not start over.
 - **Changes to work in review.** Treat the user's message and the pull request's review comments as the task, on the same branch. Read each comment as a claim to verify against the code, not as an order: fix what is right, and answer what is not with the evidence.
 
@@ -80,6 +80,8 @@ Always:
 
 Run the full test suite, the linter, the type check and the build. Then walk the Done when list, run each check's Verify, and keep the evidence: the command and its result, the test name, or a screenshot for a check that says what you see. For those, run the app and look at it with the session's browser tool when there is one.
 
+Take the evidence last, on the branch's final head, and name that commit in the report. A check that looks at the running app looks at a build of that head, installed after its last commit. A commit after the evidence (a CI fix, a review change, a rename) means running again, before the report, every check it could touch.
+
 A check without evidence is "not verified". It is never "passed". A check the spec marked as the user's to run, or that needs something only they can grant, is reported as "owner" with whatever partial evidence you have, and counted apart from the others, so "3 of 6 passed, 3 owner" says what it means.
 
 ## 7. Pull request
@@ -97,7 +99,7 @@ Post one comment from this template, move the issue to In Review, and ping. Drop
 ````markdown
 ## Built
 What now works, in a line or two.
-Pull request: <link, or "not opened" and why> · Preview: <link, if any> · Visual report: <link, if published>
+Pull request: <link> at <short sha> · Preview: <link, if any> · Visual report: <link, if published>
 
 ## Checks
 - [x] The check. Evidence: test name, command result or screenshot.

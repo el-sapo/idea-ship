@@ -57,7 +57,7 @@ An item the user already saw on the idea issue is restated in a line or two: its
 
 Splitting matters because an unattended agent does far better on a small, checkable piece than on a large vague one.
 
-When you split, do not write things twice. The parent holds the goal, decision, scope, flow, attention items, the sub-issues in build order, and only the few end-to-end checks that prove the whole thing works. Detailed checks and plans live in the sub-issues. Every decision, including one that belongs to a sub-issue, is listed once on the parent so the user answers in one place.
+When you split, do not write things twice. The parent holds the goal, decision, scope, flow, attention items, the sub-issues in build order, and only the few end-to-end checks that prove the whole thing works. Detailed checks and plans live in the sub-issues. Every decision is written once and numbered on the parent. A decision that concerns the whole feature or several sub-issues lives on the parent. A decision that concerns one sub-issue only is written on that sub-issue, where its worker reads; the parent's Decisions list keeps its number and points to the sub-issue.
 
 ## 5. Write the spec
 
@@ -109,6 +109,7 @@ What makes it buildable:
 - **Every item with a high risk of breaking has a check that would catch the break.** A flag without a check only moves the worry to the build.
 - **Plan** names real files and areas from the code you read, not generic layers.
 - **Decisions** always carry a default, so an unanswered question never blocks the build. Record the ones the user already answered under Decision, and number new ones after the last number used on the issue, so a reply like "2 B" is never ambiguous.
+- **Defaults hold with the scope.** Read every default against every Scope line and Done when check it touches, including a parent's decisions against each sub-issue. If one cannot hold with the other, fix the default, move the line to Out, or write each option so it says which Scope lines and checks it keeps.
 
 What keeps it lean: no user-story phrasing, no scenario tables, no estimates in points. Reuse the chosen option's flow, updated, and keep the link to the visual brief if the issue had one. Include a wireframe only for a screen this spec builds, as an attached image when the session can render and upload one, otherwise as a box-drawing wireframe in a code block no wider than 36 characters. Write in the language the issue is already in.
 
