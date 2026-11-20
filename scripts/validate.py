@@ -23,6 +23,11 @@ CURSOR_MARKETPLACE = ROOT / ".cursor-plugin" / "marketplace.json"
 KEBAB = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 SEMVER = re.compile(r"^\d+\.\d+\.\d+$")
 EM_DASH = "—"
+# Front matter: one 'key: value' per line, and the characters YAML reserves
+# at the start of an unquoted value.
+FRONT_MATTER_LINE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):(?: (.*))?$")
+PLAIN_BLOCK = set("|>")
+PLAIN_START = set("-?:,[]{}#&*!%@`")
 PROSE_GLOBS = ["*.md", "docs/*.md", "plugins/*/README.md", "plugins/*/skills/*/SKILL.md"]
 PLUGINS = ROOT / "plugins"
 
@@ -64,19 +69,66 @@ def load_json(path):
     return None
 
 
+def scalar(value):
+    """Read one front matter value as a strict YAML parser would.
+
+    Returns (text, None), or (None, why a strict parser refuses it). A plugin
+    directory and some agents read front matter with a strict parser, so a
+    value a lenient reader accepts can still leave the skill unread.
+    """
+    if value.startswith("'"):
+        inner = value[1:-1]
+        if len(value) < 2 or not value.endswith("'") or "'" in inner.replace("''", ""):
+            return None, "single-quoted value is not closed, or has a lone ' inside (write it as '')"
+        return inner.replace("''", "'"), None
+    if value.startswith('"'):
+        try:
+            decoded = json.loads(value)
+        except ValueError:
+            return None, "double-quoted value is not closed, or has a bad escape"
+        return decoded, None
+    if value[:1] in PLAIN_BLOCK:
+        return None, "block value; put the value on one line, in quotes"
+    if value[:1] in PLAIN_START:
+        return None, f"unquoted value starts with {value[0]}; wrap the value in quotes"
+    if ": " in value or value.endswith(":"):
+        return None, "unquoted value has a colon followed by a space; wrap the value in quotes"
+    if " #" in value:
+        return None, "unquoted value has a space followed by #, which starts a comment; wrap the value in quotes"
+    return value, None
+
+
 def front_matter(text):
-    """Return the YAML front matter as a dict of top-level scalar keys, or None."""
+    """Return (fields, errors) for the YAML front matter, or (None, []) when there is none.
+
+    fields holds the top-level keys with a value on their own line. errors
+    lists what a strict YAML parser would refuse. Indented lines belong to
+    the key above them and are not read.
+    """
     if not text.startswith("---\n"):
-        return None
+        return None, []
     end = text.find("\n---", 4)
     if end < 0:
-        return None
-    fields = {}
-    for line in text[4:end].splitlines():
-        if ":" in line and not line.startswith((" ", "\t")):
-            key, _, value = line.partition(":")
-            fields[key.strip()] = value.strip().strip("\"'")
-    return fields
+        return None, []
+    fields, errors = {}, []
+    for number, line in enumerate(text[4:end].splitlines(), 2):
+        if not line.strip() or line.startswith((" ", "\t", "#")):
+            continue
+        match = FRONT_MATTER_LINE.match(line)
+        if not match:
+            errors.append(f"line {number}: not a 'key: value' line")
+            continue
+        key, value = match.group(1), (match.group(2) or "").strip()
+        if key in fields:
+            errors.append(f"line {number}: '{key}' appears twice")
+        if not value:
+            fields[key] = ""
+            continue
+        decoded, why = scalar(value)
+        if why:
+            errors.append(f"line {number}: '{key}': {why}")
+        fields[key] = decoded if decoded is not None else ""
+    return fields, errors
 
 
 def check_marketplace():
@@ -208,9 +260,13 @@ def check_skill(skill_dir):
         problem(skill_dir, "no SKILL.md")
         return
     text = skill.read_text(encoding="utf-8")
-    fields = front_matter(text)
+    fields, errors = front_matter(text)
     if fields is None:
         problem(skill, "no front matter")
+        return
+    for error in errors:
+        problem(skill, f"front matter {error}")
+    if errors:
         return
     if fields.get("name") != skill_dir.name:
         problem(skill, f"front matter name '{fields.get('name')}' differs from folder '{skill_dir.name}'")

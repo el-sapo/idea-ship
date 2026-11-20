@@ -2,6 +2,13 @@
 
 The plugin version lives in `plugins/idea-ship/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`; the three move together.
 
+## 0.6.1 (2026-11-20)
+
+Every skill's front matter is now YAML a strict parser reads. The skills say and do the same as in 0.6.0.
+
+- Skills: each `description` is wrapped in single quotes. Unquoted, its second colon made the front matter invalid YAML, which a lenient reader accepts and a strict one, such as a plugin directory's scan, cannot read.
+- Validator: `scripts/validate.py` reads front matter the way a strict parser does. It reports an unquoted value with a colon followed by a space, a space followed by `#`, or a reserved first character, a quoted value that is not closed, a key that appears twice, and a line that is not `key: value`.
+
 ## 0.6.0 (2026-10-26)
 
 A feature run merges its own verified steps from the session that holds the grant, evidence is taken on the final head, a default that fights the scope is reported, and a change asked for mid-run waits its turn.

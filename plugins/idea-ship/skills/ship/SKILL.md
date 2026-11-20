@@ -1,6 +1,6 @@
 ---
 name: ship
-description: Use when the user approves work in review and says "ship it", "ship ABC-12", "merge it" or "go ahead": merge the pull request, confirm the deploy, close the Linear issue and say what comes next.
+description: 'Use when the user approves work in review and says "ship it", "ship ABC-12", "merge it" or "go ahead": merge the pull request, confirm the deploy, close the Linear issue and say what comes next.'
 ---
 
 # Ship

@@ -10,6 +10,7 @@ The skills under `plugins/idea-ship/skills/` are the canonical text. Copies save
 - Prefer a sentence that explains the reason over a rule that forbids. Agents follow reasons better than lists.
 - Keep the examples neutral: `ABC-12` for an issue, `main` for the default branch, no real team keys, product names or people.
 - No em dashes. Use a comma, a colon or a full stop.
+- Wrap the front matter `description` in single quotes, and write an apostrophe inside it twice (`''`). A description nearly always has a colon, and an unquoted value with a colon is not valid YAML: some readers accept it, a strict one cannot read the skill.
 - Stay under 500 lines per skill. A skill that needs more is two skills.
 - A change in what a skill writes to Linear (a template, a section name) is a change every other skill reads. Check `build` reads what `spec` writes, `ship` reads what `build` writes, and `feature` reads all three. The same goes for the instructions file: when `build` or `ship` starts reading something new from it, `setup`'s template needs a section for it.
 
