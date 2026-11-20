@@ -1,6 +1,6 @@
 ---
 name: setup
-description: Use when the user says "setup", "set up this repo for the factory" or "is this repo ready": check that a project is ready for the factory loop, prove its commands, verify the connections and the Linear team, propose the instructions file as a pull request, report what is missing and where to fix it, and offer a first ticket.
+description: 'Use when the user says "setup", "set up this repo for the factory" or "is this repo ready": check that a project is ready for the factory loop, prove its commands, verify the connections and the Linear team, propose the instructions file as a pull request, report what is missing and where to fix it, and offer a first ticket.'
 ---
 
 # Setup

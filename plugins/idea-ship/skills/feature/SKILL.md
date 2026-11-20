@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Use when the user asks to build a whole feature, a parent Linear issue with specced sub-issues ("build the feature ABC-47", "run ABC-47 end to end", "continue the feature"): plan the run, get approval on how far to go, then drive one build per sub-issue on a feature branch, verify and integrate each, and hand back one pull request on the parent.
+description: 'Use when the user asks to build a whole feature, a parent Linear issue with specced sub-issues ("build the feature ABC-47", "run ABC-47 end to end", "continue the feature"): plan the run, get approval on how far to go, then drive one build per sub-issue on a feature branch, verify and integrate each, and hand back one pull request on the parent.'
 ---
 
 # Feature
