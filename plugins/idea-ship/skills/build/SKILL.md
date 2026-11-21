@@ -1,6 +1,6 @@
 ---
 name: build
-description: Use when the user says "code it" or "build ABC-12", or asks for changes to work in review: build a specced Linear issue into a pull request, carefully and unattended, then report on the issue.
+description: 'Use when the user says "code it" or "build ABC-12", or asks for changes to work in review: build a specced Linear issue into a pull request, carefully and unattended, then report on the issue.'
 ---
 
 # Build

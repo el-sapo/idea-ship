@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Use when the user picks from an idea's options or says "spec it" or "build the spec": write a lean, buildable spec with flagged risks into the same Linear issue, before any code.
+description: 'Use when the user picks from an idea''s options or says "spec it" or "build the spec": write a lean, buildable spec with flagged risks into the same Linear issue, before any code.'
 ---
 
 # Spec

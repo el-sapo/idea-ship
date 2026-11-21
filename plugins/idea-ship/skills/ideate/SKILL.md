@@ -1,6 +1,6 @@
 ---
 name: ideate
-description: Use whenever the user shares an idea to build or change, even by voice: reply with a visual brief, then file options on a Linear issue, or a ready-to-build spec when it is small and clear.
+description: 'Use whenever the user shares an idea to build or change, even by voice: reply with a visual brief, then file options on a Linear issue, or a ready-to-build spec when it is small and clear.'
 ---
 
 # Ideate
