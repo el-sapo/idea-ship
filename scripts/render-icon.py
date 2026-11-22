@@ -2,8 +2,9 @@
 """Render the plugin icon from its SVG source.
 
 Writes plugins/idea-ship/.claude-plugin/icon.png at 1024 px from
-plugins/idea-ship/assets/mark.svg, and a 48 px check render outside the
-repository, to look at before committing. The output is deterministic: a
+assets/mark.svg, and a 48 px check render outside the repository, to
+look at before committing. The mark lives outside the plugin folder
+because a plugin directory refuses an SVG there. The output is deterministic: a
 run on an unchanged mark leaves the committed PNG byte for byte the same.
 
 Needs Python 3.9+ and one rasteriser, pinned:
@@ -21,7 +22,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SOURCE = ROOT / "plugins" / "idea-ship" / "assets" / "mark.svg"
+SOURCE = ROOT / "assets" / "mark.svg"
 ICON = ROOT / "plugins" / "idea-ship" / ".claude-plugin" / "icon.png"
 ICON_SIZE = 1024
 CHECK_SIZE = 48

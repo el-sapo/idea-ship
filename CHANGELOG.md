@@ -2,6 +2,13 @@
 
 The plugin version lives in `plugins/idea-ship/.claude-plugin/plugin.json`, `.codex-plugin/plugin.json` and `.cursor-plugin/plugin.json`; the three move together.
 
+## 0.6.2 (2026-11-22)
+
+The plugin folder now holds only file types a plugin directory accepts from any publisher. The skills say and do the same as in 0.6.1.
+
+- Mark: `mark.svg`, `mark-dark.svg` and `alt-paper-boat.svg` move from `plugins/idea-ship/assets/` to `assets/` at the root of the repository. A directory refused the plugin for shipping SVG files, and nothing in the plugin read them. `scripts/render-icon.py` renders the icon from the new place, and the icon is byte for byte the same.
+- Validator: `scripts/validate.py` holds a plugin folder to Markdown, plain text, JSON, YAML and complete PNG, JPEG, GIF and WebP images, and reports any other file type, an SVG and a font included, and any file that starts with `#!`.
+
 ## 0.6.1 (2026-11-20)
 
 Every skill's front matter is now YAML a strict parser reads. The skills say and do the same as in 0.6.0.

@@ -40,12 +40,11 @@ PACKAGE_FILES = {
     ".npmrc", "bunfig.toml", "uv.toml",
 }
 RUNNERS = re.compile(r"\b(?:npx|bunx|uvx) |\bpipx run\b|\buv run\b|\bpnpm dlx\b|\byarn dlx\b")
-TEXT_SUFFIXES = {
-    "", ".md", ".markdown", ".txt", ".json", ".jsonc", ".yaml", ".yml", ".toml", ".svg", ".xml",
-    ".html", ".css", ".js", ".mjs", ".cjs", ".ts", ".py", ".sh", ".csv", ".ini", ".cfg",
-}
+# The file types a directory accepts from any publisher: Markdown, plain text,
+# JSON and YAML, and whole raster images. Scripts, programs, fonts and SVG are
+# accepted only from publishers the directory has verified, so none ship here.
+TEXT_SUFFIXES = {"", ".md", ".markdown", ".txt", ".json", ".yaml", ".yml"}
 RASTER_SUFFIXES = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
-FONT_SUFFIXES = {".ttf", ".otf", ".woff", ".woff2"}
 MAX_FILE_BYTES = 256 * 1024
 MAX_FILES = 512
 # The directory's listing icon, found by its place: a square PNG.
@@ -300,8 +299,8 @@ def check_prose():
                 problem(path, "no newline at end of file")
 
 
-def complete_image_or_font(suffix, data):
-    """True when data is a whole file of the type its suffix names."""
+def complete_image(suffix, data):
+    """True when data is a whole image of the type its suffix names."""
     if suffix == ".png":
         return data.startswith(b"\x89PNG\r\n\x1a\n") and data.endswith(b"IEND\xaeB`\x82")
     if suffix in (".jpg", ".jpeg"):
@@ -311,12 +310,6 @@ def complete_image_or_font(suffix, data):
     if suffix == ".webp":
         return (data[:4] == b"RIFF" and data[8:12] == b"WEBP"
                 and int.from_bytes(data[4:8], "little") + 8 == len(data))
-    if suffix == ".woff":
-        return data[:4] == b"wOFF"
-    if suffix == ".woff2":
-        return data[:4] == b"wOF2"
-    if suffix in (".ttf", ".otf"):
-        return data[:4] in (b"\x00\x01\x00\x00", b"OTTO", b"true")
     return False
 
 
@@ -348,13 +341,17 @@ def check_name(path):
 def check_file(path):
     data = path.read_bytes()
     suffix = path.suffix.lower()
-    if suffix in RASTER_SUFFIXES or suffix in FONT_SUFFIXES:
-        if not complete_image_or_font(suffix, data):
+    if suffix in RASTER_SUFFIXES:
+        if not complete_image(suffix, data):
             problem(path, f"not a complete {suffix[1:].upper()} file")
+    elif suffix == ".svg":
+        problem(path, "SVG; a plugin directory refuses it in a plugin folder. Keep the source outside plugins/ and ship a PNG")
     else:
         text = as_text(data)
         if text is None or suffix not in TEXT_SUFFIXES:
-            problem(path, "binary or unknown file type; only text, PNG, JPEG, GIF, WebP, SVG and fonts are allowed")
+            problem(path, "file type a plugin directory refuses; only Markdown, plain text, JSON, YAML, PNG, JPEG, GIF and WebP are allowed")
+        elif text.startswith("#!"):
+            problem(path, "starts with #!; a plugin folder carries no scripts")
         elif RUNNERS.search(text):
             problem(path, f"runs a package with '{RUNNERS.search(text).group(0).strip()}'; a plugin folder must not")
     if suffix not in RASTER_SUFFIXES and len(data) > MAX_FILE_BYTES:
