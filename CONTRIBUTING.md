@@ -32,11 +32,11 @@ Dry runs with fresh agents are the cheapest test: give a fresh session the chang
 
 Project-specific instructions (a stack, a repository's conventions) belong in that project's instructions file. Specs and plans belong in Linear and in ignored scratch folders. Third-party skills are not copied in, and no platform (hosting, CI, a store) is named in a skill.
 
-A plugin folder holds only text (an SVG counts as text), complete images (PNG, JPEG, GIF, WebP) and fonts: no system files such as `.DS_Store`, no symbolic links, no file names a Windows checkout cannot hold, no package manifests, lockfiles or package runners, nothing over 256 KiB except PNG, JPEG, GIF and WebP images, and at most 512 files. `python3 scripts/validate.py` checks all of it.
+A plugin folder holds only what a plugin directory accepts from any publisher: Markdown, plain text, JSON and YAML, and complete PNG, JPEG, GIF and WebP images. No SVG, script, program, font or other file type, no file that starts with `#!`, no system files such as `.DS_Store`, no symbolic links, no file names a Windows checkout cannot hold, no package manifests, lockfiles or package runners, nothing over 256 KiB except the images, and at most 512 files. Sources that are not one of those types, such as the mark's SVG, live outside `plugins/`. `python3 scripts/validate.py` checks all of it.
 
 ## The icon
 
-The mark's source is `plugins/idea-ship/assets/mark.svg`, with `mark-dark.svg` for dark backgrounds and `alt-paper-boat.svg` as the other direction. The directory's listing icon, `plugins/idea-ship/.claude-plugin/icon.png`, is rendered from `mark.svg` at 1024 px and found by its place, so `plugin.json` has no `icon` key. After a change to the mark, regenerate it with the one pinned rasteriser:
+The mark's source is `assets/mark.svg` at the root of the repository, with `mark-dark.svg` for dark backgrounds and `alt-paper-boat.svg` as the other direction. They stay out of the plugin folder, where a directory refuses an SVG. The directory's listing icon, `plugins/idea-ship/.claude-plugin/icon.png`, is rendered from `mark.svg` at 1024 px and found by its place, so `plugin.json` has no `icon` key. After a change to the mark, regenerate it with the one pinned rasteriser:
 
 ```sh
 pip install resvg-py==0.2.0
